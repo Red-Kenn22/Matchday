@@ -6,6 +6,14 @@
   <meta name="theme-color" content="#0b192c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Matchday — Pitchside Coaching App</title>
+  <!-- Google Analytics (GA4) & Firebase SDKs -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EG2JQGKMS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6EG2JQGKMS');
+  </script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
@@ -23,7 +31,8 @@
     .brand-logo { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.92rem; letter-spacing: 0.6px; color: #fff; }
     .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sky-token); display: inline-block; }
     .header-pills { display: flex; gap: 5px; align-items: center; }
-    .status-pill { background: var(--navy-800); border: 1px solid var(--navy-700); color: #cbd5e1; font-size: 0.68rem; font-weight: 700; padding: 5px 8px; border-radius: 999px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .status-pill { background: var(--navy-800); border: 1px solid var(--navy-700); color: #cbd5e1; font-size: 0.68rem; font-weight: 800; padding: 5px 8px; border-radius: 999px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .status-pill.settings-btn { background: var(--sky-token); color: var(--navy-950); border-color: #fff; font-weight: 900; }
     .dot-indicator { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; }
     .dot-indicator.active { background: #22c55e; }
     .dot-indicator.syncing { background: #f59e0b; }
@@ -53,19 +62,18 @@
     .view-section.active { display: block; }
     .day-card { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 14px; padding: 14px; margin-bottom: 14px; box-shadow: 0 3px 0 rgba(15,23,42,0.12); }
     .day-card-title { font-size: 0.88rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-    /* EQUAL PLAY ADVISOR BANNER */
     .equal-bar { background: #0f172a; color: #fff; border: 2px solid var(--navy-700); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; }
     .equal-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.78rem; font-weight: 800; }
-    .equal-target-pill { background: var(--sky-token); color: var(--navy-950); font-weight: 900; padding: 3px 8px; border-radius: 6px; font-size: 0.76rem; }
+    .equal-target-pill { background: var(--sky-token); color: var(--navy-950); font-weight: 900; padding: 3px 8px; border-radius: 6px; font-size: 0.74rem; }
     .advisor-suggestion { margin-top: 8px; padding-top: 8px; border-top: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: #fef08a; }
     .btn-quick-swap { background: var(--green-bright); color: #fff; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 6px 10px; font-weight: 900; font-size: 0.76rem; cursor: pointer; flex-shrink: 0; min-height: 38px; }
-    /* PITCH BOARD */
     .pitch-wrapper { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 14px; padding: 8px; margin-bottom: 12px; box-shadow: 0 3px 0 rgba(15,23,42,0.12); }
     .pitch-board { position: relative; width: 100%; height: 430px; background: repeating-linear-gradient(0deg, var(--pitch-dark) 0px, var(--pitch-dark) 36px, var(--pitch-light) 36px, var(--pitch-light) 72px); border: 2.5px solid #fff; border-radius: 10px; overflow: hidden; }
     .pitch-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .pitch-overlay-badge { position: absolute; top: 8px; background: rgba(6,16,30,0.88); color: #fff; font-size: 0.7rem; font-weight: 900; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); z-index: 5; pointer-events: none; }
     .pitch-overlay-badge.left { left: 8px; }
     .pitch-overlay-badge.right { right: 8px; }
+    .pitch-empty-msg { position: absolute; inset: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: rgba(6,16,30,0.85); color: #fff; border-radius: 12px; padding: 20px; z-index: 20; font-weight: 800; gap: 12px; }
     .pitch-token { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; cursor: grab; z-index: 10; width: 68px; touch-action: none; }
     .pitch-token.selected .token-disc, .pitch-token.dragging .token-disc { outline: 4px solid #facc15; transform: scale(1.15); }
     .pitch-token.dragging { z-index: 50; }
@@ -97,7 +105,6 @@
     .prog-track { width: 100%; height: 6px; background: #cbd5e1; border-radius: 99px; overflow: hidden; }
     .prog-fill { height: 100%; background: var(--green-bright); border-radius: 99px; }
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    .form-grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 8px; margin-bottom: 10px; }
     .field-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
     .field-label { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; color: var(--text-muted); }
     .day-input, .day-select { min-height: var(--touch-min); background: #fff; border: 2px solid var(--text-main); border-radius: 10px; padding: 0 10px; font-size: 0.92rem; font-weight: 800; color: var(--text-main); width: 100%; }
@@ -128,9 +135,9 @@
     .nav-tab span { pointer-events: none; }
     .nav-tab.active { color: var(--sky-token); background: rgba(114,194,235,0.12); }
     .nav-tab.active::before { content: ""; position: absolute; top: 0; left: 15%; right: 15%; height: 3px; background: var(--sky-token); border-radius: 0 0 4px 4px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(6,16,30,0.75); z-index: 10000; display: none; align-items: flex-end; justify-content: center; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(6,16,30,0.82); z-index: 10000; display: none; align-items: flex-end; justify-content: center; }
     .modal-backdrop.open { display: flex; }
-    .modal-sheet { background: #fff; color: var(--text-main); width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; border-top: 4px solid var(--navy-900); padding: 16px; max-height: 88vh; overflow-y: auto; }
+    .modal-sheet { background: #fff; color: var(--text-main); width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; border-top: 4px solid var(--navy-900); padding: 16px; max-height: 90vh; overflow-y: auto; }
     .sheet-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid #e2e8f0; }
     .sheet-title { font-size: 1.05rem; font-weight: 900; }
     .btn-close { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--text-main); background: #f1f5f9; font-weight: 900; font-size: 1rem; cursor: pointer; }
@@ -141,19 +148,20 @@
 </head>
 <body>
 
+  <!-- TOP COCKPIT HEADER -->
   <header class="top-cockpit">
     <div class="app-bar">
-      <div class="brand-logo"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.65rem;color:#72c2eb;">v6.0</small></span></div>
+      <div class="brand-logo"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.65rem;color:#72c2eb;">v7.0</small></span></div>
       <div class="header-pills">
-        <button class="status-pill" onclick="switchTeamCodePrompt()" title="Switch Team Room Code">🔑 <span id="team-code-label">SPITFIRES</span></button>
-        <button class="status-pill" onclick="forceCloudPull()"><span class="dot-indicator active" id="cloud-dot"></span><span id="cloud-text">Synced</span></button>
+        <button class="status-pill" onclick="forceCloudPull()"><span class="dot-indicator active" id="cloud-dot"></span><span id="cloud-text">Sync</span></button>
         <button class="status-pill" onclick="toggleWakeLock()"><span class="dot-indicator active" id="wake-dot"></span><span id="wake-text">Lock</span></button>
+        <button class="status-pill settings-btn" onclick="openSettingsModal()">⚙️ <span id="header-team-code">Settings</span></button>
       </div>
     </div>
     <div class="scoreboard-row">
-      <div class="score-team-col home"><span class="venue-pill them" id="badge-left">HOME</span><div class="score-team-name" id="team-left">Maidenhead Utd Galaxy</div></div>
+      <div class="score-team-col home"><span class="venue-pill them" id="badge-left">HOME</span><div class="score-team-name" id="team-left">Opposition</div></div>
       <div class="score-center-box" id="score-display">0 - 0</div>
-      <div class="score-team-col away"><span class="venue-pill us" id="badge-right">AWAY (US)</span><div class="score-team-name" id="team-right">Woodley Utd Spitfires</div></div>
+      <div class="score-team-col away"><span class="venue-pill us" id="badge-right">AWAY (US)</span><div class="score-team-name" id="team-right">My Team</div></div>
     </div>
     <div class="clock-controls-row">
       <div class="clock-left">
@@ -165,18 +173,15 @@
         <button class="btn-adj" onclick="adjustClock(60)">+1m</button>
       </div>
     </div>
-    <div class="primary-clock-bars" id="clock-buttons-container">
-      <button class="btn-start-bar" onclick="startFirstHalf()">▶ Start 1st Half (40m)</button>
-    </div>
+    <div class="primary-clock-bars" id="clock-buttons-container"></div>
   </header>
 
-  <!-- TAB 1: MATCH -->
+  <!-- TAB 1: MATCH COCKPIT -->
   <main id="view-match" class="view-section active">
-    <!-- EQUAL PLAYING MINUTES ADVISOR BAR -->
     <div class="equal-bar" id="equal-advisor-box">
       <div class="equal-top">
-        <span id="equal-summary-text">⚖️ Equal Play Target: 53m / player</span>
-        <span class="equal-target-pill" id="equal-floor-pill">50% Floor: 40m</span>
+        <span id="equal-summary-text">⚖️ Equal Play Target</span>
+        <span class="equal-target-pill" id="equal-floor-pill">50% Floor</span>
       </div>
       <div class="advisor-suggestion" id="equal-suggestion-row" style="display:none;">
         <span id="equal-suggestion-text">💡 Suggested Sub</span>
@@ -217,43 +222,17 @@
     </div>
   </main>
 
-  <!-- TAB 2: LINEUP & FORMAT SETUP -->
+  <!-- TAB 2: STREAMLINED WEEKLY LINEUP PREP -->
   <section id="view-lineup" class="view-section">
     <div class="day-card">
-      <div class="day-card-title">Fixture, Age Group & Format</div>
-      <div class="form-grid-2">
-        <div class="field-group"><label class="field-label">My Team Name</label><input type="text" id="input-my-team" class="day-input" value="Woodley Utd Spitfires" onchange="saveSetupConfig()"></div>
-        <div class="field-group"><label class="field-label">Opposition</label><input type="text" id="input-opp-team" class="day-input" value="Maidenhead Utd Galaxy" onchange="saveSetupConfig()"></div>
+      <div class="day-card-title">
+        <span>Match Fixture & Tactics</span>
+        <button class="btn-outline" style="min-height:34px;padding:0 10px;font-size:0.74rem;" onclick="openSettingsModal()" id="lineup-rules-pill">⚙️ Team Settings</button>
       </div>
-
-      <!-- AGE GROUP, FORMAT & HALF LENGTH -->
-      <div class="form-grid-3">
-        <div class="field-group">
-          <label class="field-label">Age Group Preset</label>
-          <select id="select-age-group" class="day-select" onchange="applyAgeGroupPreset(this.value)">
-            <option value="U7-U8">U7–U8 (20m H)</option>
-            <option value="U9-U10">U9–U10 (25m H)</option>
-            <option value="U11-U12">U11–U12 (30m H)</option>
-            <option value="U13-U14">U13–U14 (35m H)</option>
-            <option value="U15-U16" selected>U15–U16 (40m H)</option>
-            <option value="U17+">U17 / Adult (45m H)</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Game Format</label>
-          <select id="select-format" class="day-select" onchange="changeGameFormat(this.value)">
-            <option value="5">5v5 (5 Pitch)</option>
-            <option value="7">7v7 (7 Pitch)</option>
-            <option value="9">9v9 (9 Pitch)</option>
-            <option value="11" selected>11v11 (11 Pitch)</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Half Mins</label>
-          <input type="number" id="input-half-mins" class="day-input" value="40" min="5" max="60" onchange="saveSetupConfig()">
-        </div>
+      <div class="field-group">
+        <label class="field-label">Opposition Team Name</label>
+        <input type="text" id="input-opp-team" class="day-input" placeholder="e.g. Maidenhead Utd Galaxy" onchange="saveFixtureConfig()">
       </div>
-
       <div class="form-grid-2">
         <div class="field-group">
           <label class="field-label">Venue (Home = Left)</label>
@@ -267,19 +246,6 @@
           <select id="select-formation" class="day-select" onchange="changeFormation(this.value)"></select>
         </div>
       </div>
-
-      <!-- EQUAL PLAY SETTINGS -->
-      <div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
-        <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:800;cursor:pointer;">
-          <input type="checkbox" id="chk-equal-mode" checked style="width:18px;height:18px;" onchange="toggleEqualSettings()">
-          <span>⚖️ Equal Playing Time Advisor</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:800;color:var(--text-muted);cursor:pointer;">
-          <input type="checkbox" id="chk-lock-gk" checked style="width:18px;height:18px;" onchange="toggleEqualSettings()">
-          <span>🔒 Lock GK (Rotate Outfield Only)</span>
-        </label>
-      </div>
-
       <div class="lineup-btn-row">
         <button class="btn-sky" onclick="autoFillStartingLineup()">⚡ Auto-Fill Lineup</button>
         <button class="btn-outline" onclick="resetFormationCoords()">📐 Reset Shape</button>
@@ -347,11 +313,11 @@
     </div>
   </section>
 
-  <!-- TAB 4: HISTORY -->
+  <!-- TAB 4: TEAM MATCH HISTORY -->
   <section id="view-history" class="view-section">
     <div class="day-card">
       <div class="day-card-title">
-        <span>Finished Match Archive</span>
+        <span>Team Match Archive</span>
         <button class="btn-sky" style="min-height:40px;padding:0 12px;font-size:0.8rem;" onclick="openManualMatchModal()">+ Log Past Match</button>
       </div>
       <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1.5px dashed #cbd5e1;">
@@ -379,7 +345,104 @@
     </button>
   </nav>
 
-  <!-- MODALS -->
+  <!-- MODAL 0: FIRST-RUN WELCOME GATEWAY -->
+  <div class="modal-backdrop" id="modal-welcome">
+    <div class="modal-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">⚽ Welcome to Matchday</div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--text-muted);font-weight:700;line-height:1.4;margin-bottom:16px;">
+        Pitchside coaching tracker, live rolling substitutions, and equal playing time rotation. Please set up your team in Settings before use, or join an existing team with a Team Code:
+      </p>
+      <div style="display:grid;gap:10px;">
+        <button class="btn-start-bar" onclick="startCreateNewTeamFlow()">⚙️ Set Up New Team in Settings</button>
+        <button class="btn-sky" onclick="joinExistingTeamPrompt()">🔑 Join Existing Team with Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 1: ⚙️ TEAM & SEASON SETTINGS DRAWER -->
+  <div class="modal-backdrop" id="modal-settings">
+    <div class="modal-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">⚙️ Team & Season Settings</div>
+        <button class="btn-close" onclick="closeModal('modal-settings')">✕</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">My Team Name</label>
+        <input type="text" id="set-my-team" class="day-input" placeholder="e.g. Tilehurst Panthers U12">
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">Age Group Preset</label>
+          <select id="set-age-group" class="day-select" onchange="onSettingsAgeChange(this.value)">
+            <option value="U7-U8">U7–U8 (5v5 • 20m)</option>
+            <option value="U9-U10">U9–U10 (7v7 • 25m)</option>
+            <option value="U11-U12">U11–U12 (9v9 • 30m)</option>
+            <option value="U13-U14">U13–U14 (11v11 • 35m)</option>
+            <option value="U15-U16">U15–U16 (11v11 • 40m)</option>
+            <option value="U17+">U17 / Adult (11v11 • 45m)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Pitch Format</label>
+          <select id="set-format" class="day-select">
+            <option value="5">5v5 (5 on Pitch)</option>
+            <option value="7">7v7 (7 on Pitch)</option>
+            <option value="9">9v9 (9 on Pitch)</option>
+            <option value="11">11v11 (11 on Pitch)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">Half Duration (Mins)</label>
+          <input type="number" id="set-half-mins" class="day-input" value="40" min="5" max="60">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Team Sync Code</label>
+          <input type="text" id="set-team-code" class="day-input" placeholder="Auto-generated" style="text-transform:uppercase;">
+        </div>
+      </div>
+
+      <div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:10px;margin-bottom:12px;display:grid;gap:8px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;font-weight:800;cursor:pointer;">
+          <input type="checkbox" id="set-equal-mode" checked style="width:20px;height:20px;">
+          <span>⚖️ Enable Single-Match Equal Playing Time Advisor</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:800;color:var(--text-muted);cursor:pointer;">
+          <input type="checkbox" id="set-lock-gk" checked style="width:20px;height:20px;">
+          <span>🔒 Lock Goalkeeper (Exclude GK from outfield rotation math)</span>
+        </label>
+      </div>
+
+      <button class="btn-start-bar" style="width:100%;margin-bottom:10px;" onclick="saveSettingsModal()">✅ Save Team Settings</button>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:10px;border-top:2px solid #e2e8f0;">
+        <button class="btn-outline" onclick="copyCoCoachInviteLink()">🔗 Copy Co-Coach Link</button>
+        <button class="btn-outline" onclick="joinExistingTeamPrompt()">🔑 Switch Team Code</button>
+      </div>
+      <div style="margin-top:8px;text-align:center;">
+        <button class="btn-outline" style="width:100%;min-height:38px;font-size:0.75rem;color:var(--text-muted);" onclick="openUsageRegistryModal()">📊 View Active Teams Usage Registry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: USAGE REGISTRY (ADMIN VIEW) -->
+  <div class="modal-backdrop" id="modal-registry">
+    <div class="modal-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">📊 Active Teams Registry</div>
+        <button class="btn-close" onclick="closeModal('modal-registry')">✕</button>
+      </div>
+      <div id="registry-list-container" style="display:grid;gap:8px;max-height:65vh;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PLAYER QUICK ACTION -->
   <div class="modal-backdrop" id="modal-player-action">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title" id="pa-modal-title">Player Actions</div><button class="btn-close" onclick="closeModal('modal-player-action')">✕</button></div>
@@ -394,6 +457,7 @@
     </div>
   </div>
 
+  <!-- MODAL 4: GOAL -->
   <div class="modal-backdrop" id="modal-goal">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">⚽ Log Goal (Our Team)</div><button class="btn-close" onclick="closeModal('modal-goal')">✕</button></div>
@@ -403,6 +467,7 @@
     </div>
   </div>
 
+  <!-- MODAL 5: ROLLING SUB -->
   <div class="modal-backdrop" id="modal-sub">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">🔄 Rolling Substitution</div><button class="btn-close" onclick="closeModal('modal-sub')">✕</button></div>
@@ -412,6 +477,7 @@
     </div>
   </div>
 
+  <!-- MODAL 6: CARD -->
   <div class="modal-backdrop" id="modal-card">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">🟨 Log Disciplinary Card</div><button class="btn-close" onclick="closeModal('modal-card')">✕</button></div>
@@ -423,6 +489,7 @@
     </div>
   </div>
 
+  <!-- MODAL 7: REPORT -->
   <div class="modal-backdrop" id="modal-report">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">🏁 Match Report</div><button class="btn-close" onclick="closeModal('modal-report')">✕</button></div>
@@ -434,6 +501,7 @@
     </div>
   </div>
 
+  <!-- MODAL 8: PAST MATCH -->
   <div class="modal-backdrop" id="modal-past-match">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">📝 Log Past Match Result</div><button class="btn-close" onclick="closeModal('modal-past-match')">✕</button></div>
@@ -470,18 +538,7 @@
       measurementId: "G-6EG2JQGKMS"
     };
 
-    let currentTeamCode = localStorage.getItem("matchday_active_team_code") || "SPITFIRES";
-    const LEGACY_KEYS = ["spitfires_matchday_v3", "matchday_coaching_app_v2", "matchday_coaching_app_v1"];
-    let rtdb = null, firebaseRef = null, selectedSwapTarget = null, activeReportText = "", wakeLockSentinel = null;
-
-    function getStorageKey() {
-      return currentTeamCode === "SPITFIRES" ? "matchday_spitfires_v4" : ("matchday_team_" + currentTeamCode);
-    }
-    function getFirebasePath() {
-      return currentTeamCode === "SPITFIRES" ? "spitfires_state_v4" : ("teams/" + currentTeamCode);
-    }
-
-    const INITIAL_SQUAD = [
+    const SPITFIRES_SQUAD = [
       { id: "p1", name: "Aidan", num: 1, available: true },
       { id: "p2", name: "Alayham", num: 2, available: true },
       { id: "p3", name: "Archie", num: 3, available: true },
@@ -537,15 +594,52 @@
       }
     };
 
-    let state = {
-      setup: { myTeam: "Woodley Utd Spitfires", oppTeam: "Maidenhead Utd Galaxy", venue: "away", ageGroup: "U15-U16", format: 11, halfDuration: 40, formation: "4-3-3", equalPlay: true, lockGK: true, customCoords: null },
-      squad: JSON.parse(JSON.stringify(INITIAL_SQUAD)),
-      match: { status: "PRE", running: false, elapsedSec: 0, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11"], starterIds: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11"], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] },
-      seasonStats: {},
-      history: [],
-      undoStack: [],
-      updatedAt: 0
-    };
+    const LEGACY_KEYS = ["spitfires_matchday_v3", "matchday_coaching_app_v2", "matchday_coaching_app_v1"];
+    let currentTeamCode = "";
+    let rtdb = null, firebaseRef = null, selectedSwapTarget = null, activeReportText = "", wakeLockSentinel = null;
+
+    function getBlankState() {
+      return {
+        setup: { myTeam: "My Team", oppTeam: "Opposition", venue: "home", ageGroup: "U15-U16", format: 11, halfDuration: 40, formation: "4-3-3", equalPlay: true, lockGK: true, customCoords: null },
+        squad: [],
+        match: { status: "PRE", running: false, elapsedSec: 0, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: [], starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] },
+        seasonStats: {},
+        history: [],
+        undoStack: [],
+        updatedAt: 0
+      };
+    }
+
+    let state = getBlankState();
+
+    function detectInitialTeamCode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramTeam = urlParams.get("team");
+      if (paramTeam) {
+        const clean = paramTeam.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+        if (clean) {
+          localStorage.setItem("matchday_active_team_code", clean);
+          return clean;
+        }
+      }
+      const savedCode = localStorage.getItem("matchday_active_team_code");
+      if (savedCode) return savedCode;
+      // Seamless migration if this phone already has Woodley Spitfires data saved
+      if (localStorage.getItem("matchday_spitfires_v4")) {
+        localStorage.setItem("matchday_active_team_code", "SPITFIRES");
+        return "SPITFIRES";
+      }
+      return "";
+    }
+
+    function getStorageKey() {
+      if (!currentTeamCode) return "matchday_unassigned_temp";
+      return currentTeamCode === "SPITFIRES" ? "matchday_spitfires_v4" : ("matchday_team_" + currentTeamCode);
+    }
+    function getFirebasePath() {
+      if (!currentTeamCode) return null;
+      return currentTeamCode === "SPITFIRES" ? "spitfires_state_v4" : ("teams/" + currentTeamCode);
+    }
 
     function toArray(v) { return !v ? [] : Array.isArray(v) ? v : typeof v === "object" ? Object.values(v) : []; }
     function pad(n) { return n < 10 ? "0" + n : String(n); }
@@ -558,10 +652,148 @@
       const target = document.getElementById(viewId);
       if (target) target.classList.add("active");
       if (btn) btn.classList.add("active");
+      else {
+        const idx = viewId === "view-match" ? 0 : viewId === "view-lineup" ? 1 : viewId === "view-squad" ? 2 : 3;
+        const tabs = document.querySelectorAll(".nav-tab");
+        if (tabs[idx]) tabs[idx].classList.add("active");
+      }
       renderEverything();
     }
 
-    // SINGLE-MATCH EQUAL PLAYING TIME CALCULATOR
+    // WELCOME & SETTINGS FLOWS
+    function startCreateNewTeamFlow() {
+      closeModal("modal-welcome");
+      state = getBlankState();
+      document.getElementById("set-my-team").value = "";
+      document.getElementById("set-age-group").value = "U15-U16";
+      document.getElementById("set-format").value = "11";
+      document.getElementById("set-half-mins").value = "40";
+      document.getElementById("set-team-code").value = "";
+      document.getElementById("set-equal-mode").checked = true;
+      document.getElementById("set-lock-gk").checked = true;
+      openModal("modal-settings");
+    }
+
+    function openSettingsModal() {
+      const s = state.setup;
+      document.getElementById("set-my-team").value = s.myTeam === "My Team" ? "" : s.myTeam;
+      document.getElementById("set-age-group").value = s.ageGroup || "U15-U16";
+      document.getElementById("set-format").value = String(s.format || 11);
+      document.getElementById("set-half-mins").value = s.halfDuration || 40;
+      document.getElementById("set-team-code").value = currentTeamCode || "";
+      document.getElementById("set-equal-mode").checked = s.equalPlay !== false;
+      document.getElementById("set-lock-gk").checked = s.lockGK !== false;
+      openModal("modal-settings");
+    }
+
+    function onSettingsAgeChange(ageVal) {
+      const p = AGE_PRESETS[ageVal];
+      if (!p) return;
+      document.getElementById("set-format").value = String(p.format);
+      document.getElementById("set-half-mins").value = p.halfDuration;
+    }
+
+    function saveSettingsModal() {
+      const teamName = document.getElementById("set-my-team").value.trim() || "My Team";
+      const ageGroup = document.getElementById("set-age-group").value;
+      const fmt = parseInt(document.getElementById("set-format").value) || 11;
+      const halfMins = parseInt(document.getElementById("set-half-mins").value) || 40;
+      let codeInput = document.getElementById("set-team-code").value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+
+      if (!codeInput) {
+        const prefix = teamName.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 5) || "TEAM";
+        codeInput = `${prefix}-${Math.floor(100 + Math.random() * 900)}`;
+      }
+
+      const isSwitchingTeam = codeInput !== currentTeamCode;
+      const prevFormat = state.setup.format;
+
+      if (isSwitchingTeam) {
+        currentTeamCode = codeInput;
+        localStorage.setItem("matchday_active_team_code", currentTeamCode);
+        const existingLocal = localStorage.getItem(getStorageKey());
+        if (existingLocal) {
+          try { state = { ...getBlankState(), ...JSON.parse(existingLocal) }; } catch (e) { state = getBlankState(); }
+        } else {
+          state = getBlankState();
+        }
+      }
+
+      state.setup.myTeam = teamName;
+      state.setup.ageGroup = ageGroup;
+      state.setup.format = fmt;
+      state.setup.halfDuration = halfMins;
+      state.setup.equalPlay = document.getElementById("set-equal-mode").checked;
+      state.setup.lockGK = document.getElementById("set-lock-gk").checked;
+
+      if (prevFormat !== fmt || !state.setup.customCoords) {
+        const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
+        state.setup.formation = Object.keys(fmtDict)[0];
+        state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[state.setup.formation]));
+      }
+
+      sanitizeState();
+      persist(true);
+      if (isSwitchingTeam) bindFirebaseTeamListener();
+      closeModal("modal-settings");
+      closeModal("modal-welcome");
+      renderEverything();
+
+      if (state.squad.length === 0) {
+        switchMainTab("view-squad");
+      }
+    }
+
+    function joinExistingTeamPrompt() {
+      const code = prompt("Enter your Team Sync Code (e.g. SPITFIRES):", currentTeamCode || "");
+      if (!code) return;
+      const clean = code.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+      if (!clean) return;
+      currentTeamCode = clean;
+      localStorage.setItem("matchday_active_team_code", currentTeamCode);
+      state = getBlankState();
+      loadLocal();
+      bindFirebaseTeamListener();
+      forceCloudPull(true);
+      closeModal("modal-welcome");
+      closeModal("modal-settings");
+      renderEverything();
+    }
+
+    function copyCoCoachInviteLink() {
+      if (!currentTeamCode) return alert("Please save your Team Settings first to generate a Team Code.");
+      const url = `${window.location.origin}${window.location.pathname}?team=${currentTeamCode}`;
+      navigator.clipboard.writeText(url);
+      alert(`Co-Coach Link copied!\n\n${url}\n\nAnyone opening this link will automatically sync with ${state.setup.myTeam} (${currentTeamCode}).`);
+    }
+
+    function openUsageRegistryModal() {
+      if (!rtdb) return alert("Cloud database offline.");
+      const container = document.getElementById("registry-list-container");
+      container.innerHTML = `<div style="padding:12px;text-align:center;font-weight:700;">Loading active teams...</div>`;
+      openModal("modal-registry");
+      rtdb.ref("team_registry").once("value", snap => {
+        const reg = snap.val() || {};
+        const items = Object.values(reg).sort((a, b) => (b.lastActiveAt || 0) - (a.lastActiveAt || 0));
+        if (!items.length) {
+          container.innerHTML = `<div style="padding:12px;text-align:center;">No teams registered yet.</div>`;
+          return;
+        }
+        container.innerHTML = items.map(t => `
+          <div class="roster-row">
+            <div>
+              <div style="font-weight:900;font-size:0.92rem;">${t.teamName || 'Unnamed'} <span style="color:#0284c7;font-size:0.78rem;">[${t.teamCode}]</span></div>
+              <div style="font-size:0.74rem;color:var(--text-muted);font-weight:700;">${t.ageGroup || ''} • ${t.format || 11}v${t.format || 11} • 👥 ${t.playerCount || 0} players • 🏁 ${t.matchesCount || 0} matches</div>
+            </div>
+            <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-align:right;">
+              Last Active<br>${t.lastActiveDate || '-'}
+            </div>
+          </div>
+        `).join("");
+      });
+    }
+
+    // EQUAL PLAYING TIME ENGINE
     function getEqualTimeMetrics() {
       const s = state.setup;
       const pitchSlots = parseInt(s.format) || 11;
@@ -574,17 +806,13 @@
       let outfieldTarget = totalGameMins;
       if (s.lockGK && availCount > 1 && pitchSlots > 1) {
         outfieldTarget = Math.round(((pitchSlots - 1) * totalGameMins) / (availCount - 1));
-      } else {
+      } else if (availCount > 0) {
         outfieldTarget = Math.round((pitchSlots * totalGameMins) / availCount);
       }
       outfieldTarget = Math.min(totalGameMins, Math.max(1, outfieldTarget));
 
-      const getTargetForPlayer = (pid) => {
-        if (s.lockGK && pid === gkId) return totalGameMins;
-        return outfieldTarget;
-      };
+      const getTargetForPlayer = pid => (s.lockGK && pid === gkId) ? totalGameMins : outfieldTarget;
 
-      // Find best smart substitution suggestion (Bench player with fewest mins vs Outfield pitch player with most mins)
       const benchPlayers = availPlayers
         .filter(p => !state.match.lineupIds.includes(p.id))
         .sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
@@ -597,15 +825,12 @@
 
       let suggestion = null;
       if (benchPlayers.length > 0 && pitchCandidates.length > 0) {
-        const subOn = benchPlayers[0];
-        const subOff = pitchCandidates[0];
-        const onMins = getPlayerMatchMins(subOn.id);
-        const offMins = getPlayerMatchMins(subOff.id);
+        const subOn = benchPlayers[0], subOff = pitchCandidates[0];
+        const onMins = getPlayerMatchMins(subOn.id), offMins = getPlayerMatchMins(subOff.id);
         if (offMins - onMins >= 4 || offMins >= outfieldTarget) {
           suggestion = { subOn, subOff, onMins, offMins };
         }
       }
-
       return { totalGameMins, floorMins, outfieldTarget, availCount, pitchSlots, getTargetForPlayer, suggestion };
     }
 
@@ -622,14 +847,10 @@
     function getActiveCoords() {
       const fmt = parseInt(state.setup.format) || 11;
       const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
-      if (!fmtDict[state.setup.formation]) {
-        state.setup.formation = Object.keys(fmtDict)[0];
-      }
+      if (!fmtDict[state.setup.formation]) state.setup.formation = Object.keys(fmtDict)[0];
       const base = fmtDict[state.setup.formation];
       const custom = toArray(state.setup.customCoords);
-      if (custom.length === fmt && custom[0] && typeof custom[0].x === "number") {
-        return custom;
-      }
+      if (custom.length === fmt && custom[0] && typeof custom[0].x === "number") return custom;
       state.setup.customCoords = JSON.parse(JSON.stringify(base));
       return state.setup.customCoords;
     }
@@ -689,8 +910,8 @@
 
     function sanitizeState() {
       if (!state.setup) state.setup = {};
-      state.setup.myTeam = state.setup.myTeam || "Woodley Utd Spitfires";
-      state.setup.oppTeam = state.setup.oppTeam || "Maidenhead Utd Galaxy";
+      state.setup.myTeam = state.setup.myTeam || (currentTeamCode === "SPITFIRES" ? "Woodley Utd Spitfires" : "My Team");
+      state.setup.oppTeam = state.setup.oppTeam || (currentTeamCode === "SPITFIRES" ? "Maidenhead Utd Galaxy" : "Opposition");
       state.setup.venue = state.setup.venue || "away";
       state.setup.ageGroup = state.setup.ageGroup || "U15-U16";
       state.setup.format = parseInt(state.setup.format) || 11;
@@ -700,13 +921,16 @@
       if (typeof state.setup.lockGK !== "boolean") state.setup.lockGK = true;
 
       state.squad = toArray(state.squad);
-      if (!state.squad.length) state.squad = JSON.parse(JSON.stringify(INITIAL_SQUAD));
+      if (!state.squad.length && currentTeamCode === "SPITFIRES") {
+        state.squad = JSON.parse(JSON.stringify(SPITFIRES_SQUAD));
+      }
       getActiveCoords();
 
       if (!state.match) state.match = {};
       const fmtCount = state.setup.format;
-      state.match.lineupIds = toArray(state.match.lineupIds);
-      if (state.match.lineupIds.length !== fmtCount) {
+      const validIds = new Set(state.squad.map(p => p.id));
+      state.match.lineupIds = toArray(state.match.lineupIds).filter(id => validIds.has(id));
+      if (state.squad.length > 0 && state.match.lineupIds.length !== Math.min(fmtCount, state.squad.length)) {
         const availIds = state.squad.filter(p => p.available).map(p => p.id);
         const merged = [...new Set([...state.match.lineupIds, ...availIds])];
         state.match.lineupIds = merged.slice(0, fmtCount);
@@ -740,12 +964,19 @@
     }
 
     function loadLocal() {
-      document.getElementById("team-code-label").textContent = currentTeamCode;
+      document.getElementById("header-team-code").textContent = currentTeamCode || "Setup";
+      if (!currentTeamCode) {
+        state = getBlankState();
+        return;
+      }
       const raw = localStorage.getItem(getStorageKey());
       if (raw) {
-        try { state = { ...state, ...JSON.parse(raw) }; } catch (e) {}
+        try { state = { ...getBlankState(), ...JSON.parse(raw) }; } catch (e) {}
+      } else {
+        state = getBlankState();
       }
       sanitizeState();
+      // Only merge legacy local storage if the active team is SPITFIRES
       if (currentTeamCode === "SPITFIRES") {
         LEGACY_KEYS.forEach(k => {
           try { const r = localStorage.getItem(k); if (r) mergeExternalData(JSON.parse(r)); } catch (e) {}
@@ -754,21 +985,33 @@
     }
 
     function persist(pushCloud = true) {
+      if (!currentTeamCode) return;
       state.updatedAt = Date.now();
       sanitizeState();
       localStorage.setItem(getStorageKey(), JSON.stringify(state));
-      if (pushCloud && rtdb) {
+      if (pushCloud && rtdb && getFirebasePath()) {
         setCloudStatus("syncing");
         const copy = JSON.parse(JSON.stringify(state));
         delete copy.undoStack;
         rtdb.ref(getFirebasePath()).set(copy)
           .then(() => setCloudStatus("online"))
           .catch(() => setCloudStatus("offline"));
+        // Update lightweight usage registry
+        rtdb.ref("team_registry/" + currentTeamCode).set({
+          teamCode: currentTeamCode,
+          teamName: state.setup.myTeam,
+          ageGroup: state.setup.ageGroup,
+          format: state.setup.format,
+          playerCount: state.squad.length,
+          matchesCount: state.history.length,
+          lastActiveDate: new Date().toLocaleDateString("en-GB"),
+          lastActiveAt: Date.now()
+        }).catch(() => {});
       }
     }
 
     function bindFirebaseTeamListener() {
-      if (!rtdb) return;
+      if (!rtdb || !getFirebasePath()) return;
       if (firebaseRef) firebaseRef.off();
       firebaseRef = rtdb.ref(getFirebasePath());
       firebaseRef.on("value", snap => {
@@ -777,7 +1020,7 @@
         const localHist = [...state.history];
         const localStats = JSON.parse(JSON.stringify(state.seasonStats));
         if ((remote.updatedAt || 0) > (state.updatedAt || 0)) {
-          state = { ...state, ...remote, undoStack: state.undoStack || [] };
+          state = { ...getBlankState(), ...remote, undoStack: state.undoStack || [] };
           sanitizeState();
           if (!state.history.length && localHist.length) state.history = localHist;
           if (!hasStatsActivity(state.seasonStats) && hasStatsActivity(localStats)) state.seasonStats = localStats;
@@ -804,39 +1047,26 @@
             }
           });
         }
-        bindFirebaseTeamListener();
+        if (currentTeamCode) bindFirebaseTeamListener();
       } catch (e) { setCloudStatus("offline"); }
     }
 
-    function switchTeamCodePrompt() {
-      const code = prompt("Enter Team Code to sync with your coaching staff (Leave as SPITFIRES for Woodley Utd Spitfires, or enter a new code for another team):", currentTeamCode);
-      if (!code) return;
-      const clean = code.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "") || "SPITFIRES";
-      if (clean === currentTeamCode) return;
-      currentTeamCode = clean;
-      localStorage.setItem("matchday_active_team_code", currentTeamCode);
-      state.updatedAt = 0;
-      state.history = [];
-      state.seasonStats = {};
-      loadLocal();
-      bindFirebaseTeamListener();
-      renderEverything();
-    }
-
-    function forceCloudPull() {
-      if (!rtdb) return;
+    function forceCloudPull(silent = false) {
+      if (!rtdb || !getFirebasePath()) return;
       setCloudStatus("syncing");
       rtdb.ref(getFirebasePath()).once("value", snap => {
         const remote = snap.val();
         if (remote) {
           const localHist = [...state.history], localStats = JSON.parse(JSON.stringify(state.seasonStats));
-          state = { ...state, ...remote };
+          state = { ...getBlankState(), ...remote };
           sanitizeState();
           if (!state.history.length && localHist.length) state.history = localHist;
           if (!hasStatsActivity(state.seasonStats) && hasStatsActivity(localStats)) state.seasonStats = localStats;
           localStorage.setItem(getStorageKey(), JSON.stringify(state));
           renderEverything();
-          alert("Cloud Sync Complete!");
+          if (!silent) alert(`Synced latest data for ${state.setup.myTeam} (${currentTeamCode})!`);
+        } else if (!silent) {
+          alert(`No existing cloud data found for code "${currentTeamCode}".`);
         }
         setCloudStatus("online");
       });
@@ -845,7 +1075,7 @@
     function setCloudStatus(mode) {
       const dot = document.getElementById("cloud-dot"), txt = document.getElementById("cloud-text");
       dot.className = "dot-indicator" + (mode === "online" ? " active" : mode === "syncing" ? " syncing" : "");
-      txt.textContent = mode === "online" ? "Synced" : mode === "syncing" ? "Sync..." : "Offline";
+      txt.textContent = mode === "online" ? "Sync" : mode === "syncing" ? "..." : "Local";
     }
 
     async function requestScreenWakeLock() {
@@ -853,7 +1083,6 @@
         try {
           wakeLockSentinel = await navigator.wakeLock.request("screen");
           document.getElementById("wake-dot").className = "dot-indicator active";
-          document.getElementById("wake-text").textContent = "Lock: On";
         } catch (e) {}
       }
     }
@@ -861,7 +1090,6 @@
       if (wakeLockSentinel) {
         await wakeLockSentinel.release(); wakeLockSentinel = null;
         document.getElementById("wake-dot").className = "dot-indicator";
-        document.getElementById("wake-text").textContent = "Lock: Off";
       } else requestScreenWakeLock();
     }
 
@@ -888,6 +1116,7 @@
     function getCurrentMinuteStr() { return Math.max(1, Math.ceil((state.match.elapsedSec || 0) / 60)) + "'"; }
 
     function startFirstHalf() {
+      if (!state.squad.length) return alert("Please add players to your Squad first!");
       pushUndo();
       state.match.status = "1H"; state.match.running = true; state.match.lastTickAt = Date.now();
       state.match.starterIds = [...state.match.lineupIds];
@@ -910,7 +1139,7 @@
       persist(); renderEverything();
     }
     function triggerFullTime() {
-      if (!confirm("Confirm Full Time? This will commit player minutes and stats to Season Totals and generate your Match Report.")) return;
+      if (!confirm("Confirm Full Time? This will commit player minutes and stats to Season Totals and generate your Team Match Report.")) return;
       state.match.running = false; state.match.status = "FT";
       const ftMin = Math.ceil(state.match.elapsedSec / 60) || (state.setup.halfDuration * 2);
       state.match.timeline.unshift({ min: `${ftMin}'`, text: "🏁 Full Time Whistle", type: "period" });
@@ -921,6 +1150,7 @@
     function adjustClock(secDelta) { state.match.elapsedSec = Math.max(0, (state.match.elapsedSec || 0) + secDelta); persist(); renderTopScoreboard(); }
 
     function renderTopScoreboard() {
+      document.getElementById("header-team-code").textContent = currentTeamCode || "Setup";
       const s = state.setup, m = state.match, isHome = s.venue === "home";
       document.getElementById("team-left").textContent = isHome ? s.myTeam : s.oppTeam;
       document.getElementById("team-right").textContent = isHome ? s.oppTeam : s.myTeam;
@@ -952,14 +1182,12 @@
 
     function renderMatchView() {
       sanitizeState();
-      const s = state.setup;
-      const eq = getEqualTimeMetrics();
+      const s = state.setup, eq = getEqualTimeMetrics();
       document.getElementById("match-formation-badge").textContent = `${s.format}v${s.format} • ${s.formation}`;
 
-      // Render Equal Play Bar
       const eqBox = document.getElementById("equal-advisor-box");
-      eqBox.style.display = s.equalPlay ? "block" : "none";
-      if (s.equalPlay) {
+      eqBox.style.display = (s.equalPlay && state.squad.length > 0) ? "block" : "none";
+      if (s.equalPlay && state.squad.length > 0) {
         document.getElementById("equal-summary-text").textContent = `⚖️ Equal Target: ${eq.outfieldTarget}m/player (${s.ageGroup} ${eq.totalGameMins}m • ${eq.availCount} Avail)`;
         document.getElementById("equal-floor-pill").textContent = `50% Floor: ${eq.floorMins}m`;
         const sugRow = document.getElementById("equal-suggestion-row");
@@ -968,44 +1196,42 @@
           const { subOn, subOff, onMins, offMins } = eq.suggestion;
           document.getElementById("equal-suggestion-text").textContent = `💡 Next Sub: ${subOn.name} (${onMins}m) ON for ${subOff.name} (${offMins}/${eq.outfieldTarget}m)`;
           document.getElementById("equal-swap-btn").onclick = () => executeQuickSuggestedSub(subOff.id, subOn.id);
-        } else {
-          sugRow.style.display = "none";
-        }
+        } else sugRow.style.display = "none";
       }
 
       const coords = getActiveCoords();
       const tokenContainer = document.getElementById("match-pitch-tokens");
       tokenContainer.innerHTML = "";
 
-      state.match.lineupIds.forEach((pid, idx) => {
-        const player = state.squad.find(p => p.id === pid) || { id: pid, name: "Empty", num: "-" };
-        const slot = coords[idx] || { role: "SUB", x: 50, y: 50 };
-        const mins = getPlayerMatchMins(pid);
-        const target = eq.getTargetForPlayer(pid);
-        const cInfo = (state.match.cards && state.match.cards[pid]) || { yellow: 0, red: 0 };
-        const cardBadge = cInfo.red > 0 ? "🟥" : cInfo.yellow > 0 ? "🟨" : "";
+      if (state.squad.length === 0) {
+        tokenContainer.innerHTML = `<div class="pitch-empty-msg"><div>👥 No Squad Players Added Yet</div><button class="btn-sky" onclick="switchMainTab('view-squad')">+ Add Squad Roster</button></div>`;
+      } else {
+        state.match.lineupIds.forEach((pid, idx) => {
+          const player = state.squad.find(p => p.id === pid) || { id: pid, name: "Empty", num: "-" };
+          const slot = coords[idx] || { role: "SUB", x: 50, y: 50 };
+          const mins = getPlayerMatchMins(pid), target = eq.getTargetForPlayer(pid);
+          const cInfo = (state.match.cards && state.match.cards[pid]) || { yellow: 0, red: 0 };
+          const cardBadge = cInfo.red > 0 ? "🟥" : cInfo.yellow > 0 ? "🟨" : "";
+          const overCap = s.equalPlay && idx > 0 && mins >= target;
+          const metFloor = s.equalPlay && mins >= eq.floorMins && !overCap;
+          const minLabel = s.equalPlay ? `${mins}/${target}'` : `${mins}'`;
 
-        const overCap = s.equalPlay && idx > 0 && mins >= target;
-        const metFloor = s.equalPlay && mins >= eq.floorMins && !overCap;
-        const minLabel = s.equalPlay ? `${mins}/${target}'` : `${mins}'`;
-
-        const el = document.createElement("div");
-        el.className = "pitch-token";
-        el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
-        el.innerHTML = `<div class="token-disc ${overCap ? 'cap-reached' : ''}">${player.num}<span class="token-role-pill">${slot.role}</span><span class="token-min-pill ${overCap ? 'over-cap' : metFloor ? 'met-floor' : ''}">${minLabel}</span>${cardBadge ? `<span class="token-card-flag">${cardBadge}</span>` : ""}</div><div class="token-label">${player.name}</div>`;
-        bindTokenDragAndTap(el, idx, player.id, "match-pitch-board", () => openQuickPlayerAction(player.id));
-        tokenContainer.appendChild(el);
-      });
+          const el = document.createElement("div");
+          el.className = "pitch-token";
+          el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
+          el.innerHTML = `<div class="token-disc ${overCap ? 'cap-reached' : ''}">${player.num}<span class="token-role-pill">${slot.role}</span><span class="token-min-pill ${overCap ? 'over-cap' : metFloor ? 'met-floor' : ''}">${minLabel}</span>${cardBadge ? `<span class="token-card-flag">${cardBadge}</span>` : ""}</div><div class="token-label">${player.name}</div>`;
+          bindTokenDragAndTap(el, idx, player.id, "match-pitch-board", () => openQuickPlayerAction(player.id));
+          tokenContainer.appendChild(el);
+        });
+      }
 
       const benchPlayers = state.squad.filter(p => p.available && !state.match.lineupIds.includes(p.id)).sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
       document.getElementById("match-bench-count").textContent = `${benchPlayers.length} Substitutes`;
       const benchGrid = document.getElementById("match-bench-grid");
       benchGrid.innerHTML = "";
       benchPlayers.forEach(p => {
-        const mins = getPlayerMatchMins(p.id);
-        const target = eq.outfieldTarget;
-        const deficit = Math.max(0, target - mins);
-        const pct = Math.min(100, Math.round((mins / target) * 100));
+        const mins = getPlayerMatchMins(p.id), target = eq.outfieldTarget;
+        const deficit = Math.max(0, target - mins), pct = Math.min(100, Math.round((mins / target) * 100));
         const card = document.createElement("div");
         card.className = "bench-card";
         card.onclick = () => openSubModal(null, p.id);
@@ -1038,13 +1264,8 @@
     function renderLineupView() {
       sanitizeState();
       const s = state.setup;
-      document.getElementById("input-my-team").value = s.myTeam;
       document.getElementById("input-opp-team").value = s.oppTeam;
-      document.getElementById("select-age-group").value = s.ageGroup || "U15-U16";
-      document.getElementById("select-format").value = String(s.format || 11);
-      document.getElementById("input-half-mins").value = s.halfDuration;
-      document.getElementById("chk-equal-mode").checked = s.equalPlay;
-      document.getElementById("chk-lock-gk").checked = s.lockGK;
+      document.getElementById("lineup-rules-pill").textContent = `⚙️ ${s.ageGroup} • ${s.format}v${s.format} • ${s.halfDuration}m H`;
       populateFormationDropdown();
 
       document.getElementById("seg-home").classList.toggle("active", s.venue === "home");
@@ -1055,17 +1276,21 @@
       const container = document.getElementById("lineup-pitch-tokens");
       container.innerHTML = "";
 
-      state.match.lineupIds.forEach((pid, idx) => {
-        const player = state.squad.find(p => p.id === pid) || { id: pid, name: "Empty", num: "-" };
-        const slot = coords[idx] || { role: "XI", x: 50, y: 50 };
-        const isSel = selectedSwapTarget && selectedSwapTarget.type === "pitch" && selectedSwapTarget.slotIndex === idx;
-        const el = document.createElement("div");
-        el.className = "pitch-token" + (isSel ? " selected" : "");
-        el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
-        el.innerHTML = `<div class="token-disc">${player.num}<span class="token-role-pill">${slot.role}</span></div><div class="token-label">${player.name}</div>`;
-        bindTokenDragAndTap(el, idx, pid, "lineup-pitch-board", () => handleLineupSwapTap({ type: "pitch", slotIndex: idx, playerId: pid }));
-        container.appendChild(el);
-      });
+      if (state.squad.length === 0) {
+        container.innerHTML = `<div class="pitch-empty-msg"><div>👥 Add your squad players to set up your Starting Lineup</div><button class="btn-sky" onclick="switchMainTab('view-squad')">+ Go to Squad Roster</button></div>`;
+      } else {
+        state.match.lineupIds.forEach((pid, idx) => {
+          const player = state.squad.find(p => p.id === pid) || { id: pid, name: "Empty", num: "-" };
+          const slot = coords[idx] || { role: "XI", x: 50, y: 50 };
+          const isSel = selectedSwapTarget && selectedSwapTarget.type === "pitch" && selectedSwapTarget.slotIndex === idx;
+          const el = document.createElement("div");
+          el.className = "pitch-token" + (isSel ? " selected" : "");
+          el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
+          el.innerHTML = `<div class="token-disc">${player.num}<span class="token-role-pill">${slot.role}</span></div><div class="token-label">${player.name}</div>`;
+          bindTokenDragAndTap(el, idx, pid, "lineup-pitch-board", () => handleLineupSwapTap({ type: "pitch", slotIndex: idx, playerId: pid }));
+          container.appendChild(el);
+        });
+      }
 
       const benchPlayers = state.squad.filter(p => p.available && !state.match.lineupIds.includes(p.id));
       const benchGrid = document.getElementById("lineup-bench-grid");
@@ -1078,38 +1303,6 @@
         card.innerHTML = `<div class="bench-top-row"><div class="bench-left"><div class="num-circle">${p.num}</div><div class="bench-name">${p.name}</div></div><span class="mins-tag">SUB</span></div>`;
         benchGrid.appendChild(card);
       });
-    }
-
-    function applyAgeGroupPreset(ageVal) {
-      const preset = AGE_PRESETS[ageVal];
-      if (!preset) return;
-      state.setup.ageGroup = ageVal;
-      state.setup.format = preset.format;
-      state.setup.halfDuration = preset.halfDuration;
-      state.setup.formation = preset.defaultFormation;
-      const fmtDict = FORMATIONS_BY_FORMAT[preset.format];
-      state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[preset.defaultFormation]));
-      sanitizeState();
-      persist();
-      renderEverything();
-    }
-
-    function changeGameFormat(fmtVal) {
-      const fmt = parseInt(fmtVal) || 11;
-      state.setup.format = fmt;
-      const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
-      state.setup.formation = Object.keys(fmtDict)[0];
-      state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[state.setup.formation]));
-      sanitizeState();
-      persist();
-      renderEverything();
-    }
-
-    function toggleEqualSettings() {
-      state.setup.equalPlay = document.getElementById("chk-equal-mode").checked;
-      state.setup.lockGK = document.getElementById("chk-lock-gk").checked;
-      persist();
-      renderEverything();
     }
 
     function handleLineupSwapTap(target) {
@@ -1134,10 +1327,8 @@
       persist(); renderLineupView(); renderMatchView();
     }
 
-    function saveSetupConfig() {
-      state.setup.myTeam = document.getElementById("input-my-team").value.trim() || "Woodley Utd Spitfires";
+    function saveFixtureConfig() {
       state.setup.oppTeam = document.getElementById("input-opp-team").value.trim() || "Opposition";
-      state.setup.halfDuration = parseInt(document.getElementById("input-half-mins").value) || 40;
       persist(); renderEverything();
     }
     function setVenue(v) { state.setup.venue = v; persist(); renderLineupView(); renderTopScoreboard(); }
@@ -1223,7 +1414,6 @@
       const offSel = document.getElementById("sub-off-id"), onSel = document.getElementById("sub-on-id");
       const eq = getEqualTimeMetrics();
       offSel.innerHTML = ""; onSel.innerHTML = "";
-      // Sort pitch players by most minutes played if no preOffId was tapped
       const pitchList = state.match.lineupIds.map(pid => state.squad.find(x => x.id === pid)).filter(Boolean);
       if (!preOffId) pitchList.sort((a, b) => getPlayerMatchMins(b.id) - getPlayerMatchMins(a.id));
       pitchList.forEach(p => {
@@ -1275,12 +1465,16 @@
       document.getElementById("squad-count-label").textContent = `${availCount}/${state.squad.length} Available`;
       const rList = document.getElementById("squad-roster-list");
       rList.innerHTML = "";
-      state.squad.forEach(p => {
-        const row = document.createElement("div");
-        row.className = "roster-row" + (!p.available ? " unavailable" : "");
-        row.innerHTML = `<div class="bench-left"><div class="num-circle">${p.num}</div><div class="bench-name">${p.name}</div></div><div class="roster-actions"><button class="btn-avail ${p.available ? 'yes' : 'no'}" onclick="toggleAvailability('${p.id}')">${p.available ? '✅ Available' : '❌ Absent'}</button><button class="btn-icon-sq" onclick="editPlayerPrompt('${p.id}')">✏️</button><button class="btn-icon-sq" onclick="removePlayer('${p.id}')">🗑️</button></div>`;
-        rList.appendChild(row);
-      });
+      if (!state.squad.length) {
+        rList.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:14px;font-weight:700;">Your squad list is empty. Enter a shirt number and first name above to add your players!</div>`;
+      } else {
+        state.squad.forEach(p => {
+          const row = document.createElement("div");
+          row.className = "roster-row" + (!p.available ? " unavailable" : "");
+          row.innerHTML = `<div class="bench-left"><div class="num-circle">${p.num}</div><div class="bench-name">${p.name}</div></div><div class="roster-actions"><button class="btn-avail ${p.available ? 'yes' : 'no'}" onclick="toggleAvailability('${p.id}')">${p.available ? '✅ Available' : '❌ Absent'}</button><button class="btn-icon-sq" onclick="editPlayerPrompt('${p.id}')">✏️</button><button class="btn-icon-sq" onclick="removePlayer('${p.id}')">🗑️</button></div>`;
+          rList.appendChild(row);
+        });
+      }
 
       const tbody = document.getElementById("season-stats-tbody");
       tbody.innerHTML = "";
@@ -1309,6 +1503,7 @@
 
     function toggleAvailability(pid) { const p = state.squad.find(x => x.id === pid); if (p) p.available = !p.available; persist(); renderEverything(); }
     function addNewPlayer() {
+      if (!currentTeamCode) return openModal("modal-welcome");
       const numVal = parseInt(document.getElementById("new-player-num").value) || (state.squad.length + 1);
       const nameVal = document.getElementById("new-player-name").value.trim();
       if (!nameVal) return alert("Please enter a player first name.");
@@ -1352,7 +1547,7 @@
         }
       });
 
-      let report = `⚽ *MATCHDAY REPORT (${s.ageGroup} • ${s.format}v${s.format})*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n📋 *MATCH TIMELINE:*\n`;
+      let report = `⚽ *${s.myTeam.toUpperCase()} MATCH REPORT (${s.ageGroup} • ${s.format}v${s.format})*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n📋 *MATCH TIMELINE:*\n`;
       [...m.timeline].reverse().forEach(e => { report += `• ${e.min} ${e.text}\n`; });
       report += `\n⏱️ *PLAYER MINUTES (Equal Target: ${eq.outfieldTarget}m):*\n`;
       state.squad.forEach(p => {
@@ -1361,22 +1556,23 @@
           report += `• #${p.num} ${p.name}: ${d.mins}' (${d.starts ? 'Start' : 'Sub'})${d.goals ? ` ⚽x${d.goals}` : ''}${d.assists ? ` 🎯x${d.assists}` : ''}\n`;
         }
       });
-      state.history.unshift({ id: "match_" + Date.now(), date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas });
+      state.history.unshift({ id: "match_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas });
     }
 
     function rebuildMatchFromSeasonStats() {
       sanitizeState();
+      if (!state.squad.length) return alert("No squad players found.");
       const s = state.setup, isHome = s.venue === "home";
       const homeName = isHome ? s.myTeam : s.oppTeam, awayName = isHome ? s.oppTeam : s.myTeam;
       let totalGoalsUs = 0;
       state.squad.forEach(p => { totalGoalsUs += (state.seasonStats[p.id]?.goals || 0); });
-      const oppScoreStr = prompt(`Rebuilding Match Report for ${homeName} vs ${awayName}.\n\nSeason Stats show our team scored ${totalGoalsUs} goal(s).\nHow many goals did ${s.oppTeam} score?`, "0");
+      const oppScoreStr = prompt(`Rebuilding Match Report for ${homeName} vs ${awayName}.\n\nSeason Stats show ${s.myTeam} scored ${totalGoalsUs} goal(s).\nHow many goals did ${s.oppTeam} score?`, "0");
       if (oppScoreStr === null) return;
       const oppGoals = parseInt(oppScoreStr) || 0;
       const homeScore = isHome ? totalGoalsUs : oppGoals, awayScore = isHome ? oppGoals : totalGoalsUs;
       const dateStr = new Date().toLocaleDateString("en-GB");
 
-      let report = `⚽ *MATCHDAY REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n⚽ *GOALS & ASSISTS:*\n`;
+      let report = `⚽ *${s.myTeam.toUpperCase()} MATCH REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n⚽ *GOALS & ASSISTS:*\n`;
       let hasG = false;
       state.squad.forEach(p => {
         const st = state.seasonStats[p.id];
@@ -1389,11 +1585,12 @@
         if (st && (st.apps > 0 || st.mins > 0)) report += `• #${p.num} ${p.name}: ${st.mins}' (${st.starts > 0 ? 'Start' : 'Sub'})${st.goals ? ` ⚽x${st.goals}` : ''}${st.assists ? ` 🎯x${st.assists}` : ''}\n`;
       });
 
-      state.history.unshift({ id: "match_rebuilt_" + Date.now(), date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: null });
+      state.history.unshift({ id: "match_rebuilt_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: null });
       persist(true); renderHistoryView(); openReportModal(report);
     }
 
     function openManualMatchModal() {
+      if (!state.squad.length) return alert("Please add players to your Squad first!");
       document.getElementById("past-date").value = new Date().toISOString().split("T")[0];
       document.getElementById("past-opp").value = "";
       document.getElementById("past-score-us").value = 0;
@@ -1427,7 +1624,7 @@
 
       sanitizeState();
       const deltas = {};
-      let report = `⚽ *MATCHDAY REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr}\n\n⏱️ *PLAYER BREAKDOWN:*\n`;
+      let report = `⚽ *${state.setup.myTeam.toUpperCase()} MATCH REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr}\n\n⏱️ *PLAYER BREAKDOWN:*\n`;
       state.squad.forEach(p => {
         const role = document.getElementById(`past_role_${p.id}`).value;
         if (role !== "dnp") {
@@ -1443,7 +1640,7 @@
           report += `• #${p.num} ${p.name}: ${mins}' (${role === 'start' ? 'Start' : 'Sub'})${goals ? ` ⚽x${goals}` : ''}${assists ? ` 🎯x${assists}` : ''}\n`;
         }
       });
-      state.history.unshift({ id: "match_" + Date.now(), date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: commitStats ? deltas : null });
+      state.history.unshift({ id: "match_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: commitStats ? deltas : null });
       closeModal("modal-past-match"); persist(true); renderEverything();
     }
 
@@ -1451,7 +1648,7 @@
       sanitizeState();
       const list = document.getElementById("history-archive-list");
       if (!state.history.length) {
-        list.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:12px;font-weight:700;">No archived matches in list yet. Tap "+ Log Past Match" above or "Rebuild Match Report" to add games!</div>`;
+        list.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:12px;font-weight:700;">No archived match reports for ${state.setup.myTeam} yet.</div>`;
         return;
       }
       list.innerHTML = "";
@@ -1492,11 +1689,16 @@
       try { renderHistoryView(); } catch (e) {}
     }
 
+    // INITIALIZE APP
+    currentTeamCode = detectInitialTeamCode();
     loadLocal();
     initFirebaseSync();
     startSecondLoop();
     requestScreenWakeLock();
     renderEverything();
+    if (!currentTeamCode) {
+      openModal("modal-welcome");
+    }
   </script>
 </body>
 </html>
