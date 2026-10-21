@@ -61,11 +61,22 @@
     .view-section.active { display: block; }
     .day-card { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 14px; padding: 14px; margin-bottom: 14px; box-shadow: 0 3px 0 rgba(15,23,42,0.12); }
     .day-card-title { font-size: 0.88rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    /* SUB TIMER & EQUAL PLAY BAR */
     .equal-bar { background: #0f172a; color: #fff; border: 2px solid var(--navy-700); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; }
+    .sub-timer-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #334155; flex-wrap: wrap; }
+    .sub-timer-row.alarm-ringing { background: #dc2626; margin: -10px -12px 8px; padding: 10px 12px; border-radius: 10px 10px 0 0; border-bottom: 2px solid #fca5a5; animation: pulseAlarm 0.8s infinite alternate; }
+    @keyframes pulseAlarm { from { background-color: #dc2626; } to { background-color: #991b1b; } }
+    .sub-timer-left { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 0.85rem; }
+    .sub-countdown-digits { font-family: monospace; font-size: 1.25rem; font-weight: 900; background: #06101e; padding: 3px 8px; border-radius: 6px; border: 1px solid #475569; color: #38bdf8; }
+    .sub-timer-row.alarm-ringing .sub-countdown-digits { background: #fff; color: #dc2626; border-color: #fff; }
+    .sub-timer-controls { display: flex; gap: 5px; align-items: center; }
+    .btn-sub-ctrl { background: #1e293b; color: #f8fafc; border: 1.5px solid #475569; border-radius: 7px; padding: 5px 9px; font-size: 0.74rem; font-weight: 900; cursor: pointer; min-height: 34px; }
+    .sub-timer-row.alarm-ringing .btn-sub-ctrl { background: #0f172a; border-color: #fff; }
     .equal-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.78rem; font-weight: 800; }
     .equal-target-pill { background: var(--sky-token); color: var(--navy-950); font-weight: 900; padding: 3px 8px; border-radius: 6px; font-size: 0.74rem; }
     .advisor-suggestion { margin-top: 8px; padding-top: 8px; border-top: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: #fef08a; }
     .btn-quick-swap { background: var(--green-bright); color: #fff; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 6px 10px; font-weight: 900; font-size: 0.76rem; cursor: pointer; flex-shrink: 0; min-height: 38px; }
+    /* PITCH BOARD */
     .pitch-wrapper { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 14px; padding: 8px; margin-bottom: 12px; box-shadow: 0 3px 0 rgba(15,23,42,0.12); }
     .pitch-board { position: relative; width: 100%; height: 430px; background: repeating-linear-gradient(0deg, var(--pitch-dark) 0px, var(--pitch-dark) 36px, var(--pitch-light) 36px, var(--pitch-light) 72px); border: 2.5px solid #fff; border-radius: 10px; overflow: hidden; }
     .pitch-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -150,7 +161,7 @@
   <!-- TOP COCKPIT HEADER -->
   <header class="top-cockpit">
     <div class="app-bar">
-      <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.65rem;color:#72c2eb;">v7.1</small></span></div>
+      <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.65rem;color:#72c2eb;">v7.2</small></span></div>
       <div class="header-pills">
         <button class="status-pill" onclick="forceCloudPull()"><span class="dot-indicator active" id="cloud-dot"></span><span id="cloud-text">Sync</span></button>
         <button class="status-pill" onclick="toggleWakeLock()"><span class="dot-indicator active" id="wake-dot"></span><span id="wake-text">Lock</span></button>
@@ -178,7 +189,20 @@
   <!-- TAB 1: MATCH COCKPIT -->
   <main id="view-match" class="view-section active">
     <div class="equal-bar" id="equal-advisor-box">
-      <div class="equal-top">
+      <!-- SUB TIMER & ALARM STRIP -->
+      <div class="sub-timer-row" id="sub-timer-strip">
+        <div class="sub-timer-left">
+          <span id="sub-timer-label">⏲️ Sub Timer (8m):</span>
+          <span class="sub-countdown-digits" id="sub-timer-digits">08:00</span>
+        </div>
+        <div class="sub-timer-controls">
+          <button class="btn-sub-ctrl" onclick="cycleSubIntervalQuick()" title="Change Sub Interval">⚙️ Interval</button>
+          <button class="btn-sub-ctrl" onclick="snoozeSubTimer(120)" id="btn-sub-snooze" style="display:none;">💤 +2m</button>
+          <button class="btn-sub-ctrl" onclick="resetSubTimerManual()">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="equal-top" id="equal-top-row">
         <span id="equal-summary-text">⚖️ Equal Play Target</span>
         <span class="equal-target-pill" id="equal-floor-pill">50% Floor</span>
       </div>
@@ -402,9 +426,14 @@
           <input type="number" id="set-half-mins" class="day-input" value="40" min="5" max="60">
         </div>
         <div class="field-group">
-          <label class="field-label">Team Sync Code</label>
-          <input type="text" id="set-team-code" class="day-input" placeholder="Auto-generated" style="text-transform:uppercase;">
+          <label class="field-label">Sub Alarm Interval (Mins, 0 = Off)</label>
+          <input type="number" id="set-sub-interval" class="day-input" value="8" min="0" max="45">
         </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Team Sync Code</label>
+        <input type="text" id="set-team-code" class="day-input" placeholder="Auto-generated" style="text-transform:uppercase;">
       </div>
 
       <div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:10px;margin-bottom:12px;display:grid;gap:8px;">
@@ -593,13 +622,13 @@
     const LEGACY_KEYS = ["spitfires_matchday_v3", "matchday_coaching_app_v2", "matchday_coaching_app_v1"];
     let currentTeamCode = "";
     let rtdb = null, firebaseRef = null, selectedSwapTarget = null, activeReportText = "", wakeLockSentinel = null;
-    let adminTapCount = 0, adminTapTimer = null;
+    let adminTapCount = 0, adminTapTimer = null, audioCtx = null;
 
     function getBlankState() {
       return {
-        setup: { myTeam: "My Team", oppTeam: "Opposition", venue: "home", ageGroup: "U15-U16", format: 11, halfDuration: 40, formation: "4-3-3", equalPlay: true, lockGK: true, customCoords: null },
+        setup: { myTeam: "My Team", oppTeam: "Opposition", venue: "home", ageGroup: "U15-U16", format: 11, halfDuration: 40, formation: "4-3-3", equalPlay: true, lockGK: true, subIntervalMins: 8, customCoords: null },
         squad: [],
-        match: { status: "PRE", running: false, elapsedSec: 0, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: [], starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] },
+        match: { status: "PRE", running: false, elapsedSec: 0, subTimerRemSec: 480, subAlarmActive: false, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: [], starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] },
         seasonStats: {},
         history: [],
         undoStack: [],
@@ -608,6 +637,57 @@
     }
 
     let state = getBlankState();
+
+    // WEB AUDIO API PITCHSIDE CHIME + VIBRATION ALARM
+    function playSubAlarmSound() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const now = audioCtx.currentTime;
+        [0, 0.22, 0.44].forEach((offset, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(i === 2 ? 1318.5 : 987.77, now + offset); // B5 -> B5 -> E6 chime
+          gain.gain.setValueAtTime(0.35, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.18);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.19);
+        });
+      } catch (e) {}
+      if (navigator.vibrate) {
+        try { navigator.vibrate([350, 150, 350, 150, 500]); } catch (e) {}
+      }
+    }
+
+    function resetSubTimerManual() {
+      const iv = parseInt(state.setup.subIntervalMins) || 0;
+      state.match.subTimerRemSec = iv * 60;
+      state.match.subAlarmActive = false;
+      persist();
+      renderMatchView();
+    }
+
+    function snoozeSubTimer(sec) {
+      state.match.subTimerRemSec = (state.match.subTimerRemSec || 0) + sec;
+      state.match.subAlarmActive = false;
+      persist();
+      renderMatchView();
+    }
+
+    function cycleSubIntervalQuick() {
+      const options = [0, 5, 8, 10, 12, 15];
+      const cur = parseInt(state.setup.subIntervalMins) || 0;
+      const nextIdx = (options.indexOf(cur) + 1) % options.length;
+      state.setup.subIntervalMins = options[nextIdx];
+      state.match.subTimerRemSec = state.setup.subIntervalMins * 60;
+      state.match.subAlarmActive = false;
+      if (state.setup.subIntervalMins > 0) playSubAlarmSound(); // Unlocks audio context & confirms
+      persist();
+      renderMatchView();
+    }
 
     function detectInitialTeamCode() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -676,6 +756,7 @@
       document.getElementById("set-age-group").value = "U15-U16";
       document.getElementById("set-format").value = "11";
       document.getElementById("set-half-mins").value = "40";
+      document.getElementById("set-sub-interval").value = "8";
       document.getElementById("set-team-code").value = "";
       document.getElementById("set-equal-mode").checked = true;
       document.getElementById("set-lock-gk").checked = true;
@@ -688,6 +769,7 @@
       document.getElementById("set-age-group").value = s.ageGroup || "U15-U16";
       document.getElementById("set-format").value = String(s.format || 11);
       document.getElementById("set-half-mins").value = s.halfDuration || 40;
+      document.getElementById("set-sub-interval").value = s.subIntervalMins !== undefined ? s.subIntervalMins : 8;
       document.getElementById("set-team-code").value = currentTeamCode || "";
       document.getElementById("set-equal-mode").checked = s.equalPlay !== false;
       document.getElementById("set-lock-gk").checked = s.lockGK !== false;
@@ -706,6 +788,7 @@
       const ageGroup = document.getElementById("set-age-group").value;
       const fmt = parseInt(document.getElementById("set-format").value) || 11;
       const halfMins = parseInt(document.getElementById("set-half-mins").value) || 40;
+      const subIv = Math.max(0, parseInt(document.getElementById("set-sub-interval").value) || 0);
       let codeInput = document.getElementById("set-team-code").value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
 
       if (!codeInput) {
@@ -715,6 +798,7 @@
 
       const isSwitchingTeam = codeInput !== currentTeamCode;
       const prevFormat = state.setup.format;
+      const prevSubIv = state.setup.subIntervalMins;
 
       if (isSwitchingTeam) {
         currentTeamCode = codeInput;
@@ -731,8 +815,14 @@
       state.setup.ageGroup = ageGroup;
       state.setup.format = fmt;
       state.setup.halfDuration = halfMins;
+      state.setup.subIntervalMins = subIv;
       state.setup.equalPlay = document.getElementById("set-equal-mode").checked;
       state.setup.lockGK = document.getElementById("set-lock-gk").checked;
+
+      if (prevSubIv !== subIv || state.match.status === "PRE") {
+        state.match.subTimerRemSec = subIv * 60;
+        state.match.subAlarmActive = false;
+      }
 
       if (prevFormat !== fmt || !state.setup.customCoords) {
         const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
@@ -834,7 +924,7 @@
       if (benchPlayers.length > 0 && pitchCandidates.length > 0) {
         const subOn = benchPlayers[0], subOff = pitchCandidates[0];
         const onMins = getPlayerMatchMins(subOn.id), offMins = getPlayerMatchMins(subOff.id);
-        if (offMins - onMins >= 4 || offMins >= outfieldTarget) {
+        if (offMins - onMins >= 4 || offMins >= outfieldTarget || state.match.subAlarmActive) {
           suggestion = { subOn, subOff, onMins, offMins };
         }
       }
@@ -848,6 +938,12 @@
       if (!state.match.appearedIds.includes(onId)) state.match.appearedIds.push(onId);
       const pOff = state.squad.find(p => p.id === offId), pOn = state.squad.find(p => p.id === onId);
       state.match.timeline.unshift({ min: getCurrentMinuteStr(), type: "sub", text: `🔄 SUB: ${pOn ? pOn.name : 'Sub'} ON for ${pOff ? pOff.name : 'Player'}` });
+      // Auto-reset sub timer on substitution
+      const iv = parseInt(state.setup.subIntervalMins) || 0;
+      if (iv > 0) {
+        state.match.subTimerRemSec = iv * 60;
+        state.match.subAlarmActive = false;
+      }
       persist(); renderEverything();
     }
 
@@ -924,6 +1020,7 @@
       state.setup.format = parseInt(state.setup.format) || 11;
       state.setup.halfDuration = parseInt(state.setup.halfDuration) || 40;
       state.setup.formation = state.setup.formation || "4-3-3";
+      if (state.setup.subIntervalMins === undefined) state.setup.subIntervalMins = 8;
       if (typeof state.setup.equalPlay !== "boolean") state.setup.equalPlay = true;
       if (typeof state.setup.lockGK !== "boolean") state.setup.lockGK = true;
 
@@ -934,6 +1031,9 @@
       getActiveCoords();
 
       if (!state.match) state.match = {};
+      if (state.match.subTimerRemSec === undefined) {
+        state.match.subTimerRemSec = (parseInt(state.setup.subIntervalMins) || 8) * 60;
+      }
       const fmtCount = state.setup.format;
       const validIds = new Set(state.squad.map(p => p.id));
       state.match.lineupIds = toArray(state.match.lineupIds).filter(id => validIds.has(id));
@@ -1110,6 +1210,21 @@
               state.match.playerSeconds[pid] = (state.match.playerSeconds[pid] || 0) + delta;
               if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid);
             });
+
+            // Sub Timer Countdown Logic
+            const ivMins = parseInt(state.setup.subIntervalMins) || 0;
+            if (ivMins > 0) {
+              state.match.subTimerRemSec = Math.max(0, (state.match.subTimerRemSec || 0) - delta);
+              if (state.match.subTimerRemSec === 0) {
+                if (!state.match.subAlarmActive) {
+                  state.match.subAlarmActive = true;
+                  playSubAlarmSound();
+                } else if (state.match.elapsedSec % 10 === 0) {
+                  playSubAlarmSound(); // Repeat alert every 10s until sub made or reset
+                }
+              }
+            }
+
             renderTopScoreboard();
             renderMatchView();
           }
@@ -1125,6 +1240,8 @@
       pushUndo();
       state.match.status = "1H"; state.match.running = true; state.match.lastTickAt = Date.now();
       state.match.starterIds = [...state.match.lineupIds];
+      const iv = parseInt(state.setup.subIntervalMins) || 0;
+      if (iv > 0) { state.match.subTimerRemSec = iv * 60; state.match.subAlarmActive = false; }
       state.match.lineupIds.forEach(pid => { if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid); });
       state.match.timeline.unshift({ min: "1'", text: "⏱️ Kickoff — 1st Half Started", type: "period" });
       persist(); renderEverything();
@@ -1133,19 +1250,22 @@
     function triggerHalfTime() {
       pushUndo();
       state.match.running = false; state.match.status = "HT"; state.match.elapsedSec = state.setup.halfDuration * 60;
+      state.match.subAlarmActive = false;
       state.match.timeline.unshift({ min: `${state.setup.halfDuration}'`, text: "⏸️ Half Time Whistle", type: "period" });
       persist(); renderEverything();
     }
     function startSecondHalf() {
       pushUndo();
       state.match.status = "2H"; state.match.running = true; state.match.lastTickAt = Date.now();
+      const iv = parseInt(state.setup.subIntervalMins) || 0;
+      if (iv > 0) { state.match.subTimerRemSec = iv * 60; state.match.subAlarmActive = false; }
       state.match.lineupIds.forEach(pid => { if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid); });
       state.match.timeline.unshift({ min: `${state.setup.halfDuration + 1}'`, text: "▶️ Kickoff — 2nd Half Started", type: "period" });
       persist(); renderEverything();
     }
     function triggerFullTime() {
       if (!confirm("Confirm Full Time? This will commit player minutes and stats to Season Totals and generate your Team Match Report.")) return;
-      state.match.running = false; state.match.status = "FT";
+      state.match.running = false; state.match.status = "FT"; state.match.subAlarmActive = false;
       const ftMin = Math.ceil(state.match.elapsedSec / 60) || (state.setup.halfDuration * 2);
       state.match.timeline.unshift({ min: `${ftMin}'`, text: "🏁 Full Time Whistle", type: "period" });
       commitMatchToSeasonAndArchive();
@@ -1187,21 +1307,54 @@
 
     function renderMatchView() {
       sanitizeState();
-      const s = state.setup, eq = getEqualTimeMetrics();
+      const s = state.setup, m = state.match, eq = getEqualTimeMetrics();
       document.getElementById("match-formation-badge").textContent = `${s.format}v${s.format} • ${s.formation}`;
 
       const eqBox = document.getElementById("equal-advisor-box");
-      eqBox.style.display = (s.equalPlay && state.squad.length > 0) ? "block" : "none";
+      const ivMins = parseInt(s.subIntervalMins) || 0;
+      eqBox.style.display = ((s.equalPlay || ivMins > 0) && state.squad.length > 0) ? "block" : "none";
+
+      // Render Sub Timer Row
+      const subStrip = document.getElementById("sub-timer-strip");
+      const subLabel = document.getElementById("sub-timer-label");
+      const subDigits = document.getElementById("sub-timer-digits");
+      const snoozeBtn = document.getElementById("btn-sub-snooze");
+
+      if (ivMins > 0) {
+        const rem = Math.max(0, m.subTimerRemSec || 0);
+        const rM = Math.floor(rem / 60), rS = rem % 60;
+        subDigits.textContent = `${pad(rM)}:${pad(rS)}`;
+        if (m.subAlarmActive) {
+          subStrip.classList.add("alarm-ringing");
+          subLabel.textContent = `🔔 SUB WINDOW DUE (${ivMins}m)!`;
+          snoozeBtn.style.display = "inline-block";
+        } else {
+          subStrip.classList.remove("alarm-ringing");
+          subLabel.textContent = `⏲️ Next Sub (${ivMins}m):`;
+          snoozeBtn.style.display = "none";
+        }
+      } else {
+        subStrip.classList.remove("alarm-ringing");
+        subLabel.textContent = `⏲️ Sub Timer: OFF`;
+        subDigits.textContent = `--:--`;
+        snoozeBtn.style.display = "none";
+      }
+
+      const eqTopRow = document.getElementById("equal-top-row");
+      const sugRow = document.getElementById("equal-suggestion-row");
       if (s.equalPlay && state.squad.length > 0) {
+        eqTopRow.style.display = "flex";
         document.getElementById("equal-summary-text").textContent = `⚖️ Equal Target: ${eq.outfieldTarget}m/player (${s.ageGroup} ${eq.totalGameMins}m • ${eq.availCount} Avail)`;
         document.getElementById("equal-floor-pill").textContent = `50% Floor: ${eq.floorMins}m`;
-        const sugRow = document.getElementById("equal-suggestion-row");
         if (eq.suggestion) {
           sugRow.style.display = "flex";
           const { subOn, subOff, onMins, offMins } = eq.suggestion;
           document.getElementById("equal-suggestion-text").textContent = `💡 Next Sub: ${subOn.name} (${onMins}m) ON for ${subOff.name} (${offMins}/${eq.outfieldTarget}m)`;
           document.getElementById("equal-swap-btn").onclick = () => executeQuickSuggestedSub(subOff.id, subOn.id);
         } else sugRow.style.display = "none";
+      } else {
+        eqTopRow.style.display = "none";
+        sugRow.style.display = "none";
       }
 
       const coords = getActiveCoords();
@@ -1358,7 +1511,8 @@
     function resetMatchSheet() {
       if (!confirm("Reset current live match clock, score, and events back to 0-0 Pre-Match?")) return;
       const fmt = parseInt(state.setup.format) || 11;
-      state.match = { status: "PRE", running: false, elapsedSec: 0, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: state.squad.filter(p => p.available).slice(0, fmt).map(p => p.id), starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] };
+      const iv = parseInt(state.setup.subIntervalMins) || 8;
+      state.match = { status: "PRE", running: false, elapsedSec: 0, subTimerRemSec: iv * 60, subAlarmActive: false, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: state.squad.filter(p => p.available).slice(0, fmt).map(p => p.id), starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] };
       state.undoStack = [];
       persist(); renderEverything();
     }
