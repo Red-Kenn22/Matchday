@@ -26,7 +26,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--day-bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 74px; overflow-x: hidden; }
 
-    /* CLEANUP 1: COMPACT BROADCAST SCOREBUG HEADER */
+    /* BROADCAST SCOREBUG HEADER */
     .top-cockpit { background: var(--navy-900); color: #fff; padding: 8px 10px; border-bottom: 2px solid var(--navy-700); position: sticky; top: 0; z-index: 900; box-shadow: 0 3px 10px rgba(0,0,0,0.25); }
     .app-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 6px; }
     .brand-logo { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.86rem; letter-spacing: 0.5px; color: #fff; cursor: pointer; }
@@ -46,7 +46,6 @@
     .score-team-name { font-size: 0.92rem; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .score-center-box { background: var(--navy-950); border: 1.5px solid var(--navy-700); border-radius: 8px; padding: 2px 12px; font-size: 1.35rem; font-weight: 900; color: #fff; letter-spacing: 1.5px; min-width: 78px; text-align: center; }
 
-    /* UNIFIED CLOCK + SUB TIMER + PERIOD BAR */
     .control-strip { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px; }
     .clock-pill-box { display: flex; align-items: center; gap: 6px; background: var(--navy-950); border: 1.5px solid var(--navy-700); border-radius: 8px; padding: 4px 8px; cursor: pointer; min-height: 38px; }
     .period-tag { font-size: 0.65rem; font-weight: 900; padding: 2px 5px; border-radius: 4px; background: #1e293b; color: #cbd5e1; }
@@ -66,7 +65,6 @@
     .btn-ctrl-main.red { background: var(--red-danger); border-color: #f87171; }
     .btn-ctrl-main.navy { background: var(--navy-700); border-color: #64748b; }
 
-    /* COLLAPSIBLE CLOCK & SUB ADJUST DRAWER */
     .Quick-adj-drawer { display: none; justify-content: space-between; align-items: center; gap: 6px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #334155; font-size: 0.72rem; color: #94a3b8; font-weight: 800; }
     .Quick-adj-drawer.open { display: flex; }
     .btn-mini-adj { background: var(--navy-800); border: 1px solid #475569; color: #fff; border-radius: 6px; padding: 4px 8px; font-size: 0.72rem; font-weight: 800; cursor: pointer; }
@@ -76,11 +74,10 @@
     .day-card { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 0 rgba(15,23,42,0.1); }
     .day-card-title { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-    /* 1-LINE ADVISOR TICKER ABOVE PITCH */
     .equal-ticker { background: #0f172a; color: #fff; border: 2px solid var(--text-main); border-bottom: none; border-radius: 12px 12px 0 0; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 36px; font-size: 0.75rem; font-weight: 800; }
     .btn-quick-swap { background: var(--green-bright); color: #fff; border: 1.5px solid #bbf7d0; border-radius: 6px; padding: 3px 9px; font-weight: 900; font-size: 0.72rem; cursor: pointer; flex-shrink: 0; min-height: 28px; }
 
-    /* PITCH BOARD & CLEANUP 2: DECLUTTERED PITCH TOKENS */
+    /* PITCH BOARD & TOKENS */
     .pitch-wrapper { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 0 0 12px 12px; padding: 6px; margin-bottom: 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.1); }
     .pitch-wrapper.standalone { border-radius: 12px; }
     .pitch-board { position: relative; width: 100%; height: 390px; background: repeating-linear-gradient(0deg, var(--pitch-dark) 0px, var(--pitch-dark) 36px, var(--pitch-light) 36px, var(--pitch-light) 72px); border: 2px solid #fff; border-radius: 8px; overflow: hidden; }
@@ -94,7 +91,6 @@
     .pitch-token.selected .token-disc, .pitch-token.dragging .token-disc { outline: 3.5px solid #facc15; transform: scale(1.14); }
     .pitch-token.dragging { z-index: 50; }
     .token-disc { width: 42px; height: 42px; border-radius: 50%; background: var(--sky-token); border: 3px solid var(--navy-950); color: var(--navy-950); font-size: 1.05rem; font-weight: 900; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.45); pointer-events: none; }
-    /* Ring colors encode Equal Play status without text clutter */
     .token-disc.met-floor { border-color: #22c55e; box-shadow: 0 0 0 1.5px #14532d, 0 2px 5px rgba(0,0,0,0.45); }
     .token-disc.cap-reached { border-color: #f97316; box-shadow: 0 0 0 2px #fed7aa, 0 2px 6px rgba(0,0,0,0.5); }
     .token-role-pill { position: absolute; top: -5px; right: -10px; background: var(--navy-950); color: #fff; font-size: 0.55rem; font-weight: 900; padding: 1px 4px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.4); }
@@ -103,7 +99,6 @@
     .token-label .lbl-mins { color: #fef08a; font-weight: 900; margin-left: 2px; }
     .token-label .lbl-mins.over { color: #fca5a5; }
 
-    /* CLEANUP 3: 1-ROW 3-PILL TOUCHLINE ACTION STRIP */
     .touchline-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
     .btn-touch { min-height: 44px; border: 2px solid var(--text-main); border-radius: 10px; font-size: 0.84rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.12); }
     .btn-touch.goal-us { background: #dcfce7; color: #14532d; border-color: #15803d; }
@@ -111,7 +106,6 @@
     .btn-touch.sub-btn { background: var(--sky-token); color: var(--navy-950); }
     .btn-touch.card-btn { background: #fef3c7; color: #78350f; border-color: #d97706; }
 
-    /* CLEANUP 4: COMPACT 3-COLUMN BENCH GRID */
     .bench-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .bench-card { background: #f8fafc; border: 2px solid var(--text-main); border-radius: 9px; padding: 6px 7px 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 3px; cursor: pointer; }
     .bench-card.selected { background: #fef9c3; border-color: #ca8a04; outline: 3px solid #facc15; }
@@ -137,13 +131,15 @@
     .subtab-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
     .subtab-btn { min-height: 42px; border: 2px solid var(--text-main); border-radius: 9px; background: #e2e8f0; color: var(--text-main); font-weight: 900; font-size: 0.85rem; cursor: pointer; }
     .subtab-btn.active { background: var(--navy-900); color: #fff; }
-    .roster-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border: 2px solid #cbd5e1; border-radius: 9px; margin-bottom: 6px; background: #fff; }
+    .roster-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border: 2px solid #cbd5e1; border-radius: 9px; margin-bottom: 6px; background: #fff; gap: 6px; flex-wrap: wrap; }
     .roster-row.unavailable { opacity: 0.55; background: #f1f5f9; }
-    .roster-actions { display: flex; gap: 5px; align-items: center; }
-    .btn-avail { min-height: 36px; padding: 0 9px; border-radius: 7px; font-weight: 800; font-size: 0.74rem; border: 2px solid var(--text-main); cursor: pointer; }
+    .roster-actions { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .btn-avail { min-height: 34px; padding: 0 8px; border-radius: 7px; font-weight: 800; font-size: 0.72rem; border: 2px solid var(--text-main); cursor: pointer; }
     .btn-avail.yes { background: #dcfce7; color: #14532d; }
     .btn-avail.no { background: #fee2e2; color: #7f1d1d; }
-    .btn-icon-sq { width: 36px; height: 36px; border-radius: 7px; border: 2px solid var(--text-main); background: #f8fafc; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-avail.sky { background: #e0f2fe; color: #0369a1; border-color: #0284c7; }
+    .btn-avail.amber { background: #fef3c7; color: #92400e; border-color: #d97706; }
+    .btn-icon-sq { width: 34px; height: 34px; border-radius: 7px; border: 2px solid var(--text-main); background: #f8fafc; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .stats-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     .stats-table th { background: var(--navy-900); color: #fff; padding: 8px 5px; text-align: left; font-weight: 900; }
     .stats-table td { padding: 8px 5px; border-bottom: 1.5px solid #cbd5e1; font-weight: 700; }
@@ -163,18 +159,21 @@
     .btn-close { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--text-main); background: #f1f5f9; font-weight: 900; font-size: 0.95rem; cursor: pointer; }
     .report-pre { background: #0f172a; color: #f8fafc; padding: 10px; border-radius: 9px; font-family: monospace; font-size: 0.78rem; white-space: pre-wrap; margin-bottom: 10px; max-height: 220px; overflow-y: auto; }
     .past-player-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; padding: 6px 8px; border: 1.5px solid #cbd5e1; border-radius: 7px; margin-bottom: 5px; background: #f8fafc; }
-    .mini-num-input { width: 44px; height: 34px; border: 2px solid var(--text-main); border-radius: 6px; text-align: center; font-weight: 800; font-size: 0.82rem; }
+    .mini-num-input { width: 46px; height: 34px; border: 2px solid var(--text-main); border-radius: 6px; text-align: center; font-weight: 800; font-size: 0.82rem; }
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .player-chip { padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 800; border: 1.5px solid #94a3b8; background: #f1f5f9; color: #475569; cursor: pointer; }
+    .player-chip.active { background: #dcfce7; border-color: #16a34a; color: #14532d; }
   </style>
 </head>
 <body>
 
-  <!-- CLEANUP 1: BROADCAST SCOREBUG HEADER -->
+  <!-- BROADCAST SCOREBUG HEADER -->
   <header class="top-cockpit">
     <div class="app-bar">
-      <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.3</small></span></div>
+      <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.4</small></span></div>
       <div class="header-pills">
         <button class="icon-pill" onclick="forceCloudPull()" title="Cloud Sync"><span class="dot-indicator active" id="cloud-dot"></span></button>
-        <button class="icon-pill" onclick="toggleWakeLock()" title="Screen Wake Lock"><span class="dot-indicator active" id="wake-dot"></span>🔒</button>
+        <button class="icon-pill" onclick="toggleWakeLock()" title="Screen Wake Lock & Watch Sync"><span class="dot-indicator active" id="wake-dot"></span>⌚</button>
         <button class="icon-pill" onclick="undoLastAction()" title="Undo Last Event">↩️ Undo</button>
         <button class="icon-pill settings-btn" onclick="openSettingsModal()">⚙️ <span id="header-team-code">Setup</span></button>
       </div>
@@ -202,7 +201,6 @@
       <div class="clock-btns-right" id="clock-buttons-container"></div>
     </div>
 
-    <!-- Collapsible Adjust Drawer (Toggled by tapping clock digits) -->
     <div class="Quick-adj-drawer" id="quick-adj-drawer">
       <span>Clock & Sub Timer:</span>
       <div style="display:flex;gap:5px;">
@@ -216,7 +214,6 @@
 
   <!-- TAB 1: MATCH COCKPIT -->
   <main id="view-match" class="view-section active">
-    <!-- 1-LINE EQUAL PLAY & SUB ADVISOR TICKER -->
     <div class="equal-ticker" id="equal-advisor-box">
       <span id="equal-ticker-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">⚖️ Target: 53m/player</span>
       <button class="btn-quick-swap" id="equal-swap-btn" style="display:none;">⚡ Swap</button>
@@ -239,21 +236,22 @@
       </div>
     </div>
 
-    <!-- CLEANUP 3: SINGLE-ROW 3-PILL ACTION STRIP -->
     <div class="touchline-strip">
       <button class="btn-touch goal-us" onclick="openGoalModal()">⚽ +Goal Us</button>
       <button class="btn-touch goal-them" onclick="logOppositionGoal()">🥅 +Goal Them</button>
       <button class="btn-touch sub-btn" onclick="openSubModal()">🔄 Sub</button>
     </div>
 
-    <!-- CLEANUP 4: COMPACT 3-COLUMN BENCH -->
     <div class="day-card">
       <div class="day-card-title"><span>Bench (Tap Player to Sub On)</span><span style="font-size:0.7rem;color:var(--text-muted);" id="match-bench-count"></span></div>
       <div class="bench-list" id="match-bench-grid"></div>
     </div>
 
     <div class="day-card">
-      <div class="day-card-title"><span>Match Timeline</span></div>
+      <div class="day-card-title">
+        <span>Match Timeline</span>
+        <button class="btn-avail sky" onclick="openLiveTimelineEditor()">⏱️ Edit Timeline / Subs</button>
+      </div>
       <div id="match-timeline-list"></div>
     </div>
   </main>
@@ -506,11 +504,15 @@
     </div>
   </div>
 
-  <!-- MODAL 6: REPORT -->
+  <!-- MODAL 6: REPORT VIEW & QUICK EDIT LINKS -->
   <div class="modal-backdrop" id="modal-report">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">🏁 Match Report</div><button class="btn-close" onclick="closeModal('modal-report')">✕</button></div>
       <pre class="report-pre" id="report-preview-box"></pre>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="report-edit-shortcuts">
+        <button class="btn-avail sky" style="min-height:38px;" id="btn-rep-edit-tl">⏱️ Edit Timeline / FT</button>
+        <button class="btn-avail amber" style="min-height:38px;" id="btn-rep-edit-rep">📝 Edit Match Report</button>
+      </div>
       <div style="display:grid;gap:8px;">
         <button class="btn-ctrl-main" style="min-height:44px;" onclick="copyReportForWhatsApp()">📋 Copy for WhatsApp</button>
         <button class="btn-sky" onclick="nativeShareReport()">📤 Share Match Report</button>
@@ -540,6 +542,66 @@
       <div style="margin:6px 0;font-size:0.74rem;font-weight:900;text-transform:uppercase;">Player Participation (Role | Mins | ⚽G | 🎯A)</div>
       <div id="past-players-container" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
       <button class="btn-ctrl-main" style="width:100%;min-height:44px;" onclick="savePastMatchResult()">💾 Save Result</button>
+    </div>
+  </div>
+
+  <!-- MODAL 8: ⏱️ EDIT MATCH TIMELINE, FINISH TIME & SUB TIMES -->
+  <div class="modal-backdrop" id="modal-edit-timeline">
+    <div class="modal-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title" id="tl-edit-title">⏱️ Edit Timeline & Finish Time</div>
+        <button class="btn-close" onclick="closeModal('modal-edit-timeline')">✕</button>
+      </div>
+
+      <!-- Finish Time Auto-Adjust Box -->
+      <div id="tl-finish-time-box" style="background:#f8fafc;border:2px solid var(--navy-900);border-radius:10px;padding:10px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
+          <div>
+            <div style="font-size:0.72rem;font-weight:900;text-transform:uppercase;color:var(--text-muted);">Match Finish Time (Mins)</div>
+            <div style="font-size:0.74rem;font-weight:700;color:#0369a1;" id="tl-ft-helper">Auto-adjusts players on pitch at FT</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="number" id="tl-input-ft-mins" class="mini-num-input" style="width:58px;height:38px;font-size:0.95rem;" min="1" max="150">
+            <button type="button" class="btn-avail sky" id="tl-btn-reg-trim">✂️ Set 80m</button>
+          </div>
+        </div>
+        <div style="font-size:0.68rem;font-weight:800;color:var(--text-muted);">Players on pitch at Final Whistle (Tap to toggle):</div>
+        <div class="chip-wrap" id="tl-final-pitch-chips"></div>
+      </div>
+
+      <div style="font-size:0.72rem;font-weight:900;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">
+        Timeline Events (Editing a Sub minute auto-adjusts both players' mins)
+      </div>
+      <div id="tl-events-editor-list" style="max-height:220px;overflow-y:auto;margin-bottom:10px;"></div>
+
+      <button class="btn-ctrl-main" style="width:100%;min-height:44px;" onclick="saveEditedTimeline()">💾 Save Timeline & Auto-Update Mins</button>
+    </div>
+  </div>
+
+  <!-- MODAL 9: 📝 EDIT MATCH REPORT & PLAYER MINUTES -->
+  <div class="modal-backdrop" id="modal-edit-report">
+    <div class="modal-sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">📝 Edit Match Report & Player Mins</div>
+        <button class="btn-close" onclick="closeModal('modal-edit-report')">✕</button>
+      </div>
+      <div class="form-grid-2">
+        <div class="field-group"><label class="field-label">Match Header / Scoreline</label><input type="text" id="er-header" class="day-input"></div>
+        <div class="field-group"><label class="field-label">Date</label><input type="text" id="er-date" class="day-input"></div>
+      </div>
+      <div style="margin:6px 0;font-size:0.72rem;font-weight:900;text-transform:uppercase;color:var(--text-muted);">
+        Player Match Mins & Stats (Auto-syncs changes to Season Totals)
+      </div>
+      <div id="er-players-container" style="max-height:190px;overflow-y:auto;margin-bottom:10px;"></div>
+
+      <div class="field-group">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <label class="field-label">Formatted Report Text</label>
+          <button type="button" class="btn-avail sky" style="min-height:26px;font-size:0.68rem;" onclick="regenerateReportTextInEditor()">🔄 Rebuild Text from Stats Above</button>
+        </div>
+        <textarea id="er-report-text" style="width:100%;height:120px;padding:8px;border:2px solid var(--text-main);border-radius:8px;font-family:monospace;font-size:0.76rem;"></textarea>
+      </div>
+      <button class="btn-ctrl-main" style="width:100%;min-height:44px;" onclick="saveEditedMatchReport()">💾 Save Report & Sync Season Stats</button>
     </div>
   </div>
 
@@ -614,7 +676,13 @@
     const LEGACY_KEYS = ["spitfires_matchday_v3", "matchday_coaching_app_v2", "matchday_coaching_app_v1"];
     let currentTeamCode = "";
     let rtdb = null, firebaseRef = null, selectedSwapTarget = null, activeReportText = "", wakeLockSentinel = null;
-    let adminTapCount = 0, adminTapTimer = null, audioCtx = null;
+    let adminTapCount = 0, adminTapTimer = null, audioCtx = null, watchAudioEl = null;
+
+    // Editing State Holders
+    let editingTargetMatchId = null; // "LIVE" or history item ID
+    let tempEditTimeline = [];
+    let tempOriginalFT = 80;
+    let tempFinalPitchSet = new Set();
 
     function getBlankState() {
       return {
@@ -629,6 +697,61 @@
     }
 
     let state = getBlankState();
+
+    // SMARTWATCH MEDIA SESSION API (OPTION 1)
+    function initWatchMediaSession() {
+      if (watchAudioEl) return;
+      try {
+        const sampleRate = 8000, numSamples = 8000;
+        const buffer = new ArrayBuffer(44 + numSamples * 2);
+        const view = new DataView(buffer);
+        const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+        writeStr(0, "RIFF"); view.setUint32(4, 36 + numSamples * 2, true); writeStr(8, "WAVE");
+        writeStr(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+        writeStr(36, "data"); view.setUint32(40, numSamples * 2, true);
+        for (let i = 0; i < numSamples; i++) view.setInt16(44 + i * 2, (i % 2 === 0) ? 1 : -1, true);
+        const blob = new Blob([buffer], { type: "audio/wav" });
+        watchAudioEl = new Audio(URL.createObjectURL(blob));
+        watchAudioEl.loop = true;
+        watchAudioEl.volume = 0.01;
+      } catch (e) {}
+
+      if ("mediaSession" in navigator) {
+        try {
+          navigator.mediaSession.setActionHandler("play", () => { if (!state.match.running) pauseResumeMatch(); });
+          navigator.mediaSession.setActionHandler("pause", () => { if (state.match.running) pauseResumeMatch(); });
+          navigator.mediaSession.setActionHandler("nexttrack", () => { handleSubPillTap(); });
+          navigator.mediaSession.setActionHandler("previoustrack", () => { snoozeSubTimer(120); });
+        } catch (e) {}
+      }
+    }
+
+    function syncWatchMediaSessionState() {
+      if (!watchAudioEl) return;
+      const m = state.match, s = state.setup;
+      if (m.running) {
+        watchAudioEl.play().catch(() => {});
+        if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "playing";
+      } else {
+        if (m.status === "PRE" || m.status === "FT") watchAudioEl.pause();
+        if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "paused";
+      }
+      if ("mediaSession" in navigator && typeof MediaMetadata !== "undefined") {
+        const cMin = pad(Math.floor((m.elapsedSec || 0) / 60)), cSec = pad((m.elapsedSec || 0) % 60);
+        const isHome = s.venue === "home";
+        const scoreStr = `${isHome ? m.scoreUs : m.scoreThem} - ${isHome ? m.scoreThem : m.scoreUs}`;
+        const rem = Math.max(0, m.subTimerRemSec || 0);
+        const subStr = (parseInt(s.subIntervalMins) || 0) > 0 ? `Sub: ${pad(Math.floor(rem / 60))}:${pad(rem % 60)}` : "Sub: Off";
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: `${m.status} ${cMin}:${cSec} • ${scoreStr}`,
+            artist: `${subStr} • ${s.myTeam}`,
+            album: "Tap Pause to Stop Match Clock"
+          });
+        } catch (e) {}
+      }
+    }
 
     function playSubAlarmSound() {
       try {
@@ -654,15 +777,10 @@
 
     function handleSubPillTap() {
       const iv = parseInt(state.setup.subIntervalMins) || 0;
-      if (iv === 0) {
-        cycleSubIntervalQuick();
-        return;
-      }
+      if (iv === 0) { cycleSubIntervalQuick(); return; }
       state.match.subTimerRemSec = iv * 60;
       state.match.subAlarmActive = false;
-      persist();
-      renderTopScoreboard();
-      renderMatchView();
+      persist(); renderTopScoreboard(); renderMatchView();
     }
 
     function snoozeSubTimer(sec) {
@@ -918,7 +1036,7 @@
       if (idx !== -1) state.match.lineupIds[idx] = onId;
       if (!state.match.appearedIds.includes(onId)) state.match.appearedIds.push(onId);
       const pOff = state.squad.find(p => p.id === offId), pOn = state.squad.find(p => p.id === onId);
-      state.match.timeline.unshift({ min: getCurrentMinuteStr(), type: "sub", text: `🔄 SUB: ${pOn ? pOn.name : 'Sub'} ON for ${pOff ? pOff.name : 'Player'}` });
+      state.match.timeline.unshift({ min: getCurrentMinuteStr(), type: "sub", offId, onId, text: `🔄 SUB: ${pOn ? pOn.name : 'Sub'} ON for ${pOff ? pOff.name : 'Player'}` });
       const iv = parseInt(state.setup.subIntervalMins) || 0;
       if (iv > 0) {
         state.match.subTimerRemSec = iv * 60;
@@ -976,7 +1094,89 @@
       const date = String(it.date || new Date().toLocaleDateString("en-GB"));
       const header = String(it.header || (it.fixture ? `${it.fixture} (${it.score || ''})` : "Archived Match"));
       const report = String(it.report || `⚽ MATCH REPORT\n${header}\n📅 Date: ${date}`);
-      return { id, date, header, report, deltas: it.deltas || null };
+      return {
+        id,
+        teamCode: it.teamCode || currentTeamCode,
+        date,
+        header,
+        report,
+        deltas: it.deltas || null,
+        timeline: toArray(it.timeline),
+        finalLineupIds: toArray(it.finalLineupIds),
+        totalMins: parseInt(it.totalMins) || 0
+      };
+    }
+
+    // Hydrates legacy history items (like the 2 matches already played) by parsing timeline & final on-pitch players
+    function hydrateHistoryItemMetadata(item) {
+      if (!item) return;
+      if (!item.timeline || !item.timeline.length) {
+        const parsedTl = [];
+        const lines = (item.report || "").split("\n");
+        lines.forEach(line => {
+          const m = line.match(/^•\s*(\d+)'\s*(.+)$/);
+          if (m) {
+            const minNum = parseInt(m[1]);
+            const text = m[2].trim();
+            let type = "other", offId = null, onId = null;
+            if (text.includes("SUB:")) {
+              type = "sub";
+              const subMatch = text.match(/SUB:\s*(.+?)\s+ON for\s+(.+)$/i);
+              if (subMatch) {
+                const pOn = state.squad.find(p => p.name.toLowerCase() === subMatch[1].trim().toLowerCase());
+                const pOff = state.squad.find(p => p.name.toLowerCase() === subMatch[2].trim().toLowerCase());
+                if (pOn) onId = pOn.id;
+                if (pOff) offId = pOff.id;
+              }
+            } else if (text.includes("Full Time") || text.includes("Half Time") || text.includes("Kickoff")) {
+              type = "period";
+            } else if (text.includes("GOAL!")) {
+              type = "goal_us";
+            }
+            parsedTl.unshift({ min: `${minNum}'`, type, offId, onId, text });
+          }
+        });
+        if (parsedTl.length) item.timeline = parsedTl;
+      }
+
+      if (!item.totalMins) {
+        let maxM = (state.setup.halfDuration || 40) * 2;
+        item.timeline.forEach(e => {
+          const m = parseInt(e.min);
+          if (m > maxM) maxM = m;
+        });
+        if (item.deltas) {
+          Object.values(item.deltas).forEach(d => { if (d && d.mins > maxM) maxM = d.mins; });
+        }
+        item.totalMins = maxM;
+      }
+
+      if (!item.finalLineupIds || !item.finalLineupIds.length) {
+        const onPitch = new Set();
+        if (item.deltas) {
+          Object.keys(item.deltas).forEach(pid => {
+            if (item.deltas[pid] && item.deltas[pid].starts > 0) onPitch.add(pid);
+          });
+        }
+        // Walk chronological order (reverse of stored timeline)
+        [...item.timeline].reverse().forEach(e => {
+          if (e.type === "sub") {
+            let onId = e.onId, offId = e.offId;
+            if (!onId || !offId) {
+              const subMatch = (e.text || "").match(/SUB:\s*(.+?)\s+ON for\s+(.+)$/i);
+              if (subMatch) {
+                const pOn = state.squad.find(p => p.name.toLowerCase() === subMatch[1].trim().toLowerCase());
+                const pOff = state.squad.find(p => p.name.toLowerCase() === subMatch[2].trim().toLowerCase());
+                if (pOn) onId = pOn.id;
+                if (pOff) offId = pOff.id;
+              }
+            }
+            if (offId) onPitch.delete(offId);
+            if (onId) onPitch.add(onId);
+          }
+        });
+        item.finalLineupIds = Array.from(onPitch);
+      }
     }
 
     function ensureSeasonStats() {
@@ -1164,10 +1364,12 @@
       }
     }
     async function toggleWakeLock() {
+      initWatchMediaSession();
       if (wakeLockSentinel) {
         await wakeLockSentinel.release(); wakeLockSentinel = null;
         document.getElementById("wake-dot").className = "dot-indicator";
       } else requestScreenWakeLock();
+      syncWatchMediaSessionState();
     }
 
     function startSecondLoop() {
@@ -1195,6 +1397,7 @@
                 }
               }
             }
+            syncWatchMediaSessionState();
             renderTopScoreboard();
             renderMatchView();
           }
@@ -1207,6 +1410,7 @@
 
     function startFirstHalf() {
       if (!state.squad.length) return alert("Please add players to your Squad first!");
+      initWatchMediaSession();
       pushUndo();
       state.match.status = "1H"; state.match.running = true; state.match.lastTickAt = Date.now();
       state.match.starterIds = [...state.match.lineupIds];
@@ -1214,23 +1418,32 @@
       if (iv > 0) { state.match.subTimerRemSec = iv * 60; state.match.subAlarmActive = false; }
       state.match.lineupIds.forEach(pid => { if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid); });
       state.match.timeline.unshift({ min: "1'", text: "⏱️ Kickoff — 1st Half Started", type: "period" });
+      syncWatchMediaSessionState();
       persist(); renderEverything();
     }
-    function pauseResumeMatch() { state.match.running = !state.match.running; state.match.lastTickAt = Date.now(); persist(); renderTopScoreboard(); }
+    function pauseResumeMatch() {
+      initWatchMediaSession();
+      state.match.running = !state.match.running; state.match.lastTickAt = Date.now();
+      syncWatchMediaSessionState();
+      persist(); renderTopScoreboard();
+    }
     function triggerHalfTime() {
       pushUndo();
       state.match.running = false; state.match.status = "HT"; state.match.elapsedSec = state.setup.halfDuration * 60;
       state.match.subAlarmActive = false;
       state.match.timeline.unshift({ min: `${state.setup.halfDuration}'`, text: "⏸️ Half Time Whistle", type: "period" });
+      syncWatchMediaSessionState();
       persist(); renderEverything();
     }
     function startSecondHalf() {
+      initWatchMediaSession();
       pushUndo();
       state.match.status = "2H"; state.match.running = true; state.match.lastTickAt = Date.now();
       const iv = parseInt(state.setup.subIntervalMins) || 0;
       if (iv > 0) { state.match.subTimerRemSec = iv * 60; state.match.subAlarmActive = false; }
       state.match.lineupIds.forEach(pid => { if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid); });
       state.match.timeline.unshift({ min: `${state.setup.halfDuration + 1}'`, text: "▶️ Kickoff — 2nd Half Started", type: "period" });
+      syncWatchMediaSessionState();
       persist(); renderEverything();
     }
     function triggerFullTime() {
@@ -1238,9 +1451,10 @@
       state.match.running = false; state.match.status = "FT"; state.match.subAlarmActive = false;
       const ftMin = Math.ceil(state.match.elapsedSec / 60) || (state.setup.halfDuration * 2);
       state.match.timeline.unshift({ min: `${ftMin}'`, text: "🏁 Full Time Whistle", type: "period" });
+      syncWatchMediaSessionState();
       commitMatchToSeasonAndArchive();
       persist(); renderEverything();
-      if (state.history[0]) openReportModal(state.history[0].report);
+      if (state.history[0]) openReportById(state.history[0].id);
     }
     function adjustClock(secDelta) { state.match.elapsedSec = Math.max(0, (state.match.elapsedSec || 0) + secDelta); persist(); renderTopScoreboard(); }
 
@@ -1268,7 +1482,6 @@
         document.getElementById("stoppage-text").textContent = "";
       }
 
-      // Render Sub Timer Pill in Control Strip
       const ivMins = parseInt(s.subIntervalMins) || 0;
       const subStrip = document.getElementById("sub-timer-strip");
       const subLabel = document.getElementById("sub-timer-label");
@@ -1358,7 +1571,6 @@
         });
       }
 
-      // CLEANUP 4: 3-Column Compact Bench Cards
       const benchPlayers = state.squad.filter(p => p.available && !state.match.lineupIds.includes(p.id)).sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
       document.getElementById("match-bench-count").textContent = `${benchPlayers.length} Subs`;
       const benchGrid = document.getElementById("match-bench-grid");
@@ -1491,6 +1703,7 @@
       const iv = parseInt(state.setup.subIntervalMins) || 8;
       state.match = { status: "PRE", running: false, elapsedSec: 0, subTimerRemSec: iv * 60, subAlarmActive: false, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: state.squad.filter(p => p.available).slice(0, fmt).map(p => p.id), starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] };
       state.undoStack = [];
+      syncWatchMediaSessionState();
       persist(); renderEverything();
     }
 
@@ -1578,6 +1791,312 @@
       persist(); renderMatchView();
     }
 
+    // ⏱️ EDIT TIMELINE, SUB TIMES & MATCH FINISH TIME ENGINE
+    function openLiveTimelineEditor() {
+      openTimelineEditorFor("LIVE");
+    }
+
+    function openTimelineEditorFor(targetId) {
+      closeModal("modal-report");
+      editingTargetMatchId = targetId;
+      const regMins = (parseInt(state.setup.halfDuration) || 40) * 2;
+      const ftBox = document.getElementById("tl-finish-time-box");
+      document.getElementById("tl-btn-reg-trim").textContent = `✂️ Set ${regMins}m`;
+
+      if (targetId === "LIVE") {
+        document.getElementById("tl-edit-title").textContent = "⏱️ Edit Live Match Timeline";
+        tempOriginalFT = Math.max(1, Math.ceil((state.match.elapsedSec || 0) / 60));
+        tempEditTimeline = JSON.parse(JSON.stringify(state.match.timeline || []));
+        tempFinalPitchSet = new Set(state.match.lineupIds);
+      } else {
+        const item = state.history.find(x => x.id === targetId);
+        if (!item) return;
+        hydrateHistoryItemMetadata(item);
+        document.getElementById("tl-edit-title").textContent = `⏱️ Edit Timeline: ${item.header}`;
+        tempOriginalFT = item.totalMins || regMins;
+        tempEditTimeline = JSON.parse(JSON.stringify(item.timeline || []));
+        tempFinalPitchSet = new Set(item.finalLineupIds || []);
+      }
+
+      document.getElementById("tl-input-ft-mins").value = tempOriginalFT;
+      document.getElementById("tl-btn-reg-trim").onclick = () => {
+        document.getElementById("tl-input-ft-mins").value = regMins;
+        // Also update any FT whistle event in the list
+        tempEditTimeline.forEach((ev, idx) => {
+          if ((ev.text || "").includes("Full Time")) {
+            const inp = document.getElementById(`tl_ev_min_${idx}`);
+            if (inp) inp.value = regMins;
+          }
+        });
+      };
+
+      renderFinalPitchChips();
+      renderTimelineEditorEvents();
+      openModal("modal-edit-timeline");
+    }
+
+    function renderFinalPitchChips() {
+      const container = document.getElementById("tl-final-pitch-chips");
+      container.innerHTML = "";
+      state.squad.forEach(p => {
+        const active = tempFinalPitchSet.has(p.id);
+        const chip = document.createElement("span");
+        chip.className = "player-chip" + (active ? " active" : "");
+        chip.textContent = `#${p.num} ${p.name}`;
+        chip.onclick = () => {
+          if (tempFinalPitchSet.has(p.id)) tempFinalPitchSet.delete(p.id);
+          else tempFinalPitchSet.add(p.id);
+          renderFinalPitchChips();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function renderTimelineEditorEvents() {
+      const list = document.getElementById("tl-events-editor-list");
+      if (!tempEditTimeline.length) {
+        list.innerHTML = `<div style="padding:10px;text-align:center;color:var(--text-muted);font-size:0.8rem;">No timeline events recorded.</div>`;
+        return;
+      }
+      list.innerHTML = "";
+      tempEditTimeline.forEach((ev, idx) => {
+        const minNum = parseInt(ev.min) || 1;
+        const row = document.createElement("div");
+        row.className = "past-player-row";
+        row.innerHTML = `
+          <div style="font-size:0.78rem;font-weight:800;overflow:hidden;text-overflow:ellipsis;">${ev.text || ''}</div>
+          <div style="display:flex;gap:5px;align-items:center;">
+            <input type="number" id="tl_ev_min_${idx}" class="mini-num-input" value="${minNum}" min="1" max="150">
+            <span style="font-weight:900;font-size:0.78rem;">'</span>
+            <button type="button" class="btn-icon-sq" style="width:30px;height:30px;font-size:0.75rem;" onclick="removeTempTimelineEvent(${idx})">🗑️</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function removeTempTimelineEvent(idx) {
+      tempEditTimeline.splice(idx, 1);
+      renderTimelineEditorEvents();
+    }
+
+    function saveEditedTimeline() {
+      const newFT = Math.max(1, parseInt(document.getElementById("tl-input-ft-mins").value) || tempOriginalFT);
+      const ftDelta = newFT - tempOriginalFT; // e.g. 80 - 92 = -12 mins
+
+      // Calculate per-player minute adjustments from Sub Time edits + Finish Time edit
+      const playerMinAdjustments = {};
+      const addAdj = (pid, d) => { if (pid) playerMinAdjustments[pid] = (playerMinAdjustments[pid] || 0) + d; };
+
+      // 1. Apply Finish Time delta to all players on the pitch at final whistle
+      if (ftDelta !== 0) {
+        tempFinalPitchSet.forEach(pid => addAdj(pid, ftDelta));
+      }
+
+      // 2. Check each timeline event for minute changes (especially Subs)
+      tempEditTimeline.forEach((ev, idx) => {
+        const oldMin = parseInt(ev.min) || 1;
+        const inp = document.getElementById(`tl_ev_min_${idx}`);
+        let newMin = inp ? (parseInt(inp.value) || oldMin) : oldMin;
+        if ((ev.text || "").includes("Full Time") && ftDelta !== 0 && newMin === oldMin) {
+          newMin = newFT;
+        }
+        const subDelta = newMin - oldMin; // Positive = sub happened later (Off player played MORE, On player played LESS)
+        if (subDelta !== 0 && ev.type === "sub") {
+          let onId = ev.onId, offId = ev.offId;
+          if (!onId || !offId) {
+            const subMatch = (ev.text || "").match(/SUB:\s*(.+?)\s+ON for\s+(.+)$/i);
+            if (subMatch) {
+              const pOn = state.squad.find(p => p.name.toLowerCase() === subMatch[1].trim().toLowerCase());
+              const pOff = state.squad.find(p => p.name.toLowerCase() === subMatch[2].trim().toLowerCase());
+              if (pOn) onId = pOn.id;
+              if (pOff) offId = pOff.id;
+            }
+          }
+          addAdj(offId, subDelta);
+          addAdj(onId, -subDelta);
+        }
+        ev.min = `${newMin}'`;
+      });
+
+      if (editingTargetMatchId === "LIVE") {
+        pushUndo();
+        if (ftDelta !== 0) {
+          state.match.elapsedSec = Math.max(0, newFT * 60);
+        }
+        Object.keys(playerMinAdjustments).forEach(pid => {
+          const secAdj = playerMinAdjustments[pid] * 60;
+          state.match.playerSeconds[pid] = Math.max(0, (state.match.playerSeconds[pid] || 0) + secAdj);
+        });
+        state.match.timeline = tempEditTimeline;
+        closeModal("modal-edit-timeline");
+        persist(true);
+        renderEverything();
+        return;
+      }
+
+      // Apply to Archived History Match & Sync Season Stats
+      const item = state.history.find(x => x.id === editingTargetMatchId);
+      if (!item) return;
+      ensureSeasonStats();
+      if (!item.deltas) item.deltas = {};
+
+      Object.keys(playerMinAdjustments).forEach(pid => {
+        const adj = playerMinAdjustments[pid];
+        if (!adj) return;
+        if (!item.deltas[pid]) {
+          item.deltas[pid] = { apps: 1, starts: 0, subs: 1, mins: 0, goals: 0, assists: 0, yellow: 0, red: 0 };
+        }
+        const oldPlayerMins = item.deltas[pid].mins || 0;
+        const newPlayerMins = Math.max(0, oldPlayerMins + adj);
+        const actualDiff = newPlayerMins - oldPlayerMins;
+        item.deltas[pid].mins = newPlayerMins;
+        if (state.seasonStats[pid]) {
+          state.seasonStats[pid].mins = Math.max(0, (state.seasonStats[pid].mins || 0) + actualDiff);
+        }
+      });
+
+      item.totalMins = newFT;
+      item.timeline = tempEditTimeline;
+      item.finalLineupIds = Array.from(tempFinalPitchSet);
+      item.report = buildReportStringFromItem(item);
+
+      closeModal("modal-edit-timeline");
+      persist(true);
+      renderEverything();
+      openReportById(item.id);
+    }
+
+    function buildReportStringFromItem(item) {
+      const s = state.setup, eq = getEqualTimeMetrics();
+      let rep = `⚽ *${s.myTeam.toUpperCase()} MATCH REPORT (${s.ageGroup} • ${s.format}v${s.format})*\n🏟️ *${item.header}*\n📅 Date: ${item.date} (${s.halfDuration}m halves)\n`;
+      if (item.timeline && item.timeline.length) {
+        rep += `\n📋 *MATCH TIMELINE:*\n`;
+        [...item.timeline].reverse().forEach(e => { rep += `• ${e.min} ${e.text}\n`; });
+      }
+      rep += `\n⏱️ *PLAYER MINUTES (Equal Target: ${eq.outfieldTarget}m):*\n`;
+      state.squad.forEach(p => {
+        const d = item.deltas && item.deltas[p.id];
+        if (d && (d.apps > 0 || d.mins > 0 || d.goals > 0 || d.assists > 0)) {
+          rep += `• #${p.num} ${p.name}: ${d.mins}' (${d.starts ? 'Start' : 'Sub'})${d.goals ? ` ⚽x${d.goals}` : ''}${d.assists ? ` 🎯x${d.assists}` : ''}\n`;
+        }
+      });
+      return rep;
+    }
+
+    // 📝 EDIT MATCH REPORT & PLAYER MINUTES MODAL
+    function openReportEditorById(id) {
+      closeModal("modal-report");
+      const item = state.history.find(x => x.id === id);
+      if (!item) return;
+      hydrateHistoryItemMetadata(item);
+      editingTargetMatchId = id;
+      document.getElementById("er-header").value = item.header || "";
+      document.getElementById("er-date").value = item.date || "";
+      document.getElementById("er-report-text").value = item.report || "";
+
+      const container = document.getElementById("er-players-container");
+      container.innerHTML = "";
+      state.squad.forEach(p => {
+        const d = (item.deltas && item.deltas[p.id]) || { apps: 0, starts: 0, subs: 0, mins: 0, goals: 0, assists: 0 };
+        const role = d.starts > 0 ? "start" : (d.subs > 0 || d.mins > 0) ? "sub" : "dnp";
+        const row = document.createElement("div");
+        row.className = "past-player-row";
+        row.innerHTML = `
+          <div style="font-weight:900;font-size:0.8rem;">#${p.num} ${p.name}</div>
+          <div style="display:flex;gap:4px;align-items:center;">
+            <select id="er_role_${p.id}" class="day-select" style="min-height:32px;padding:0 4px;font-size:0.74rem;width:68px;">
+              <option value="start" ${role==='start'?'selected':''}>Start</option>
+              <option value="sub" ${role==='sub'?'selected':''}>Sub</option>
+              <option value="dnp" ${role==='dnp'?'selected':''}>DNP</option>
+            </select>
+            <input type="number" id="er_mins_${p.id}" class="mini-num-input" value="${d.mins||0}" title="Minutes">
+            <input type="number" id="er_g_${p.id}" class="mini-num-input" style="width:38px;" value="${d.goals||0}" min="0" title="Goals">
+            <input type="number" id="er_a_${p.id}" class="mini-num-input" style="width:38px;" value="${d.assists||0}" min="0" title="Assists">
+          </div>
+        `;
+        container.appendChild(row);
+      });
+      openModal("modal-edit-report");
+    }
+
+    function collectEditedDeltasFromForm() {
+      const newDeltas = {};
+      state.squad.forEach(p => {
+        const role = document.getElementById(`er_role_${p.id}`).value;
+        const mins = Math.max(0, parseInt(document.getElementById(`er_mins_${p.id}`).value) || 0);
+        const goals = Math.max(0, parseInt(document.getElementById(`er_g_${p.id}`).value) || 0);
+        const assists = Math.max(0, parseInt(document.getElementById(`er_a_${p.id}`).value) || 0);
+        if (role !== "dnp" || mins > 0 || goals > 0 || assists > 0) {
+          newDeltas[p.id] = {
+            apps: 1,
+            starts: role === "start" ? 1 : 0,
+            subs: role === "sub" ? 1 : 0,
+            mins,
+            goals,
+            assists,
+            yellow: 0,
+            red: 0
+          };
+        }
+      });
+      return newDeltas;
+    }
+
+    function regenerateReportTextInEditor() {
+      const item = state.history.find(x => x.id === editingTargetMatchId);
+      if (!item) return;
+      const tempItem = {
+        ...item,
+        header: document.getElementById("er-header").value.trim() || item.header,
+        date: document.getElementById("er-date").value.trim() || item.date,
+        deltas: collectEditedDeltasFromForm()
+      };
+      document.getElementById("er-report-text").value = buildReportStringFromItem(tempItem);
+    }
+
+    function saveEditedMatchReport() {
+      const item = state.history.find(x => x.id === editingTargetMatchId);
+      if (!item) return;
+      ensureSeasonStats();
+      const oldDeltas = item.deltas || {};
+      const newDeltas = collectEditedDeltasFromForm();
+
+      // Sync exact differences to Season Stats
+      state.squad.forEach(p => {
+        const pid = p.id;
+        const o = oldDeltas[pid] || { apps: 0, starts: 0, subs: 0, mins: 0, goals: 0, assists: 0 };
+        const n = newDeltas[pid] || { apps: 0, starts: 0, subs: 0, mins: 0, goals: 0, assists: 0 };
+        const st = state.seasonStats[pid];
+        if (st) {
+          st.starts = Math.max(0, (st.starts || 0) + (n.starts - o.starts));
+          st.subs = Math.max(0, (st.subs || 0) + (n.subs - o.subs));
+          st.apps = st.starts + st.subs;
+          st.mins = Math.max(0, (st.mins || 0) + (n.mins - o.mins));
+          st.goals = Math.max(0, (st.goals || 0) + (n.goals - o.goals));
+          st.assists = Math.max(0, (st.assists || 0) + (n.assists - o.assists));
+        }
+      });
+
+      const oldAutoReport = buildReportStringFromItem(item);
+      item.header = document.getElementById("er-header").value.trim() || item.header;
+      item.date = document.getElementById("er-date").value.trim() || item.date;
+      item.deltas = newDeltas;
+
+      const currentBoxText = document.getElementById("er-report-text").value;
+      // If user didn't manually customize the text box, auto-refresh it with the new player mins/score
+      if (currentBoxText.trim() === oldAutoReport.trim() || !currentBoxText.trim()) {
+        item.report = buildReportStringFromItem(item);
+      } else {
+        item.report = currentBoxText;
+      }
+
+      closeModal("modal-edit-report");
+      persist(true);
+      renderEverything();
+      openReportById(item.id);
+    }
+
     function switchSquadSubtab(mode) {
       document.getElementById("btn-sub-roster").classList.toggle("active", mode === "roster");
       document.getElementById("btn-sub-stats").classList.toggle("active", mode === "stats");
@@ -1655,10 +2174,11 @@
 
     function commitMatchToSeasonAndArchive() {
       sanitizeState();
-      const s = state.setup, m = state.match, eq = getEqualTimeMetrics(), isHome = s.venue === "home";
+      const s = state.setup, m = state.match, isHome = s.venue === "home";
       const homeName = isHome ? s.myTeam : s.oppTeam, awayName = isHome ? s.oppTeam : s.myTeam;
       const homeScore = isHome ? m.scoreUs : m.scoreThem, awayScore = isHome ? m.scoreThem : m.scoreUs;
       const dateStr = new Date().toLocaleDateString("en-GB"), deltas = {};
+      const ftMin = Math.ceil(m.elapsedSec / 60) || (s.halfDuration * 2);
 
       state.squad.forEach(p => {
         const mins = getPlayerMatchMins(p.id), started = m.starterIds.includes(p.id);
@@ -1674,16 +2194,19 @@
         }
       });
 
-      let report = `⚽ *${s.myTeam.toUpperCase()} MATCH REPORT (${s.ageGroup} • ${s.format}v${s.format})*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n📋 *MATCH TIMELINE:*\n`;
-      [...m.timeline].reverse().forEach(e => { report += `• ${e.min} ${e.text}\n`; });
-      report += `\n⏱️ *PLAYER MINUTES (Equal Target: ${eq.outfieldTarget}m):*\n`;
-      state.squad.forEach(p => {
-        if (deltas[p.id]) {
-          const d = deltas[p.id];
-          report += `• #${p.num} ${p.name}: ${d.mins}' (${d.starts ? 'Start' : 'Sub'})${d.goals ? ` ⚽x${d.goals}` : ''}${d.assists ? ` 🎯x${d.assists}` : ''}\n`;
-        }
-      });
-      state.history.unshift({ id: "match_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas });
+      const newItem = {
+        id: "match_" + Date.now(),
+        teamCode: currentTeamCode,
+        date: dateStr,
+        header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`,
+        deltas,
+        timeline: JSON.parse(JSON.stringify(m.timeline || [])),
+        finalLineupIds: [...m.lineupIds],
+        totalMins: ftMin,
+        report: ""
+      };
+      newItem.report = buildReportStringFromItem(newItem);
+      state.history.unshift(newItem);
     }
 
     function rebuildMatchFromSeasonStats() {
@@ -1699,21 +2222,28 @@
       const homeScore = isHome ? totalGoalsUs : oppGoals, awayScore = isHome ? oppGoals : totalGoalsUs;
       const dateStr = new Date().toLocaleDateString("en-GB");
 
-      let report = `⚽ *${s.myTeam.toUpperCase()} MATCH REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr} (${s.halfDuration}m halves)\n\n⚽ *GOALS & ASSISTS:*\n`;
-      let hasG = false;
+      const deltas = {};
       state.squad.forEach(p => {
         const st = state.seasonStats[p.id];
-        if (st && (st.goals > 0 || st.assists > 0)) { hasG = true; report += `• #${p.num} ${p.name}: ${st.goals ? `⚽ x${st.goals} ` : ''}${st.assists ? `🎯 x${st.assists}` : ''}\n`; }
-      });
-      if (!hasG) report += `• None logged\n`;
-      report += `\n⏱️ *PLAYER MINUTES:*\n`;
-      state.squad.forEach(p => {
-        const st = state.seasonStats[p.id];
-        if (st && (st.apps > 0 || st.mins > 0)) report += `• #${p.num} ${p.name}: ${st.mins}' (${st.starts > 0 ? 'Start' : 'Sub'})${st.goals ? ` ⚽x${st.goals}` : ''}${st.assists ? ` 🎯x${st.assists}` : ''}\n`;
+        if (st && (st.apps > 0 || st.mins > 0 || st.goals > 0 || st.assists > 0)) {
+          deltas[p.id] = { apps: 1, starts: st.starts > 0 ? 1 : 0, subs: st.starts > 0 ? 0 : 1, mins: st.mins || 0, goals: st.goals || 0, assists: st.assists || 0, yellow: st.yellow || 0, red: st.red || 0 };
+        }
       });
 
-      state.history.unshift({ id: "match_rebuilt_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: null });
-      persist(true); renderHistoryView(); openReportModal(report);
+      const newItem = {
+        id: "match_rebuilt_" + Date.now(),
+        teamCode: currentTeamCode,
+        date: dateStr,
+        header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`,
+        deltas,
+        timeline: [],
+        finalLineupIds: [...state.match.lineupIds],
+        totalMins: (s.halfDuration || 40) * 2,
+        report: ""
+      };
+      newItem.report = buildReportStringFromItem(newItem);
+      state.history.unshift(newItem);
+      persist(true); renderHistoryView(); openReportById(newItem.id);
     }
 
     function openManualMatchModal() {
@@ -1751,23 +2281,34 @@
 
       sanitizeState();
       const deltas = {};
-      let report = `⚽ *${state.setup.myTeam.toUpperCase()} MATCH REPORT*\n🏟️ *${homeName} ${homeScore} – ${awayScore} ${awayName}*\n📅 Date: ${dateStr}\n\n⏱️ *PLAYER BREAKDOWN:*\n`;
       state.squad.forEach(p => {
         const role = document.getElementById(`past_role_${p.id}`).value;
         if (role !== "dnp") {
           const mins = parseInt(document.getElementById(`past_mins_${p.id}`).value) || 0;
           const goals = parseInt(document.getElementById(`past_g_${p.id}`).value) || 0;
           const assists = parseInt(document.getElementById(`past_a_${p.id}`).value) || 0;
+          deltas[p.id] = { apps: 1, starts: role === "start" ? 1 : 0, subs: role === "sub" ? 1 : 0, mins, goals, assists, yellow: 0, red: 0 };
           if (commitStats) {
-            deltas[p.id] = { apps: 1, starts: role === "start" ? 1 : 0, subs: role === "sub" ? 1 : 0, mins, goals, assists, yellow: 0, red: 0 };
             const st = state.seasonStats[p.id];
             st.apps += 1; st.starts += deltas[p.id].starts; st.subs += deltas[p.id].subs;
             st.mins += mins; st.goals += goals; st.assists += assists;
           }
-          report += `• #${p.num} ${p.name}: ${mins}' (${role === 'start' ? 'Start' : 'Sub'})${goals ? ` ⚽x${goals}` : ''}${assists ? ` 🎯x${assists}` : ''}\n`;
         }
       });
-      state.history.unshift({ id: "match_" + Date.now(), teamCode: currentTeamCode, date: dateStr, header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`, report, deltas: commitStats ? deltas : null });
+
+      const newItem = {
+        id: "match_" + Date.now(),
+        teamCode: currentTeamCode,
+        date: dateStr,
+        header: `${homeName} ${homeScore} – ${awayScore} ${awayName}`,
+        deltas,
+        timeline: [],
+        finalLineupIds: Object.keys(deltas).filter(pid => deltas[pid].starts > 0),
+        totalMins: (state.setup.halfDuration || 40) * 2,
+        report: ""
+      };
+      newItem.report = buildReportStringFromItem(newItem);
+      state.history.unshift(newItem);
       closeModal("modal-past-match"); persist(true); renderEverything();
     }
 
@@ -1782,12 +2323,29 @@
       state.history.forEach(item => {
         const row = document.createElement("div");
         row.className = "roster-row";
-        row.innerHTML = `<div><div style="font-weight:900;font-size:0.9rem;">${item.header}</div><div style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">📅 ${item.date}</div></div><div style="display:flex;gap:5px;"><button class="btn-avail yes" onclick="openReportById('${item.id}')">📋 Report</button><button class="btn-icon-sq" onclick="deleteHistoryMatch('${item.id}')">🗑️</button></div>`;
+        row.innerHTML = `
+          <div>
+            <div style="font-weight:900;font-size:0.88rem;">${item.header}</div>
+            <div style="font-size:0.7rem;color:var(--text-muted);font-weight:700;">📅 ${item.date}${item.totalMins ? ` • ⏱️ ${item.totalMins}m` : ''}</div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            <button class="btn-avail sky" onclick="openTimelineEditorFor('${item.id}')" title="Edit Finish Time & Sub Mins">⏱️ Timeline</button>
+            <button class="btn-avail amber" onclick="openReportEditorById('${item.id}')" title="Edit Report & Player Mins">📝 Edit</button>
+            <button class="btn-avail yes" onclick="openReportById('${item.id}')">📋 Report</button>
+            <button class="btn-icon-sq" onclick="deleteHistoryMatch('${item.id}')">🗑️</button>
+          </div>
+        `;
         list.appendChild(row);
       });
     }
 
-    function openReportById(id) { const item = state.history.find(x => x.id === id); if (item) openReportModal(item.report); }
+    function openReportById(id) {
+      const item = state.history.find(x => x.id === id);
+      if (!item) return;
+      document.getElementById("btn-rep-edit-tl").onclick = () => openTimelineEditorFor(id);
+      document.getElementById("btn-rep-edit-rep").onclick = () => openReportEditorById(id);
+      openReportModal(item.report);
+    }
     function openReportModal(text) { activeReportText = text || ""; document.getElementById("report-preview-box").textContent = activeReportText; openModal("modal-report"); }
     function copyReportForWhatsApp() { navigator.clipboard.writeText(activeReportText); alert("Match Report copied! Ready to paste into WhatsApp."); }
     function nativeShareReport() { if (navigator.share) navigator.share({ title: "Matchday Report", text: activeReportText }).catch(() => {}); else copyReportForWhatsApp(); }
