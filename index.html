@@ -28,6 +28,7 @@
 
     /* BROADCAST SCOREBUG HEADER */
     .top-cockpit { background: var(--navy-900); color: #fff; padding: 8px 10px; border-bottom: 2px solid var(--navy-700); position: sticky; top: 0; z-index: 900; box-shadow: 0 3px 10px rgba(0,0,0,0.25); }
+    .cockpit-inner { max-width: 1180px; margin: 0 auto; width: 100%; }
     .app-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 6px; }
     .brand-logo { display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 0.86rem; letter-spacing: 0.5px; color: #fff; cursor: pointer; }
     .brand-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sky-token); display: inline-block; }
@@ -71,20 +72,27 @@
 
     .view-section { display: none; padding: 8px 10px; max-width: 600px; width: 100%; margin: 0 auto; }
     .view-section.active { display: block; }
+    .tablet-grid-2 { display: block; }
     .day-card { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 12px; padding: 10px; margin-bottom: 10px; box-shadow: 0 2px 0 rgba(15,23,42,0.1); }
     .day-card-title { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-    .equal-ticker { background: #0f172a; color: #fff; border: 2px solid var(--text-main); border-bottom: none; border-radius: 12px 12px 0 0; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 36px; font-size: 0.75rem; font-weight: 800; }
-    .btn-quick-swap { background: var(--green-bright); color: #fff; border: 1.5px solid #bbf7d0; border-radius: 6px; padding: 3px 9px; font-weight: 900; font-size: 0.72rem; cursor: pointer; flex-shrink: 0; min-height: 28px; }
+    /* ADVISOR & PLANNING TICKER BAR */
+    .equal-ticker { background: #0f172a; color: #fff; border: 2px solid var(--text-main); border-bottom: none; border-radius: 12px 12px 0 0; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; gap: 6px; min-height: 38px; font-size: 0.74rem; font-weight: 800; }
+    .equal-ticker.draft-active { background: #78350f; border-color: #f59e0b; color: #fef3c7; }
+    .btn-quick-swap { background: var(--green-bright); color: #fff; border: 1.5px solid #bbf7d0; border-radius: 6px; padding: 4px 9px; font-weight: 900; font-size: 0.71rem; cursor: pointer; flex-shrink: 0; min-height: 28px; }
+    .btn-plan-toggle { background: #1e293b; color: #38bdf8; border: 1.5px solid #0284c7; border-radius: 6px; padding: 4px 8px; font-weight: 900; font-size: 0.71rem; cursor: pointer; flex-shrink: 0; min-height: 28px; }
+    .btn-plan-toggle.active { background: #f59e0b; color: #0f172a; border-color: #fff; }
 
     /* PITCH BOARD & TOKENS */
-    .pitch-wrapper { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 0 0 12px 12px; padding: 6px; margin-bottom: 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.1); }
+    .pitch-wrapper { background: var(--card-bg); border: 2px solid var(--text-main); border-radius: 0 0 12px 12px; padding: 6px; margin-bottom: 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.1); transition: border-color 0.2s, background 0.2s; }
     .pitch-wrapper.standalone { border-radius: 12px; }
+    .pitch-wrapper.draft-mode { background: #fffbeb; border: 2.5px dashed #d97706; }
     .pitch-board { position: relative; width: 100%; height: 390px; background: repeating-linear-gradient(0deg, var(--pitch-dark) 0px, var(--pitch-dark) 36px, var(--pitch-light) 36px, var(--pitch-light) 72px); border: 2px solid #fff; border-radius: 8px; overflow: hidden; }
     .pitch-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .pitch-overlay-badge { position: absolute; top: 6px; background: rgba(6,16,30,0.85); color: #fff; font-size: 0.65rem; font-weight: 900; padding: 3px 7px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); z-index: 5; pointer-events: none; }
     .pitch-overlay-badge.left { left: 6px; }
     .pitch-overlay-badge.right { right: 6px; }
+    .pitch-overlay-badge.draft-badge { background: rgba(217,119,6,0.95); color: #fff; border-color: #fde68a; }
     .pitch-empty-msg { position: absolute; inset: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: rgba(6,16,30,0.88); color: #fff; border-radius: 10px; padding: 16px; z-index: 20; font-weight: 800; gap: 10px; }
 
     .pitch-token { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; cursor: grab; z-index: 10; width: 66px; touch-action: none; }
@@ -93,27 +101,38 @@
     .token-disc { width: 42px; height: 42px; border-radius: 50%; background: var(--sky-token); border: 3px solid var(--navy-950); color: var(--navy-950); font-size: 1.05rem; font-weight: 900; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.45); pointer-events: none; }
     .token-disc.met-floor { border-color: #22c55e; box-shadow: 0 0 0 1.5px #14532d, 0 2px 5px rgba(0,0,0,0.45); }
     .token-disc.cap-reached { border-color: #f97316; box-shadow: 0 0 0 2px #fed7aa, 0 2px 6px rgba(0,0,0,0.5); }
+    .token-disc.draft-incoming { background: #fde047; border: 3px dashed #b45309; color: #0f172a; }
     .token-role-pill { position: absolute; top: -5px; right: -10px; background: var(--navy-950); color: #fff; font-size: 0.55rem; font-weight: 900; padding: 1px 4px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.4); }
+    .token-role-pill.new-tag { background: #15803d; border-color: #bbf7d0; }
     .token-card-flag { position: absolute; top: -6px; left: -6px; font-size: 0.72rem; }
-    .token-label { margin-top: 3px; background: rgba(6,16,30,0.92); color: #fff; font-size: 0.68rem; font-weight: 800; padding: 1.5px 6px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.22); max-width: 74px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; pointer-events: none; }
+    .token-label { margin-top: 3px; background: rgba(6,16,30,0.92); color: #fff; font-size: 0.68rem; font-weight: 800; padding: 1.5px 6px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.22); max-width: 78px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; pointer-events: none; }
     .token-label .lbl-mins { color: #fef08a; font-weight: 900; margin-left: 2px; }
     .token-label .lbl-mins.over { color: #fca5a5; }
 
+    /* TOUCHLINE STRIP & DRAFT CONFIRMATION BAR */
     .touchline-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
-    .btn-touch { min-height: 44px; border: 2px solid var(--text-main); border-radius: 10px; font-size: 0.84rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.12); }
+    .draft-confirm-bar { display: none; background: #fffbeb; border: 2px solid #d97706; border-radius: 11px; padding: 8px; margin-bottom: 8px; box-shadow: 0 3px 8px rgba(217,119,6,0.18); }
+    .draft-confirm-bar.open { display: block; }
+    .draft-summary-text { font-size: 0.76rem; font-weight: 900; color: #92400e; margin-bottom: 6px; text-align: center; }
+    .draft-btn-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 6px; }
+
+    .btn-touch { min-height: 44px; border: 2px solid var(--text-main); border-radius: 10px; font-size: 0.82rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 8px; box-shadow: 0 2px 0 rgba(15,23,42,0.12); }
     .btn-touch.goal-us { background: #dcfce7; color: #14532d; border-color: #15803d; }
     .btn-touch.goal-them { background: #fee2e2; color: #7f1d1d; border-color: #b91c1c; }
     .btn-touch.sub-btn { background: var(--sky-token); color: var(--navy-950); }
     .btn-touch.card-btn { background: #fef3c7; color: #78350f; border-color: #d97706; }
 
+    /* COMPACT 3-COLUMN BENCH */
     .bench-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .bench-card { background: #f8fafc; border: 2px solid var(--text-main); border-radius: 9px; padding: 6px 7px 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 3px; cursor: pointer; }
     .bench-card.selected { background: #fef9c3; border-color: #ca8a04; outline: 3px solid #facc15; }
+    .bench-card.subbing-off { background: #fff7ed; border: 2px dashed #ea580c; }
     .bench-top-row { display: flex; align-items: center; gap: 5px; overflow: hidden; }
     .num-circle { width: 24px; height: 24px; border-radius: 50%; background: var(--sky-token); border: 1.5px solid var(--navy-950); color: var(--navy-950); font-weight: 900; font-size: 0.74rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .bench-name { font-weight: 800; font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .bench-meta-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.66rem; font-weight: 800; color: var(--text-muted); }
     .need-pill { color: #15803d; font-weight: 900; }
+    .off-pill { color: #c2410c; font-weight: 900; }
     .prog-track { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: #cbd5e1; }
     .prog-fill { height: 100%; background: var(--green-bright); }
 
@@ -163,185 +182,239 @@
     .chip-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
     .player-chip { padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 800; border: 1.5px solid #94a3b8; background: #f1f5f9; color: #475569; cursor: pointer; }
     .player-chip.active { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+
+    /* AUTOMATIC TABLET / WIDE-SCREEN SPLIT-SCREEN LAYOUT */
+    @media (min-width: 768px) {
+      .view-section { max-width: 1180px; padding: 14px 18px; }
+      .tablet-grid-2 { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 16px; align-items: start; }
+      .pitch-board { height: 480px; }
+      .pitch-token { width: 78px; }
+      .token-disc { width: 50px; height: 50px; font-size: 1.2rem; }
+      .token-label { font-size: 0.76rem; max-width: 88px; padding: 2px 8px; }
+      .score-team-name { font-size: 1.15rem; }
+      .score-center-box { font-size: 1.55rem; padding: 4px 18px; }
+      /* On Tablet Squad View, show Roster and Season Stats side-by-side automatically */
+      #view-squad .subtab-bar { display: none; }
+      #squad-split-wrapper { display: grid; grid-template-columns: 1fr 1.15fr; gap: 16px; align-items: start; }
+      #squad-roster-pane, #squad-stats-pane { display: block !important; }
+      .modal-backdrop { align-items: center; }
+      .modal-sheet { border-radius: 18px; border: 3px solid var(--navy-900); max-height: 85vh; }
+    }
   </style>
 </head>
 <body>
 
   <!-- BROADCAST SCOREBUG HEADER -->
   <header class="top-cockpit">
-    <div class="app-bar">
-      <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.4</small></span></div>
-      <div class="header-pills">
-        <button class="icon-pill" onclick="forceCloudPull()" title="Cloud Sync"><span class="dot-indicator active" id="cloud-dot"></span></button>
-        <button class="icon-pill" onclick="toggleWakeLock()" title="Screen Wake Lock & Watch Sync"><span class="dot-indicator active" id="wake-dot"></span>⌚</button>
-        <button class="icon-pill" onclick="undoLastAction()" title="Undo Last Event">↩️ Undo</button>
-        <button class="icon-pill settings-btn" onclick="openSettingsModal()">⚙️ <span id="header-team-code">Setup</span></button>
-      </div>
-    </div>
-
-    <div class="scoreboard-row">
-      <div class="score-team-col home"><span class="us-tag" id="badge-left">HOME</span><div class="score-team-name" id="team-left">Opposition</div></div>
-      <div class="score-center-box" id="score-display">0 - 0</div>
-      <div class="score-team-col away"><div class="score-team-name" id="team-right">My Team</div><span class="us-tag" id="badge-right">US</span></div>
-    </div>
-
-    <div class="control-strip">
-      <div class="clock-pill-box" onclick="toggleQuickAdjustDrawer()" title="Tap to adjust clock">
-        <span class="period-tag" id="period-badge">PRE</span>
-        <span class="match-timer" id="clock-text">00:00</span>
-        <span class="stoppage-badge" id="stoppage-text"></span>
+    <div class="cockpit-inner">
+      <div class="app-bar">
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.5</small></span></div>
+        <div class="header-pills">
+          <button class="icon-pill" onclick="forceCloudPull()" title="Cloud Sync"><span class="dot-indicator active" id="cloud-dot"></span></button>
+          <button class="icon-pill" onclick="toggleWakeLock()" title="Screen Wake Lock & Watch Sync"><span class="dot-indicator active" id="wake-dot"></span>⌚</button>
+          <button class="icon-pill" onclick="undoLastAction()" title="Undo Last Event">↩️ Undo</button>
+          <button class="icon-pill settings-btn" onclick="openSettingsModal()">⚙️ <span id="header-team-code">Setup</span></button>
+        </div>
       </div>
 
-      <div class="sub-pill-box" id="sub-timer-strip" onclick="handleSubPillTap()" title="Tap to Reset or Silence Sub Timer">
-        <span id="sub-timer-label">⏲️</span>
-        <span class="sub-pill-digits" id="sub-timer-digits">08:00</span>
-        <span style="font-size:0.68rem;opacity:0.8;">↺</span>
+      <div class="scoreboard-row">
+        <div class="score-team-col home"><span class="us-tag" id="badge-left">HOME</span><div class="score-team-name" id="team-left">Opposition</div></div>
+        <div class="score-center-box" id="score-display">0 - 0</div>
+        <div class="score-team-col away"><div class="score-team-name" id="team-right">My Team</div><span class="us-tag" id="badge-right">US</span></div>
       </div>
 
-      <div class="clock-btns-right" id="clock-buttons-container"></div>
-    </div>
+      <div class="control-strip">
+        <div class="clock-pill-box" onclick="toggleQuickAdjustDrawer()" title="Tap to adjust clock">
+          <span class="period-tag" id="period-badge">PRE</span>
+          <span class="match-timer" id="clock-text">00:00</span>
+          <span class="stoppage-badge" id="stoppage-text"></span>
+        </div>
 
-    <div class="Quick-adj-drawer" id="quick-adj-drawer">
-      <span>Clock & Sub Timer:</span>
-      <div style="display:flex;gap:5px;">
-        <button class="btn-mini-adj" onclick="adjustClock(-60)">-1m Clock</button>
-        <button class="btn-mini-adj" onclick="adjustClock(60)">+1m Clock</button>
-        <button class="btn-mini-adj" onclick="cycleSubIntervalQuick()" id="btn-cycle-sub">Sub: 8m</button>
-        <button class="btn-mini-adj" onclick="snoozeSubTimer(120)">+2m Sub</button>
+        <div class="sub-pill-box" id="sub-timer-strip" onclick="handleSubPillTap()" title="Tap to Reset or Silence Sub Timer">
+          <span id="sub-timer-label">⏲️</span>
+          <span class="sub-pill-digits" id="sub-timer-digits">08:00</span>
+          <span style="font-size:0.68rem;opacity:0.8;">↺</span>
+        </div>
+
+        <div class="clock-btns-right" id="clock-buttons-container"></div>
+      </div>
+
+      <div class="Quick-adj-drawer" id="quick-adj-drawer">
+        <span>Clock & Sub Timer:</span>
+        <div style="display:flex;gap:5px;">
+          <button class="btn-mini-adj" onclick="adjustClock(-60)">-1m Clock</button>
+          <button class="btn-mini-adj" onclick="adjustClock(60)">+1m Clock</button>
+          <button class="btn-mini-adj" onclick="cycleSubIntervalQuick()" id="btn-cycle-sub">Sub: 8m</button>
+          <button class="btn-mini-adj" onclick="snoozeSubTimer(120)">+2m Sub</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- TAB 1: MATCH COCKPIT -->
+  <!-- TAB 1: MATCH COCKPIT (AUTOMATIC 2-COLUMN SPLIT ON TABLET) -->
   <main id="view-match" class="view-section active">
-    <div class="equal-ticker" id="equal-advisor-box">
-      <span id="equal-ticker-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">⚖️ Target: 53m/player</span>
-      <button class="btn-quick-swap" id="equal-swap-btn" style="display:none;">⚡ Swap</button>
-    </div>
+    <div class="tablet-grid-2">
+      <!-- LEFT PANE: TICKER, PITCH & TOUCHLINE STRIP -->
+      <div class="tablet-col-left">
+        <div class="equal-ticker" id="equal-advisor-box">
+          <span id="equal-ticker-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">⚖️ Target: 53m/player</span>
+          <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
+            <button class="btn-quick-swap" id="equal-swap-btn" style="display:none;">⚡ Swap</button>
+            <button class="btn-plan-toggle" id="btn-ticker-plan" onclick="toggleDraftSubMode()">🧪 Plan Subs</button>
+          </div>
+        </div>
 
-    <div class="pitch-wrapper" id="match-pitch-wrapper">
-      <div class="pitch-board" id="match-pitch-board">
-        <div class="pitch-overlay-badge left" id="match-formation-badge">11v11 • 4-3-3</div>
-        <div class="pitch-overlay-badge right">🟢50% • 🟠Cap • Tap=Act</div>
-        <svg class="pitch-svg" viewBox="0 0 100 140" preserveAspectRatio="none">
-          <rect x="3" y="3" width="94" height="134" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <line x1="3" y1="70" x2="97" y2="70" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <circle cx="50" cy="70" r="13" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="22" y="3" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="34" y="3" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="22" y="119" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="34" y="130" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-        </svg>
-        <div id="match-pitch-tokens"></div>
+        <div class="pitch-wrapper" id="match-pitch-wrapper">
+          <div class="pitch-board" id="match-pitch-board">
+            <div class="pitch-overlay-badge left" id="match-formation-badge">11v11 • 4-3-3</div>
+            <div class="pitch-overlay-badge right" id="match-pitch-right-badge">🟢50% • 🟠Cap • Tap=Act</div>
+            <svg class="pitch-svg" viewBox="0 0 100 140" preserveAspectRatio="none">
+              <rect x="3" y="3" width="94" height="134" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <line x1="3" y1="70" x2="97" y2="70" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <circle cx="50" cy="70" r="13" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="22" y="3" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="34" y="3" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="22" y="119" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="34" y="130" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+            </svg>
+            <div id="match-pitch-tokens"></div>
+          </div>
+        </div>
+
+        <!-- DRAFT MODE CONFIRM / CANCEL BAR -->
+        <div class="draft-confirm-bar" id="draft-confirm-bar">
+          <div class="draft-summary-text" id="draft-summary-text">🧪 SANDBOX MODE — Tap bench & pitch players to queue batch subs</div>
+          <div class="draft-btn-grid">
+            <button class="btn-outline" style="min-height:42px;background:#fff;border-color:#b45309;color:#92400e;font-weight:900;" onclick="cancelDraftSubMode()">✕ Reset / Cancel</button>
+            <button class="btn-ctrl-main" style="min-height:42px;font-size:0.86rem;" id="btn-commit-draft" onclick="commitDraftSubstitutions()">✅ Confirm Subs (0)</button>
+          </div>
+        </div>
+
+        <!-- NORMAL LIVE TOUCHLINE STRIP -->
+        <div class="touchline-strip" id="live-touchline-strip">
+          <button class="btn-touch goal-us" onclick="openGoalModal()">⚽ +Goal Us</button>
+          <button class="btn-touch goal-them" onclick="logOppositionGoal()">🥅 +Goal Them</button>
+          <button class="btn-touch sub-btn" onclick="toggleDraftSubMode()">🧪 Plan Subs</button>
+        </div>
       </div>
-    </div>
 
-    <div class="touchline-strip">
-      <button class="btn-touch goal-us" onclick="openGoalModal()">⚽ +Goal Us</button>
-      <button class="btn-touch goal-them" onclick="logOppositionGoal()">🥅 +Goal Them</button>
-      <button class="btn-touch sub-btn" onclick="openSubModal()">🔄 Sub</button>
-    </div>
+      <!-- RIGHT PANE: BENCH ROTATION & TIMELINE -->
+      <div class="tablet-col-right">
+        <div class="day-card">
+          <div class="day-card-title">
+            <span id="match-bench-title">Bench (Tap Player to Sub On)</span>
+            <span style="font-size:0.7rem;color:var(--text-muted);" id="match-bench-count"></span>
+          </div>
+          <div class="bench-list" id="match-bench-grid"></div>
+        </div>
 
-    <div class="day-card">
-      <div class="day-card-title"><span>Bench (Tap Player to Sub On)</span><span style="font-size:0.7rem;color:var(--text-muted);" id="match-bench-count"></span></div>
-      <div class="bench-list" id="match-bench-grid"></div>
-    </div>
-
-    <div class="day-card">
-      <div class="day-card-title">
-        <span>Match Timeline</span>
-        <button class="btn-avail sky" onclick="openLiveTimelineEditor()">⏱️ Edit Timeline / Subs</button>
+        <div class="day-card">
+          <div class="day-card-title">
+            <span>Match Timeline</span>
+            <button class="btn-avail sky" onclick="openLiveTimelineEditor()">⏱️ Edit Timeline / Subs</button>
+          </div>
+          <div id="match-timeline-list"></div>
+        </div>
       </div>
-      <div id="match-timeline-list"></div>
     </div>
   </main>
 
   <!-- TAB 2: STREAMLINED WEEKLY LINEUP PREP -->
   <section id="view-lineup" class="view-section">
-    <div class="day-card">
-      <div class="day-card-title">
-        <span>Fixture & Tactics</span>
-        <button class="btn-outline" style="min-height:30px;padding:0 8px;font-size:0.7rem;" onclick="openSettingsModal()" id="lineup-rules-pill">⚙️ Team Settings</button>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Opposition Team Name</label>
-        <input type="text" id="input-opp-team" class="day-input" placeholder="e.g. Maidenhead Utd Galaxy" onchange="saveFixtureConfig()">
-      </div>
-      <div class="form-grid-2">
-        <div class="field-group">
-          <label class="field-label">Venue (Home = Left)</label>
-          <div class="segmented-toggle">
-            <button type="button" class="seg-btn" id="seg-home" onclick="setVenue('home')">HOME</button>
-            <button type="button" class="seg-btn active" id="seg-away" onclick="setVenue('away')">AWAY</button>
+    <div class="tablet-grid-2">
+      <div class="tablet-col-left">
+        <div class="info-banner" id="swap-helper-banner">Drag any token to custom coordinates, or tap two players to swap!</div>
+        <div class="pitch-wrapper standalone">
+          <div class="pitch-board" id="lineup-pitch-board">
+            <div class="pitch-overlay-badge left" id="lineup-formation-badge">11v11 • 4-3-3</div>
+            <div class="pitch-overlay-badge right">Drag = Move • Tap = Swap</div>
+            <svg class="pitch-svg" viewBox="0 0 100 140" preserveAspectRatio="none">
+              <rect x="3" y="3" width="94" height="134" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <line x1="3" y1="70" x2="97" y2="70" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <circle cx="50" cy="70" r="13" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="22" y="3" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="34" y="3" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="22" y="119" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+              <rect x="34" y="130" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
+            </svg>
+            <div id="lineup-pitch-tokens"></div>
           </div>
         </div>
-        <div class="field-group">
-          <label class="field-label">Tactical Formation</label>
-          <select id="select-formation" class="day-select" onchange="changeFormation(this.value)"></select>
+      </div>
+
+      <div class="tablet-col-right">
+        <div class="day-card">
+          <div class="day-card-title">
+            <span>Fixture & Tactics</span>
+            <button class="btn-outline" style="min-height:30px;padding:0 8px;font-size:0.7rem;" onclick="openSettingsModal()" id="lineup-rules-pill">⚙️ Team Settings</button>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Opposition Team Name</label>
+            <input type="text" id="input-opp-team" class="day-input" placeholder="e.g. Maidenhead Utd Galaxy" onchange="saveFixtureConfig()">
+          </div>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label class="field-label">Venue (Home = Left)</label>
+              <div class="segmented-toggle">
+                <button type="button" class="seg-btn" id="seg-home" onclick="setVenue('home')">HOME</button>
+                <button type="button" class="seg-btn active" id="seg-away" onclick="setVenue('away')">AWAY</button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Tactical Formation</label>
+              <select id="select-formation" class="day-select" onchange="changeFormation(this.value)"></select>
+            </div>
+          </div>
+          <div class="lineup-btn-row">
+            <button class="btn-sky" onclick="autoFillStartingLineup()">⚡ Auto-Fill</button>
+            <button class="btn-outline" onclick="resetFormationCoords()">📐 Reset Shape</button>
+            <button class="btn-outline" onclick="resetMatchSheet()">🔄 Reset Match</button>
+          </div>
+        </div>
+
+        <div class="day-card">
+          <div class="day-card-title"><span>Available Substitutes (Tap to Swap)</span></div>
+          <div class="bench-list" id="lineup-bench-grid"></div>
         </div>
       </div>
-      <div class="lineup-btn-row">
-        <button class="btn-sky" onclick="autoFillStartingLineup()">⚡ Auto-Fill</button>
-        <button class="btn-outline" onclick="resetFormationCoords()">📐 Reset Shape</button>
-        <button class="btn-outline" onclick="resetMatchSheet()">🔄 Reset Match</button>
-      </div>
-    </div>
-    <div class="info-banner" id="swap-helper-banner">Drag any token to custom coordinates, or tap two players to swap!</div>
-    <div class="pitch-wrapper standalone">
-      <div class="pitch-board" id="lineup-pitch-board">
-        <div class="pitch-overlay-badge left" id="lineup-formation-badge">11v11 • 4-3-3</div>
-        <div class="pitch-overlay-badge right">Drag = Move • Tap = Swap</div>
-        <svg class="pitch-svg" viewBox="0 0 100 140" preserveAspectRatio="none">
-          <rect x="3" y="3" width="94" height="134" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <line x1="3" y1="70" x2="97" y2="70" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <circle cx="50" cy="70" r="13" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="22" y="3" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="34" y="3" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="22" y="119" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-          <rect x="34" y="130" width="32" height="7" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
-        </svg>
-        <div id="lineup-pitch-tokens"></div>
-      </div>
-    </div>
-    <div class="day-card">
-      <div class="day-card-title"><span>Available Substitutes (Tap to Swap)</span></div>
-      <div class="bench-list" id="lineup-bench-grid"></div>
     </div>
   </section>
 
-  <!-- TAB 3: SQUAD & SEASON STATS -->
+  <!-- TAB 3: SQUAD & SEASON STATS (SIDE-BY-SIDE ON TABLET) -->
   <section id="view-squad" class="view-section">
     <div class="subtab-bar">
       <button class="subtab-btn active" id="btn-sub-roster" onclick="switchSquadSubtab('roster')">👥 Squad Roster</button>
       <button class="subtab-btn" id="btn-sub-stats" onclick="switchSquadSubtab('stats')">📊 Season Stats</button>
     </div>
-    <div id="squad-roster-pane">
-      <div class="day-card">
-        <div class="day-card-title">Add New Player</div>
-        <div style="display:grid;grid-template-columns:70px 1fr auto;gap:6px;">
-          <input type="number" id="new-player-num" class="day-input" placeholder="#">
-          <input type="text" id="new-player-name" class="day-input" placeholder="First Name">
-          <button class="btn-sky" onclick="addNewPlayer()">+ Add</button>
+    <div id="squad-split-wrapper">
+      <div id="squad-roster-pane">
+        <div class="day-card">
+          <div class="day-card-title">Add New Player</div>
+          <div style="display:grid;grid-template-columns:70px 1fr auto;gap:6px;">
+            <input type="number" id="new-player-num" class="day-input" placeholder="#">
+            <input type="text" id="new-player-name" class="day-input" placeholder="First Name">
+            <button class="btn-sky" onclick="addNewPlayer()">+ Add</button>
+          </div>
+        </div>
+        <div class="day-card">
+          <div class="day-card-title"><span>Active Squad List</span><span id="squad-count-label" style="font-size:0.75rem;color:var(--text-muted);"></span></div>
+          <div id="squad-roster-list"></div>
         </div>
       </div>
-      <div class="day-card">
-        <div class="day-card-title"><span>Active Squad List</span><span id="squad-count-label" style="font-size:0.75rem;color:var(--text-muted);"></span></div>
-        <div id="squad-roster-list"></div>
-      </div>
-    </div>
-    <div id="squad-stats-pane" style="display:none;">
-      <div class="day-card">
-        <div class="day-card-title">
-          <span>Cumulative Season Totals</span>
-          <span style="font-size:0.7rem;color:var(--text-muted);">Tap ✏️ to edit</span>
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="stats-table">
-            <thead>
-              <tr><th>#</th><th>Player</th><th>Apps (S/Sub)</th><th>Mins</th><th>⚽</th><th>🎯</th><th>🟨/🟥</th><th>Edit</th></tr>
-            </thead>
-            <tbody id="season-stats-tbody"></tbody>
-          </table>
+      <div id="squad-stats-pane" style="display:none;">
+        <div class="day-card">
+          <div class="day-card-title">
+            <span>Cumulative Season Totals</span>
+            <span style="font-size:0.7rem;color:var(--text-muted);">Tap ✏️ to edit</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="stats-table">
+              <thead>
+                <tr><th>#</th><th>Player</th><th>Apps (S/Sub)</th><th>Mins</th><th>⚽</th><th>🎯</th><th>🟨/🟥</th><th>Edit</th></tr>
+              </thead>
+              <tbody id="season-stats-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -475,7 +548,8 @@
       <div class="sheet-header"><div class="sheet-title" id="pa-modal-title">Player Actions</div><button class="btn-close" onclick="closeModal('modal-player-action')">✕</button></div>
       <div style="display:grid;gap:8px;">
         <button class="btn-touch goal-us" id="pa-btn-goal">⚽ Scored a Goal</button>
-        <button class="btn-touch sub-btn" id="pa-btn-sub">🔄 Substitute Off</button>
+        <button class="btn-touch sub-btn" id="pa-btn-sub">🔄 Quick Sub Off (Single)</button>
+        <button class="btn-touch card-btn" id="pa-btn-plan">🧪 Open Batch Sub Planner</button>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="btn-touch card-btn" id="pa-btn-yc">🟨 Yellow Card</button>
           <button class="btn-touch goal-them" id="pa-btn-rc">🟥 Red Card</button>
@@ -494,13 +568,16 @@
     </div>
   </div>
 
-  <!-- MODAL 5: ROLLING SUB -->
+  <!-- MODAL 5: ROLLING SUB (SINGLE) -->
   <div class="modal-backdrop" id="modal-sub">
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title">🔄 Rolling Substitution</div><button class="btn-close" onclick="closeModal('modal-sub')">✕</button></div>
       <div class="field-group"><label class="field-label">Player Coming OFF (On Pitch)</label><select id="sub-off-id" class="day-select"></select></div>
       <div class="field-group"><label class="field-label">Player Coming ON (Bench — Sorted by Mins Needed)</label><select id="sub-on-id" class="day-select"></select></div>
-      <button class="btn-sky" style="width:100%;margin-top:6px;" onclick="confirmRollingSub()">🔄 Make Substitution</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
+        <button class="btn-outline" onclick="closeModal('modal-sub');toggleDraftSubMode();">🧪 Plan Batch Subs</button>
+        <button class="btn-sky" onclick="confirmRollingSub()">🔄 Make Sub Now</button>
+      </div>
     </div>
   </div>
 
@@ -552,8 +629,6 @@
         <div class="sheet-title" id="tl-edit-title">⏱️ Edit Timeline & Finish Time</div>
         <button class="btn-close" onclick="closeModal('modal-edit-timeline')">✕</button>
       </div>
-
-      <!-- Finish Time Auto-Adjust Box -->
       <div id="tl-finish-time-box" style="background:#f8fafc;border:2px solid var(--navy-900);border-radius:10px;padding:10px;margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
           <div>
@@ -677,9 +752,16 @@
     let currentTeamCode = "";
     let rtdb = null, firebaseRef = null, selectedSwapTarget = null, activeReportText = "", wakeLockSentinel = null;
     let adminTapCount = 0, adminTapTimer = null, audioCtx = null, watchAudioEl = null;
+    let activePointerDrag = false;
 
-    // Editing State Holders
-    let editingTargetMatchId = null; // "LIVE" or history item ID
+    // BATCH SUB PLANNING (SANDBOX) STATE
+    let draftSubMode = false;
+    let draftLineupIds = [];
+    let draftCoords = [];
+    let draftSelectedTarget = null;
+
+    // TIMELINE & REPORT EDITING STATE
+    let editingTargetMatchId = null;
     let tempEditTimeline = [];
     let tempOriginalFT = 80;
     let tempFinalPitchSet = new Set();
@@ -698,7 +780,110 @@
 
     let state = getBlankState();
 
-    // SMARTWATCH MEDIA SESSION API (OPTION 1)
+    // BATCH SUB PLANNING ENGINE (SANDBOX MODE)
+    function toggleDraftSubMode() {
+      if (draftSubMode) {
+        cancelDraftSubMode();
+        return;
+      }
+      if (!state.squad.length) return alert("Please add players to your Squad first!");
+      draftSubMode = true;
+      draftLineupIds = [...state.match.lineupIds];
+      draftCoords = JSON.parse(JSON.stringify(getActiveCoords()));
+      draftSelectedTarget = null;
+      renderMatchView();
+    }
+
+    function cancelDraftSubMode() {
+      draftSubMode = false;
+      draftLineupIds = [];
+      draftCoords = [];
+      draftSelectedTarget = null;
+      renderMatchView();
+    }
+
+    function handleDraftSwapTap(target) {
+      if (!draftSelectedTarget) {
+        draftSelectedTarget = target;
+        renderMatchView();
+        return;
+      }
+      if (draftSelectedTarget.type === "pitch" && target.type === "pitch") {
+        const i1 = draftSelectedTarget.slotIndex, i2 = target.slotIndex;
+        const tmp = draftLineupIds[i1];
+        draftLineupIds[i1] = draftLineupIds[i2];
+        draftLineupIds[i2] = tmp;
+      } else if (draftSelectedTarget.type === "pitch" && target.type === "bench") {
+        draftLineupIds[draftSelectedTarget.slotIndex] = target.playerId;
+      } else if (draftSelectedTarget.type === "bench" && target.type === "pitch") {
+        draftLineupIds[target.slotIndex] = draftSelectedTarget.playerId;
+      } else if (draftSelectedTarget.type === "bench" && target.type === "bench") {
+        draftSelectedTarget = target;
+        renderMatchView();
+        return;
+      }
+      draftSelectedTarget = null;
+      renderMatchView();
+    }
+
+    function getDraftBatchDiff() {
+      const liveIds = state.match.lineupIds;
+      const comingOffIds = liveIds.filter(id => !draftLineupIds.includes(id));
+      const comingOnIds = draftLineupIds.filter(id => !liveIds.includes(id));
+      const pairs = [];
+      const count = Math.min(comingOffIds.length, comingOnIds.length);
+      for (let i = 0; i < count; i++) {
+        const pOff = state.squad.find(p => p.id === comingOffIds[i]);
+        const pOn = state.squad.find(p => p.id === comingOnIds[i]);
+        pairs.push({ offId: comingOffIds[i], onId: comingOnIds[i], pOff, pOn });
+      }
+      // Check if positions/slots changed even without bench swaps
+      const shapeChanged = liveIds.some((id, idx) => draftLineupIds[idx] !== id) ||
+        JSON.stringify(draftCoords) !== JSON.stringify(getActiveCoords());
+      return { pairs, comingOffIds, comingOnIds, shapeChanged };
+    }
+
+    function commitDraftSubstitutions() {
+      const diff = getDraftBatchDiff();
+      if (!diff.pairs.length && !diff.shapeChanged) {
+        cancelDraftSubMode();
+        return;
+      }
+      pushUndo();
+      const minStr = getCurrentMinuteStr();
+      diff.pairs.forEach(pair => {
+        if (!state.match.appearedIds.includes(pair.onId)) {
+          state.match.appearedIds.push(pair.onId);
+        }
+        state.match.timeline.unshift({
+          min: minStr,
+          type: "sub",
+          offId: pair.offId,
+          onId: pair.onId,
+          text: `🔄 SUB: ${pair.pOn ? pair.pOn.name : 'Sub'} ON for ${pair.pOff ? pair.pOff.name : 'Player'}`
+        });
+      });
+
+      state.match.lineupIds = [...draftLineupIds];
+      state.setup.customCoords = JSON.parse(JSON.stringify(draftCoords));
+
+      if (diff.pairs.length > 0) {
+        const iv = parseInt(state.setup.subIntervalMins) || 0;
+        if (iv > 0) {
+          state.match.subTimerRemSec = iv * 60;
+          state.match.subAlarmActive = false;
+        }
+      }
+
+      draftSubMode = false;
+      draftLineupIds = [];
+      draftCoords = [];
+      draftSelectedTarget = null;
+      persist(true);
+      renderEverything();
+    }
+
+    // SMARTWATCH MEDIA SESSION API
     function initWatchMediaSession() {
       if (watchAudioEl) return;
       try {
@@ -934,6 +1119,7 @@
         state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[state.setup.formation]));
       }
 
+      draftSubMode = false;
       sanitizeState();
       persist(true);
       if (isSwitchingTeam) bindFirebaseTeamListener();
@@ -950,6 +1136,7 @@
       if (!clean) return;
       currentTeamCode = clean;
       localStorage.setItem("matchday_active_team_code", currentTeamCode);
+      draftSubMode = false;
       state = getBlankState();
       loadLocal();
       bindFirebaseTeamListener();
@@ -1056,10 +1243,11 @@
       return state.setup.customCoords;
     }
 
-    function bindTokenDragAndTap(el, slotIdx, pid, boardId, onTapCallback) {
+    function bindTokenDragAndTap(el, slotIdx, pid, boardId, coordsArray, isDraftBoard, onTapCallback) {
       let startX = 0, startY = 0, isDragging = false, pointerDown = false;
       el.addEventListener("pointerdown", e => {
         pointerDown = true; isDragging = false; startX = e.clientX; startY = e.clientY;
+        activePointerDrag = true;
         try { el.setPointerCapture(e.pointerId); } catch (err) {}
       });
       el.addEventListener("pointermove", e => {
@@ -1073,19 +1261,26 @@
           const nx = Math.max(8, Math.min(92, Math.round(((e.clientX - rect.left) / rect.width) * 100)));
           const ny = Math.max(8, Math.min(92, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
           el.style.left = nx + "%"; el.style.top = ny + "%";
-          const coords = getActiveCoords();
-          if (coords[slotIdx]) { coords[slotIdx].x = nx; coords[slotIdx].y = ny; }
+          if (coordsArray[slotIdx]) { coordsArray[slotIdx].x = nx; coordsArray[slotIdx].y = ny; }
         }
       });
       const finishPointer = e => {
         if (!pointerDown) return;
-        pointerDown = false; el.classList.remove("dragging");
+        pointerDown = false; activePointerDrag = false;
+        el.classList.remove("dragging");
         try { el.releasePointerCapture(e.pointerId); } catch (err) {}
-        if (isDragging) { isDragging = false; persist(true); renderLineupView(); renderMatchView(); }
-        else onTapCallback();
+        if (isDragging) {
+          isDragging = false;
+          if (!isDraftBoard) persist(true);
+          renderLineupView();
+          renderMatchView();
+        } else onTapCallback();
       };
       el.addEventListener("pointerup", finishPointer);
-      el.addEventListener("pointercancel", () => { pointerDown = false; isDragging = false; el.classList.remove("dragging"); });
+      el.addEventListener("pointercancel", () => {
+        pointerDown = false; isDragging = false; activePointerDrag = false;
+        el.classList.remove("dragging");
+      });
     }
 
     function normalizeHistoryItem(it, idx) {
@@ -1107,7 +1302,6 @@
       };
     }
 
-    // Hydrates legacy history items (like the 2 matches already played) by parsing timeline & final on-pitch players
     function hydrateHistoryItemMetadata(item) {
       if (!item) return;
       if (!item.timeline || !item.timeline.length) {
@@ -1141,10 +1335,7 @@
 
       if (!item.totalMins) {
         let maxM = (state.setup.halfDuration || 40) * 2;
-        item.timeline.forEach(e => {
-          const m = parseInt(e.min);
-          if (m > maxM) maxM = m;
-        });
+        item.timeline.forEach(e => { const m = parseInt(e.min); if (m > maxM) maxM = m; });
         if (item.deltas) {
           Object.values(item.deltas).forEach(d => { if (d && d.mins > maxM) maxM = d.mins; });
         }
@@ -1158,7 +1349,6 @@
             if (item.deltas[pid] && item.deltas[pid].starts > 0) onPitch.add(pid);
           });
         }
-        // Walk chronological order (reverse of stored timeline)
         [...item.timeline].reverse().forEach(e => {
           if (e.type === "sub") {
             let onId = e.onId, offId = e.offId;
@@ -1305,10 +1495,10 @@
           if (!state.history.length && localHist.length) state.history = localHist;
           if (!hasStatsActivity(state.seasonStats) && hasStatsActivity(localStats)) state.seasonStats = localStats;
           localStorage.setItem(getStorageKey(), JSON.stringify(state));
-          renderEverything();
+          if (!activePointerDrag) renderEverything();
         } else if (mergeExternalData(remote)) {
           localStorage.setItem(getStorageKey(), JSON.stringify(state));
-          renderEverything();
+          if (!activePointerDrag) renderEverything();
         }
       });
     }
@@ -1380,6 +1570,7 @@
           if (delta >= 1) {
             state.match.elapsedSec += delta;
             state.match.lastTickAt = now;
+            // Always credit live seconds to the ACTUAL players on the grass (state.match.lineupIds)
             state.match.lineupIds.forEach(pid => {
               state.match.playerSeconds[pid] = (state.match.playerSeconds[pid] || 0) + delta;
               if (!state.match.appearedIds.includes(pid)) state.match.appearedIds.push(pid);
@@ -1399,7 +1590,8 @@
             }
             syncWatchMediaSessionState();
             renderTopScoreboard();
-            renderMatchView();
+            // Do not interrupt DOM if coach is mid-drag with their thumb on a token
+            if (!activePointerDrag) renderMatchView();
           }
         }
       }, 1000);
@@ -1412,6 +1604,7 @@
       if (!state.squad.length) return alert("Please add players to your Squad first!");
       initWatchMediaSession();
       pushUndo();
+      draftSubMode = false;
       state.match.status = "1H"; state.match.running = true; state.match.lastTickAt = Date.now();
       state.match.starterIds = [...state.match.lineupIds];
       const iv = parseInt(state.setup.subIntervalMins) || 0;
@@ -1429,6 +1622,7 @@
     }
     function triggerHalfTime() {
       pushUndo();
+      draftSubMode = false;
       state.match.running = false; state.match.status = "HT"; state.match.elapsedSec = state.setup.halfDuration * 60;
       state.match.subAlarmActive = false;
       state.match.timeline.unshift({ min: `${state.setup.halfDuration}'`, text: "⏸️ Half Time Whistle", type: "period" });
@@ -1438,6 +1632,7 @@
     function startSecondHalf() {
       initWatchMediaSession();
       pushUndo();
+      draftSubMode = false;
       state.match.status = "2H"; state.match.running = true; state.match.lastTickAt = Date.now();
       const iv = parseInt(state.setup.subIntervalMins) || 0;
       if (iv > 0) { state.match.subTimerRemSec = iv * 60; state.match.subAlarmActive = false; }
@@ -1448,6 +1643,7 @@
     }
     function triggerFullTime() {
       if (!confirm("Confirm Full Time? This will commit player minutes and stats to Season Totals and generate your Team Match Report.")) return;
+      draftSubMode = false;
       state.match.running = false; state.match.status = "FT"; state.match.subAlarmActive = false;
       const ftMin = Math.ceil(state.match.elapsedSec / 60) || (state.setup.halfDuration * 2);
       state.match.timeline.unshift({ min: `${ftMin}'`, text: "🏁 Full Time Whistle", type: "period" });
@@ -1516,38 +1712,92 @@
     function renderMatchView() {
       sanitizeState();
       const s = state.setup, eq = getEqualTimeMetrics();
+      const remMatchMins = Math.max(0, eq.totalGameMins - Math.floor((state.match.elapsedSec || 0) / 60));
+
       document.getElementById("match-formation-badge").textContent = `${s.format}v${s.format} • ${s.formation}`;
+      const rightBadge = document.getElementById("match-pitch-right-badge");
 
       const eqBox = document.getElementById("equal-advisor-box");
       const pitchWrap = document.getElementById("match-pitch-wrapper");
       const tickerText = document.getElementById("equal-ticker-text");
       const swapBtn = document.getElementById("equal-swap-btn");
+      const planToggleBtn = document.getElementById("btn-ticker-plan");
+      const draftBar = document.getElementById("draft-confirm-bar");
+      const liveStrip = document.getElementById("live-touchline-strip");
+      const benchTitle = document.getElementById("match-bench-title");
 
-      if (s.equalPlay && state.squad.length > 0) {
+      if (draftSubMode) {
         eqBox.style.display = "flex";
+        eqBox.classList.add("draft-active");
         pitchWrap.classList.remove("standalone");
-        if (eq.suggestion) {
-          const { subOn, subOff, onMins, offMins } = eq.suggestion;
-          tickerText.innerHTML = `💡 <span style="color:#fef08a;">Sub: ${subOn.name} (${onMins}') → ${subOff.name} (${offMins}/${eq.outfieldTarget}')</span>`;
-          swapBtn.style.display = "inline-block";
-          swapBtn.onclick = () => executeQuickSuggestedSub(subOff.id, subOn.id);
+        pitchWrap.classList.add("draft-mode");
+        rightBadge.textContent = "🧪 PLANNING • Tap=Swap • Drag=Move";
+        rightBadge.classList.add("draft-badge");
+        planToggleBtn.classList.add("active");
+        planToggleBtn.textContent = "✕ Exit Plan";
+        swapBtn.style.display = "none";
+        draftBar.classList.add("open");
+        liveStrip.style.display = "none";
+
+        const diff = getDraftBatchDiff();
+        if (draftSelectedTarget) {
+          const selP = state.squad.find(x => x.id === draftSelectedTarget.playerId);
+          tickerText.textContent = `🧪 Selected ${selP ? selP.name : 'Player'} — Now tap who to swap with!`;
         } else {
-          tickerText.textContent = `⚖️ Target: ${eq.outfieldTarget}m/player • 50% Floor: ${eq.floorMins}m (${eq.availCount} Avail)`;
-          swapBtn.style.display = "none";
+          tickerText.textContent = `🧪 Planning Mode (Live clock still running • ${remMatchMins}m left)`;
         }
+
+        const summaryEl = document.getElementById("draft-summary-text");
+        const commitBtn = document.getElementById("btn-commit-draft");
+        if (diff.pairs.length > 0) {
+          summaryEl.textContent = `Queued (${diff.pairs.length}): ` + diff.pairs.map(pr => `${pr.pOn ? pr.pOn.name : 'Sub'} ON for ${pr.pOff ? pr.pOff.name : 'Player'}`).join(" • ");
+          commitBtn.textContent = `✅ Confirm Subs (${diff.pairs.length})`;
+        } else if (diff.shapeChanged) {
+          summaryEl.textContent = `Tactical position swap ready (0 bench subs queued)`;
+          commitBtn.textContent = `✅ Save Tactical Shift`;
+        } else {
+          summaryEl.textContent = `Tap a Bench player + Pitch player to queue batch subs, or drag tokens`;
+          commitBtn.textContent = `✅ Confirm Subs (0)`;
+        }
+        benchTitle.textContent = "Draft Bench (Tap Player to Queue Sub)";
       } else {
-        eqBox.style.display = "none";
-        pitchWrap.classList.add("standalone");
+        eqBox.classList.remove("draft-active");
+        pitchWrap.classList.remove("draft-mode");
+        rightBadge.textContent = "🟢50% • 🟠Cap • Tap=Act";
+        rightBadge.classList.remove("draft-badge");
+        planToggleBtn.classList.remove("active");
+        planToggleBtn.textContent = "🧪 Plan Subs";
+        draftBar.classList.remove("open");
+        liveStrip.style.display = "grid";
+        benchTitle.textContent = "Bench (Tap Player to Sub On)";
+
+        if (state.squad.length > 0) {
+          eqBox.style.display = "flex";
+          pitchWrap.classList.remove("standalone");
+          if (s.equalPlay && eq.suggestion) {
+            const { subOn, subOff, onMins, offMins } = eq.suggestion;
+            tickerText.innerHTML = `💡 <span style="color:#fef08a;">Sub: ${subOn.name} (${onMins}') → ${subOff.name} (${offMins}/${eq.outfieldTarget}')</span>`;
+            swapBtn.style.display = "inline-block";
+            swapBtn.onclick = () => executeQuickSuggestedSub(subOff.id, subOn.id);
+          } else {
+            tickerText.textContent = `⚖️ Target: ${eq.outfieldTarget}m/player • 50% Floor: ${eq.floorMins}m (${eq.availCount} Avail)`;
+            swapBtn.style.display = "none";
+          }
+        } else {
+          eqBox.style.display = "none";
+          pitchWrap.classList.add("standalone");
+        }
       }
 
-      const coords = getActiveCoords();
+      const activePitchIds = draftSubMode ? draftLineupIds : state.match.lineupIds;
+      const coords = draftSubMode ? draftCoords : getActiveCoords();
       const tokenContainer = document.getElementById("match-pitch-tokens");
       tokenContainer.innerHTML = "";
 
       if (state.squad.length === 0) {
         tokenContainer.innerHTML = `<div class="pitch-empty-msg"><div>👥 No Squad Players Added Yet</div><button class="btn-sky" onclick="switchMainTab('view-squad')">+ Add Squad Roster</button></div>`;
       } else {
-        state.match.lineupIds.forEach((pid, idx) => {
+        activePitchIds.forEach((pid, idx) => {
           const player = state.squad.find(p => p.id === pid) || { id: pid, name: "Empty", num: "-" };
           const slot = coords[idx] || { role: "SUB", x: 50, y: 50 };
           const mins = getPlayerMatchMins(pid), target = eq.getTargetForPlayer(pid);
@@ -1556,36 +1806,62 @@
           const overCap = s.equalPlay && idx > 0 && mins >= target;
           const metFloor = s.equalPlay && mins >= eq.floorMins && !overCap;
 
+          const isIncomingSub = draftSubMode && !state.match.lineupIds.includes(pid);
+          const isDraftSel = draftSubMode && draftSelectedTarget && draftSelectedTarget.type === "pitch" && draftSelectedTarget.slotIndex === idx;
+          const projMins = mins + remMatchMins;
+          const minDisplay = draftSubMode ? `${mins}'→${projMins}'` : `${mins}'`;
+
           const el = document.createElement("div");
-          el.className = "pitch-token";
+          el.className = "pitch-token" + (isDraftSel ? " selected" : "");
           el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
           el.innerHTML = `
-            <div class="token-disc ${overCap ? 'cap-reached' : metFloor ? 'met-floor' : ''}">
+            <div class="token-disc ${isIncomingSub ? 'draft-incoming' : overCap ? 'cap-reached' : metFloor ? 'met-floor' : ''}">
               ${player.num}
+              ${isIncomingSub ? `<span class="token-role-pill new-tag">ON</span>` : (draftSubMode ? `<span class="token-role-pill">${slot.role}</span>` : "")}
               ${cardBadge ? `<span class="token-card-flag">${cardBadge}</span>` : ""}
             </div>
-            <div class="token-label">${player.name}<span class="lbl-mins ${overCap ? 'over' : ''}">${mins}'</span></div>
+            <div class="token-label">${player.name}<span class="lbl-mins ${overCap ? 'over' : ''}">${minDisplay}</span></div>
           `;
-          bindTokenDragAndTap(el, idx, player.id, "match-pitch-board", () => openQuickPlayerAction(player.id));
+          bindTokenDragAndTap(el, idx, player.id, "match-pitch-board", coords, draftSubMode, () => {
+            if (draftSubMode) {
+              handleDraftSwapTap({ type: "pitch", slotIndex: idx, playerId: player.id });
+            } else {
+              openQuickPlayerAction(player.id);
+            }
+          });
           tokenContainer.appendChild(el);
         });
       }
 
-      const benchPlayers = state.squad.filter(p => p.available && !state.match.lineupIds.includes(p.id)).sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
+      const benchPlayers = state.squad
+        .filter(p => p.available && !activePitchIds.includes(p.id))
+        .sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
+
       document.getElementById("match-bench-count").textContent = `${benchPlayers.length} Subs`;
       const benchGrid = document.getElementById("match-bench-grid");
       benchGrid.innerHTML = "";
       benchPlayers.forEach(p => {
         const mins = getPlayerMatchMins(p.id), target = eq.outfieldTarget;
         const deficit = Math.max(0, target - mins), pct = Math.min(100, Math.round((mins / target) * 100));
+        const isSubbingOff = draftSubMode && state.match.lineupIds.includes(p.id);
+        const isDraftSel = draftSubMode && draftSelectedTarget && draftSelectedTarget.type === "bench" && draftSelectedTarget.playerId === p.id;
+
         const card = document.createElement("div");
-        card.className = "bench-card";
-        card.onclick = () => openSubModal(null, p.id);
+        card.className = "bench-card" + (isDraftSel ? " selected" : "") + (isSubbingOff ? " subbing-off" : "");
+        card.onclick = () => {
+          if (draftSubMode) {
+            handleDraftSwapTap({ type: "bench", playerId: p.id });
+          } else {
+            openSubModal(null, p.id);
+          }
+        };
         card.innerHTML = `
           <div class="bench-top-row"><div class="num-circle">${p.num}</div><div class="bench-name">${p.name}</div></div>
           <div class="bench-meta-row">
             <span>${mins}m</span>
-            <span class="${deficit > 0 && s.equalPlay ? 'need-pill' : ''}">${s.equalPlay ? (deficit > 0 ? `-${deficit}m` : 'Met') : 'SUB'}</span>
+            <span class="${isSubbingOff ? 'off-pill' : (deficit > 0 && s.equalPlay ? 'need-pill' : '')}">
+              ${isSubbingOff ? 'OFF' : (s.equalPlay ? (deficit > 0 ? `-${deficit}m` : 'Met') : 'SUB')}
+            </span>
           </div>
           ${s.equalPlay ? `<div class="prog-track"><div class="prog-fill" style="width:${pct}%;"></div></div>` : ''}
         `;
@@ -1634,7 +1910,7 @@
           el.className = "pitch-token" + (isSel ? " selected" : "");
           el.style.left = slot.x + "%"; el.style.top = slot.y + "%";
           el.innerHTML = `<div class="token-disc">${player.num}<span class="token-role-pill">${slot.role}</span></div><div class="token-label">${player.name}</div>`;
-          bindTokenDragAndTap(el, idx, pid, "lineup-pitch-board", () => handleLineupSwapTap({ type: "pitch", slotIndex: idx, playerId: pid }));
+          bindTokenDragAndTap(el, idx, pid, "lineup-pitch-board", coords, false, () => handleLineupSwapTap({ type: "pitch", slotIndex: idx, playerId: pid }));
           container.appendChild(el);
         });
       }
@@ -1684,12 +1960,14 @@
       const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
       state.setup.formation = val;
       state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[val] || Object.values(fmtDict)[0]));
+      if (draftSubMode) draftCoords = JSON.parse(JSON.stringify(state.setup.customCoords));
       persist(); renderLineupView(); renderMatchView();
     }
     function resetFormationCoords() {
       const fmt = parseInt(state.setup.format) || 11;
       const fmtDict = FORMATIONS_BY_FORMAT[fmt] || FORMATIONS_BY_FORMAT[11];
       state.setup.customCoords = JSON.parse(JSON.stringify(fmtDict[state.setup.formation] || Object.values(fmtDict)[0]));
+      if (draftSubMode) draftCoords = JSON.parse(JSON.stringify(state.setup.customCoords));
       persist(); renderLineupView(); renderMatchView();
     }
     function autoFillStartingLineup() {
@@ -1699,6 +1977,7 @@
     }
     function resetMatchSheet() {
       if (!confirm("Reset current live match clock, score, and events back to 0-0 Pre-Match?")) return;
+      draftSubMode = false;
       const fmt = parseInt(state.setup.format) || 11;
       const iv = parseInt(state.setup.subIntervalMins) || 8;
       state.match = { status: "PRE", running: false, elapsedSec: 0, subTimerRemSec: iv * 60, subAlarmActive: false, lastTickAt: null, scoreUs: 0, scoreThem: 0, lineupIds: state.squad.filter(p => p.available).slice(0, fmt).map(p => p.id), starterIds: [], appearedIds: [], playerSeconds: {}, cards: {}, timeline: [] };
@@ -1714,6 +1993,7 @@
     }
     function undoLastAction() {
       if (!state.undoStack || !state.undoStack.length) return alert("No recent match event to undo.");
+      draftSubMode = false;
       state.match = JSON.parse(state.undoStack.pop());
       persist(); renderEverything();
     }
@@ -1725,6 +2005,15 @@
       document.getElementById("pa-modal-title").textContent = `#${p.num} ${p.name} (${getPlayerMatchMins(p.id)}m / Target ${eq.getTargetForPlayer(p.id)}m)`;
       document.getElementById("pa-btn-goal").onclick = () => { closeModal("modal-player-action"); openGoalModal(p.id); };
       document.getElementById("pa-btn-sub").onclick = () => { closeModal("modal-player-action"); openSubModal(p.id, null); };
+      document.getElementById("pa-btn-plan").onclick = () => {
+        closeModal("modal-player-action");
+        toggleDraftSubMode();
+        const slotIdx = draftLineupIds.indexOf(p.id);
+        if (slotIdx !== -1) {
+          draftSelectedTarget = { type: "pitch", slotIndex: slotIdx, playerId: p.id };
+          renderMatchView();
+        }
+      };
       document.getElementById("pa-btn-yc").onclick = () => { closeModal("modal-player-action"); logDirectCard(p.id, "yellow"); };
       document.getElementById("pa-btn-rc").onclick = () => { closeModal("modal-player-action"); logDirectCard(p.id, "red"); };
       openModal("modal-player-action");
@@ -1800,7 +2089,6 @@
       closeModal("modal-report");
       editingTargetMatchId = targetId;
       const regMins = (parseInt(state.setup.halfDuration) || 40) * 2;
-      const ftBox = document.getElementById("tl-finish-time-box");
       document.getElementById("tl-btn-reg-trim").textContent = `✂️ Set ${regMins}m`;
 
       if (targetId === "LIVE") {
@@ -1821,7 +2109,6 @@
       document.getElementById("tl-input-ft-mins").value = tempOriginalFT;
       document.getElementById("tl-btn-reg-trim").onclick = () => {
         document.getElementById("tl-input-ft-mins").value = regMins;
-        // Also update any FT whistle event in the list
         tempEditTimeline.forEach((ev, idx) => {
           if ((ev.text || "").includes("Full Time")) {
             const inp = document.getElementById(`tl_ev_min_${idx}`);
@@ -1882,18 +2169,15 @@
 
     function saveEditedTimeline() {
       const newFT = Math.max(1, parseInt(document.getElementById("tl-input-ft-mins").value) || tempOriginalFT);
-      const ftDelta = newFT - tempOriginalFT; // e.g. 80 - 92 = -12 mins
+      const ftDelta = newFT - tempOriginalFT;
 
-      // Calculate per-player minute adjustments from Sub Time edits + Finish Time edit
       const playerMinAdjustments = {};
       const addAdj = (pid, d) => { if (pid) playerMinAdjustments[pid] = (playerMinAdjustments[pid] || 0) + d; };
 
-      // 1. Apply Finish Time delta to all players on the pitch at final whistle
       if (ftDelta !== 0) {
         tempFinalPitchSet.forEach(pid => addAdj(pid, ftDelta));
       }
 
-      // 2. Check each timeline event for minute changes (especially Subs)
       tempEditTimeline.forEach((ev, idx) => {
         const oldMin = parseInt(ev.min) || 1;
         const inp = document.getElementById(`tl_ev_min_${idx}`);
@@ -1901,7 +2185,7 @@
         if ((ev.text || "").includes("Full Time") && ftDelta !== 0 && newMin === oldMin) {
           newMin = newFT;
         }
-        const subDelta = newMin - oldMin; // Positive = sub happened later (Off player played MORE, On player played LESS)
+        const subDelta = newMin - oldMin;
         if (subDelta !== 0 && ev.type === "sub") {
           let onId = ev.onId, offId = ev.offId;
           if (!onId || !offId) {
@@ -1921,9 +2205,7 @@
 
       if (editingTargetMatchId === "LIVE") {
         pushUndo();
-        if (ftDelta !== 0) {
-          state.match.elapsedSec = Math.max(0, newFT * 60);
-        }
+        if (ftDelta !== 0) state.match.elapsedSec = Math.max(0, newFT * 60);
         Object.keys(playerMinAdjustments).forEach(pid => {
           const secAdj = playerMinAdjustments[pid] * 60;
           state.match.playerSeconds[pid] = Math.max(0, (state.match.playerSeconds[pid] || 0) + secAdj);
@@ -1935,7 +2217,6 @@
         return;
       }
 
-      // Apply to Archived History Match & Sync Season Stats
       const item = state.history.find(x => x.id === editingTargetMatchId);
       if (!item) return;
       ensureSeasonStats();
@@ -2062,7 +2343,6 @@
       const oldDeltas = item.deltas || {};
       const newDeltas = collectEditedDeltasFromForm();
 
-      // Sync exact differences to Season Stats
       state.squad.forEach(p => {
         const pid = p.id;
         const o = oldDeltas[pid] || { apps: 0, starts: 0, subs: 0, mins: 0, goals: 0, assists: 0 };
@@ -2084,7 +2364,6 @@
       item.deltas = newDeltas;
 
       const currentBoxText = document.getElementById("er-report-text").value;
-      // If user didn't manually customize the text box, auto-refresh it with the new player mins/score
       if (currentBoxText.trim() === oldAutoReport.trim() || !currentBoxText.trim()) {
         item.report = buildReportStringFromItem(item);
       } else {
