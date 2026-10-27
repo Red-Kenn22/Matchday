@@ -206,13 +206,15 @@
       #view-lineup .tablet-col-right { display: flex; flex-direction: column; }
       #view-lineup .fixture-card { order: 2; }
     }
-    
-        /* TABLET LANDSCAPE: one-row header + full-length pitch */
+
+    /* TABLET LANDSCAPE: one-row header + full-length pitch */
     @media (min-width: 768px) and (orientation: landscape) {
-      /* Pitch height = screen height minus header, ticker, buttons and nav */
-      .view-section { --pitch-h: max(340px, calc(100vh - 270px)); }
+      /* Pitch height = screen height minus everything that isn't the pitch */
+      #view-match  { --pitch-h: max(340px, calc(100vh - 250px)); }
+      #view-lineup { --pitch-h: max(340px, calc(100vh - 175px)); }
       @supports (height: 100dvh) {
-        .view-section { --pitch-h: max(340px, calc(100dvh - 270px)); }
+        #view-match  { --pitch-h: max(340px, calc(100dvh - 250px)); }
+        #view-lineup { --pitch-h: max(340px, calc(100dvh - 175px)); }
       }
 
       /* Header: brand | score | clock + sub + buttons | icons, all on one line */
@@ -234,6 +236,21 @@
       .pitch-token { width: 66px; }
       .token-disc { width: 42px; height: 42px; font-size: 1.05rem; }
       .token-label { font-size: 0.68rem; max-width: 78px; padding: 1.5px 6px; }
+    }
+
+    /* TABLET PORTRAIT: full-width pitch that fills the screen height */
+    @media (min-width: 768px) and (orientation: portrait) {
+      .tablet-grid-2 { display: block; }
+      #view-match  { --pitch-h: max(480px, calc(100vh - 380px)); }
+      #view-lineup { --pitch-h: max(480px, calc(100vh - 470px)); }
+      @supports (height: 100dvh) {
+        #view-match  { --pitch-h: max(480px, calc(100dvh - 380px)); }
+        #view-lineup { --pitch-h: max(480px, calc(100dvh - 470px)); }
+      }
+      .pitch-board { height: var(--pitch-h); }
+      /* Lineup: substitutes straight under the pitch, fixtures last */
+      #view-lineup .tablet-col-right { display: flex; flex-direction: column; }
+      #view-lineup .fixture-card { order: 2; }
     }
   </style>
 </head>
@@ -358,7 +375,6 @@
   <section id="view-lineup" class="view-section">
     <div class="tablet-grid-2">
       <div class="tablet-col-left">
-        <div class="info-banner" id="swap-helper-banner">Drag any token to custom coordinates, or tap two players to swap!</div>
         <div class="pitch-wrapper standalone">
           <div class="pitch-board" id="lineup-pitch-board">
             <div class="pitch-overlay-badge left" id="lineup-formation-badge">11v11 • 4-3-3</div>
@@ -1968,7 +1984,7 @@
       if (!selectedSwapTarget) {
         selectedSwapTarget = target;
         const p = state.squad.find(x => x.id === target.playerId);
-        banner.textContent = `Selected ${p ? p.name : 'Player'} — Tap another player to swap, or drag any token!`;
+        if (banner) banner.textContent = `Selected ${p ? p.name : 'Player'} — Tap another player to swap, or drag any token!`;
         renderLineupView();
         return;
       }
@@ -1981,7 +1997,7 @@
         state.match.lineupIds[target.slotIndex] = selectedSwapTarget.playerId;
       }
       selectedSwapTarget = null;
-      banner.textContent = "Drag any token to custom coordinates, or tap two players to swap!";
+      if (banner) banner.textContent = "Drag any token to custom coordinates, or tap two players to swap!";
       persist(); renderLineupView(); renderMatchView();
     }
 
