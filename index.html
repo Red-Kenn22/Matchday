@@ -206,6 +206,35 @@
       #view-lineup .tablet-col-right { display: flex; flex-direction: column; }
       #view-lineup .fixture-card { order: 2; }
     }
+    
+        /* TABLET LANDSCAPE: one-row header + full-length pitch */
+    @media (min-width: 768px) and (orientation: landscape) {
+      /* Pitch height = screen height minus header, ticker, buttons and nav */
+      .view-section { --pitch-h: max(340px, calc(100vh - 270px)); }
+      @supports (height: 100dvh) {
+        .view-section { --pitch-h: max(340px, calc(100dvh - 270px)); }
+      }
+
+      /* Header: brand | score | clock + sub + buttons | icons, all on one line */
+      .cockpit-inner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; column-gap: 14px; }
+      .app-bar { display: contents; }
+      .brand-logo { grid-column: 1; grid-row: 1; }
+      .scoreboard-row { grid-column: 2; grid-row: 1; border: 0; padding: 0; }
+      .control-strip { grid-column: 3; grid-row: 1; margin-top: 0; }
+      .header-pills { grid-column: 4; grid-row: 1; }
+      .Quick-adj-drawer { grid-column: 1 / -1; grid-row: 2; }
+      .score-team-name { font-size: 1rem; }
+      .score-center-box { font-size: 1.35rem; padding: 2px 14px; }
+
+      /* Pitch: sized by height, keeps a portrait pitch shape; right column gets the rest */
+      .tablet-grid-2 { grid-template-columns: calc(var(--pitch-h) * 0.8 + 16px) minmax(0, 1fr); }
+      .pitch-board { height: var(--pitch-h); width: calc(var(--pitch-h) * 0.8); margin: 0 auto; }
+
+      /* Narrower pitch, so use the phone-sized tokens */
+      .pitch-token { width: 66px; }
+      .token-disc { width: 42px; height: 42px; font-size: 1.05rem; }
+      .token-label { font-size: 0.68rem; max-width: 78px; padding: 1.5px 6px; }
+    }
   </style>
 </head>
 <body>
