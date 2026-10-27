@@ -200,6 +200,12 @@
       .modal-backdrop { align-items: center; }
       .modal-sheet { border-radius: 18px; border: 3px solid var(--navy-900); max-height: 85vh; }
     }
+
+    /* PHONE: keep Lineup pitch and substitutes together, fixtures below */
+    @media (max-width: 767px) {
+      #view-lineup .tablet-col-right { display: flex; flex-direction: column; }
+      #view-lineup .fixture-card { order: 2; }
+    }
   </style>
 </head>
 <body>
@@ -343,7 +349,7 @@
       </div>
 
       <div class="tablet-col-right">
-        <div class="day-card">
+        <div class="day-card fixture-card">
           <div class="day-card-title">
             <span>Fixture & Tactics</span>
             <button class="btn-outline" style="min-height:30px;padding:0 8px;font-size:0.7rem;" onclick="openSettingsModal()" id="lineup-rules-pill">⚙️ Team Settings</button>
