@@ -252,6 +252,107 @@
       #view-lineup .tablet-col-right { display: flex; flex-direction: column; }
       #view-lineup .fixture-card { order: 2; }
     }
+
+    /* =====================================================
+       DESIGN REVIEW UPDATE: clearer, calmer sideline UI
+       ===================================================== */
+    :root { --line: #cbd5e1; --line-strong: #94a3b8; }
+
+    /* Calmer surfaces: thin borders, soft shadows */
+    .day-card, .pitch-wrapper { border: 1px solid var(--line); box-shadow: 0 1px 3px rgba(15,23,42,0.08); }
+    .equal-ticker { border: 1px solid #0f172a; border-bottom: none; }
+    .bench-card, .roster-row { border: 1px solid var(--line); }
+    .bench-card.selected { border: 2px solid #ca8a04; }
+    .btn-touch { border-width: 1.5px; box-shadow: none; }
+    .day-input, .day-select, .btn-outline, .btn-sky, .subtab-btn, .btn-avail, .btn-close, .btn-icon-sq, .segmented-toggle { border-width: 1.5px; border-color: var(--line-strong); }
+    .btn-sky { border-color: #38a3d6; }
+    .btn-danger { background: #fff !important; color: #b91c1c !important; border-color: #fca5a5 !important; }
+    .day-card-title { color: #334155; letter-spacing: 0.6px; }
+
+    /* Action bar: two big goal buttons, subs secondary */
+    .touchline-strip { grid-template-columns: 1fr 1fr 0.8fr; }
+    .btn-touch.goal-us, .btn-touch.goal-them { min-height: 54px; font-size: 0.95rem; }
+    .btn-touch.goal-them { background: #fee2e2; }
+    .btn-touch.plan-btn { background: #f1f5f9; color: #0f172a; border-color: var(--line-strong); }
+
+    /* Pitch legend dots (match the token rings) */
+    .lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin: 0 3px 0 6px; vertical-align: -1px; }
+    .lg-dot:first-child { margin-left: 0; }
+    .lg-floor { background: #22c55e; }
+    .lg-cap { background: #f97316; }
+
+    /* Bench: "Needs X'" pill, stronger colour = more urgent */
+    .bench-meta-row { font-size: 0.7rem; }
+    .need-pill { padding: 2px 6px; border-radius: 6px; font-weight: 900; font-size: 0.7rem; white-space: nowrap; }
+    .need-pill.need-hi  { background: #c2410c; color: #fff; }
+    .need-pill.need-mid { background: #fed7aa; color: #7c2d12; }
+    .need-pill.need-lo  { background: #e2e8f0; color: #334155; }
+    .need-pill.need-met { background: #dcfce7; color: #14532d; }
+    .off-pill { padding: 2px 6px; border-radius: 6px; background: #ffedd5; }
+
+    /* Match controls: Pause is the big obvious one, HT/FT quieter */
+    .btn-ctrl-main.btn-pause { min-width: 104px; font-size: 0.9rem; }
+    .btn-ctrl-main.btn-period { background: transparent; border: 1.5px solid #475569; color: #cbd5e1; min-width: 46px; }
+
+    /* Team names: two lines instead of cutting off */
+    .score-team-name { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.12; }
+    @media (max-width: 479px) {
+      .score-team-name { font-size: 0.8rem; }
+      .score-center-box { flex-shrink: 0; }
+    }
+
+    /* Header status words */
+    .status-lbl { font-size: 0.68rem; font-weight: 800; }
+    .cloud-lbl::after { content: "Offline"; }
+    .dot-indicator.syncing + .cloud-lbl::after { content: "Syncing"; }
+    .dot-indicator.active + .cloud-lbl::after { content: "Synced"; }
+    .wake-lbl::after { content: "Screen"; }
+    .dot-indicator.active + .wake-lbl::after { content: "Awake"; }
+    @media (max-width: 379px) { .status-lbl { display: none; } }
+
+    /* Goal picker: tap a player */
+    .pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+    .pick-chip { min-height: 48px; display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 10px; border: 1.5px solid var(--line-strong); background: #fff; color: #0f172a; font-weight: 800; font-size: 0.82rem; cursor: pointer; text-align: left; }
+    .pick-chip.selected { background: #dcfce7; border: 2px solid #15803d; }
+    .pick-chip.ghost { background: #f8fafc; color: #475569; }
+    .pick-chip.ghost.strong { background: #e0f2fe; color: #0c4a6e; border-color: #38a3d6; }
+    .pick-num { width: 26px; height: 26px; border-radius: 50%; background: var(--sky-token); color: var(--navy-950); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 900; flex-shrink: 0; }
+    .pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .assist-wrap.disabled { opacity: 0.35; pointer-events: none; }
+
+    /* Squad list: tap row to edit, switch for availability */
+    .roster-row { gap: 8px; }
+    .roster-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; background: none; border: 0; padding: 4px 0; min-height: 44px; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+    .roster-edit-hint { margin-left: auto; font-size: 0.7rem; font-weight: 800; color: #64748b; }
+    .avail-switch { display: flex; align-items: center; gap: 6px; cursor: pointer; min-height: 44px; flex-shrink: 0; }
+    .avail-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .avail-track { width: 44px; height: 26px; border-radius: 999px; background: #cbd5e1; position: relative; transition: background .15s; }
+    .avail-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: left .15s; }
+    .avail-switch input:checked + .avail-track { background: #16a34a; }
+    .avail-switch input:checked + .avail-track::after { left: 21px; }
+    .avail-switch input:focus-visible + .avail-track { outline: 2px solid #0284c7; outline-offset: 2px; }
+    .avail-text { width: 26px; font-size: 0.75rem; font-weight: 900; color: #334155; }
+    .roster-row.unavailable { opacity: 1; background: #f8fafc; }
+    .roster-row.unavailable .roster-main { opacity: 0.5; }
+
+    /* Settings */
+    .field-hint { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .settings-section-label { font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.6px; color: #0f172a; margin: 6px 0 6px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+
+    /* Review fixes */
+    .form-grid-2.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .icon-pill { white-space: nowrap; }
+    .pick-chip.ghost .pick-name { white-space: normal; line-height: 1.15; }
+    .pitch-wrapper.draft-mode .token-label { max-width: 104px; }
+    @media (max-width: 479px) {
+      .brand-logo small { display: none; }
+      .wake-lbl::after, .dot-indicator.active + .wake-lbl::after { content: ""; }
+      .wake-lbl::before { content: "☀"; font-size: 0.8rem; }
+    }
+
+    /* Room for full names on the pitch */
+    .token-label { max-width: 100px; flex-shrink: 0; }
+    @media (min-width: 768px) and (orientation: portrait) { .token-label { max-width: 130px; } }
   </style>
 </head>
 <body>
@@ -260,11 +361,11 @@
   <header class="top-cockpit">
     <div class="cockpit-inner">
       <div class="app-bar">
-        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.5</small></span></div>
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6</small></span></div>
         <div class="header-pills">
-          <button class="icon-pill" onclick="forceCloudPull()" title="Cloud Sync"><span class="dot-indicator active" id="cloud-dot"></span></button>
-          <button class="icon-pill" onclick="toggleWakeLock()" title="Screen Wake Lock & Watch Sync"><span class="dot-indicator active" id="wake-dot"></span>⌚</button>
-          <button class="icon-pill" onclick="undoLastAction()" title="Undo Last Event">↩️ Undo</button>
+          <button class="icon-pill" onclick="forceCloudPull()" title="Tap to sync now"><span class="dot-indicator active" id="cloud-dot"></span><span class="status-lbl cloud-lbl"></span></button>
+          <button class="icon-pill" onclick="toggleWakeLock()" title="Keep screen on"><span class="dot-indicator active" id="wake-dot"></span><span class="status-lbl wake-lbl"></span></button>
+          <button class="icon-pill" onclick="undoLastAction()" title="Undo last event">↩ Undo</button>
           <button class="icon-pill settings-btn" onclick="openSettingsModal()">⚙️ <span id="header-team-code">Setup</span></button>
         </div>
       </div>
@@ -309,17 +410,16 @@
       <!-- LEFT PANE: TICKER, PITCH & TOUCHLINE STRIP -->
       <div class="tablet-col-left">
         <div class="equal-ticker" id="equal-advisor-box">
-          <span id="equal-ticker-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">⚖️ Target: 53m/player</span>
+          <span id="equal-ticker-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Fair share: 53' each</span>
           <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
-            <button class="btn-quick-swap" id="equal-swap-btn" style="display:none;">⚡ Swap</button>
-            <button class="btn-plan-toggle" id="btn-ticker-plan" onclick="toggleDraftSubMode()">🧪 Plan Subs</button>
+            <button class="btn-quick-swap" id="equal-swap-btn" style="display:none;">Swap now</button>
           </div>
         </div>
 
         <div class="pitch-wrapper" id="match-pitch-wrapper">
           <div class="pitch-board" id="match-pitch-board">
             <div class="pitch-overlay-badge left" id="match-formation-badge">11v11 • 4-3-3</div>
-            <div class="pitch-overlay-badge right" id="match-pitch-right-badge">🟢50% • 🟠Cap • Tap=Act</div>
+            <div class="pitch-overlay-badge right" id="match-pitch-right-badge"></div>
             <svg class="pitch-svg" viewBox="0 0 100 140" preserveAspectRatio="none">
               <rect x="3" y="3" width="94" height="134" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
               <line x1="3" y1="70" x2="97" y2="70" stroke="rgba(255,255,255,0.65)" stroke-width="0.8"/>
@@ -335,18 +435,18 @@
 
         <!-- DRAFT MODE CONFIRM / CANCEL BAR -->
         <div class="draft-confirm-bar" id="draft-confirm-bar">
-          <div class="draft-summary-text" id="draft-summary-text">🧪 SANDBOX MODE — Tap bench & pitch players to queue batch subs</div>
+          <div class="draft-summary-text" id="draft-summary-text">Tap a bench player, then the player coming off</div>
           <div class="draft-btn-grid">
-            <button class="btn-outline" style="min-height:42px;background:#fff;border-color:#b45309;color:#92400e;font-weight:900;" onclick="cancelDraftSubMode()">✕ Reset / Cancel</button>
-            <button class="btn-ctrl-main" style="min-height:42px;font-size:0.86rem;" id="btn-commit-draft" onclick="commitDraftSubstitutions()">✅ Confirm Subs (0)</button>
+            <button class="btn-outline" style="min-height:42px;background:#fff;border-color:#b45309;color:#92400e;font-weight:900;" onclick="cancelDraftSubMode()">Cancel</button>
+            <button class="btn-ctrl-main" style="min-height:42px;font-size:0.86rem;" id="btn-commit-draft" onclick="commitDraftSubstitutions()">Confirm subs</button>
           </div>
         </div>
 
         <!-- NORMAL LIVE TOUCHLINE STRIP -->
         <div class="touchline-strip" id="live-touchline-strip">
-          <button class="btn-touch goal-us" onclick="openGoalModal()">⚽ +Goal Us</button>
-          <button class="btn-touch goal-them" onclick="logOppositionGoal()">🥅 +Goal Them</button>
-          <button class="btn-touch sub-btn" onclick="toggleDraftSubMode()">🧪 Plan Subs</button>
+          <button class="btn-touch goal-us" onclick="openGoalModal()">⚽ Goal us</button>
+          <button class="btn-touch goal-them" onclick="logOppositionGoal()">Goal them</button>
+          <button class="btn-touch sub-btn" onclick="toggleDraftSubMode()">⇄ Subs</button>
         </div>
       </div>
 
@@ -354,7 +454,7 @@
       <div class="tablet-col-right">
         <div class="day-card">
           <div class="day-card-title">
-            <span id="match-bench-title">Bench (Tap Player to Sub On)</span>
+            <span id="match-bench-title">Bench</span>
             <span style="font-size:0.7rem;color:var(--text-muted);" id="match-bench-count"></span>
           </div>
           <div class="bench-list" id="match-bench-grid"></div>
@@ -363,7 +463,7 @@
         <div class="day-card">
           <div class="day-card-title">
             <span>Match Timeline</span>
-            <button class="btn-avail sky" onclick="openLiveTimelineEditor()">⏱️ Edit Timeline / Subs</button>
+            <button class="btn-avail sky" onclick="openLiveTimelineEditor()">Edit</button>
           </div>
           <div id="match-timeline-list"></div>
         </div>
@@ -417,9 +517,9 @@
             </div>
           </div>
           <div class="lineup-btn-row">
-            <button class="btn-sky" onclick="autoFillStartingLineup()">⚡ Auto-Fill</button>
-            <button class="btn-outline" onclick="resetFormationCoords()">📐 Reset Shape</button>
-            <button class="btn-outline" onclick="resetMatchSheet()">🔄 Reset Match</button>
+            <button class="btn-sky" onclick="autoFillStartingLineup()">Auto-fill lineup</button>
+            <button class="btn-outline" onclick="resetFormationCoords()">Reset shape</button>
+            <button class="btn-outline btn-danger" onclick="resetMatchSheet()">Reset match</button>
           </div>
         </div>
 
@@ -434,8 +534,8 @@
   <!-- TAB 3: SQUAD & SEASON STATS (SIDE-BY-SIDE ON TABLET) -->
   <section id="view-squad" class="view-section">
     <div class="subtab-bar">
-      <button class="subtab-btn active" id="btn-sub-roster" onclick="switchSquadSubtab('roster')">👥 Squad Roster</button>
-      <button class="subtab-btn" id="btn-sub-stats" onclick="switchSquadSubtab('stats')">📊 Season Stats</button>
+      <button class="subtab-btn active" id="btn-sub-roster" onclick="switchSquadSubtab('roster')">Squad</button>
+      <button class="subtab-btn" id="btn-sub-stats" onclick="switchSquadSubtab('stats')">Season stats</button>
     </div>
     <div id="squad-split-wrapper">
       <div id="squad-roster-pane">
@@ -521,16 +621,15 @@
   <div class="modal-backdrop" id="modal-settings">
     <div class="modal-sheet">
       <div class="sheet-header">
-        <div class="sheet-title">⚙️ Team & Season Settings</div>
+        <div class="sheet-title">Team settings</div>
         <button class="btn-close" onclick="closeModal('modal-settings')">✕</button>
       </div>
       <div class="field-group">
-        <label class="field-label">My Team Name</label>
+        <label class="field-label" for="set-my-team">Team name</label>
         <input type="text" id="set-my-team" class="day-input" placeholder="e.g. Tilehurst Panthers U12">
       </div>
-      <div class="form-grid-2">
-        <div class="field-group">
-          <label class="field-label">Age Group Preset</label>
+      <div class="field-group">
+          <label class="field-label" for="set-age-group">Age group</label>
           <select id="set-age-group" class="day-select" onchange="onSettingsAgeChange(this.value)">
             <option value="U7-U8">U7–U8 (5v5 • 20m)</option>
             <option value="U9-U10">U9–U10 (7v7 • 25m)</option>
@@ -539,45 +638,49 @@
             <option value="U15-U16">U15–U16 (11v11 • 40m)</option>
             <option value="U17+">U17 / Adult (11v11 • 45m)</option>
           </select>
-        </div>
+          <div class="field-hint">Fills in the match details below. Change them if your league differs.</div>
+      </div>
+      <div class="settings-section-label">Match details</div>
+      <div class="form-grid-2 grid-3">
         <div class="field-group">
-          <label class="field-label">Pitch Format</label>
+          <label class="field-label">Format</label>
           <select id="set-format" class="day-select">
-            <option value="5">5v5 (5 on Pitch)</option>
-            <option value="7">7v7 (7 on Pitch)</option>
-            <option value="9">9v9 (9 on Pitch)</option>
-            <option value="11">11v11 (11 on Pitch)</option>
+            <option value="5">5v5</option>
+            <option value="7">7v7</option>
+            <option value="9">9v9</option>
+            <option value="11">11v11</option>
           </select>
         </div>
-      </div>
-      <div class="form-grid-2">
+
         <div class="field-group">
-          <label class="field-label">Half Duration (Mins)</label>
+          <label class="field-label">Half (mins)</label>
           <input type="number" id="set-half-mins" class="day-input" value="40" min="5" max="60">
         </div>
         <div class="field-group">
-          <label class="field-label">Sub Alarm (Mins, 0=Off)</label>
+          <label class="field-label">Sub alert (mins)</label>
           <input type="number" id="set-sub-interval" class="day-input" value="8" min="0" max="45">
         </div>
       </div>
+      <div class="field-hint" style="margin:-4px 0 6px;">Sub alert: set to 0 to turn it off.</div>
+      <div class="settings-section-label">Sharing</div>
       <div class="field-group">
-        <label class="field-label">Team Sync Code</label>
+        <label class="field-label">Team code <span style="text-transform:none;">(co-coaches use this to see the same match)</span></label>
         <input type="text" id="set-team-code" class="day-input" placeholder="Auto-generated" style="text-transform:uppercase;">
       </div>
       <div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:9px;padding:9px;margin-bottom:10px;display:grid;gap:6px;">
         <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:800;cursor:pointer;">
           <input type="checkbox" id="set-equal-mode" checked style="width:18px;height:18px;">
-          <span>⚖️ Enable Equal Playing Time Advisor & Ring Colors</span>
+          <span>Share playing time fairly<br><small style="font-weight:700;color:var(--text-muted);">Suggests subs and colours players by minutes</small></span>
         </label>
         <label style="display:flex;align-items:center;gap:8px;font-size:0.76rem;font-weight:800;color:var(--text-muted);cursor:pointer;">
           <input type="checkbox" id="set-lock-gk" checked style="width:18px;height:18px;">
-          <span>🔒 Lock Goalkeeper (Exclude GK from outfield rotation math)</span>
+          <span>Keeper plays the whole match<br><small style="font-weight:700;">Goalkeeper is left out of the rotation</small></span>
         </label>
       </div>
-      <button class="btn-ctrl-main" style="width:100%;min-height:44px;margin-bottom:8px;font-size:0.9rem;" onclick="saveSettingsModal()">✅ Save Team Settings</button>
+      <button class="btn-ctrl-main" style="width:100%;min-height:44px;margin-bottom:8px;font-size:0.9rem;" onclick="saveSettingsModal()">Save settings</button>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding-top:8px;border-top:2px solid #e2e8f0;">
-        <button class="btn-outline" onclick="copyCoCoachInviteLink()">🔗 Copy Co-Coach Link</button>
-        <button class="btn-outline" onclick="joinExistingTeamPrompt()">🔑 Switch Team Code</button>
+        <button class="btn-outline" onclick="copyCoCoachInviteLink()">Copy co-coach link</button>
+        <button class="btn-outline" onclick="joinExistingTeamPrompt()">Switch team</button>
       </div>
     </div>
   </div>
@@ -598,24 +701,41 @@
     <div class="modal-sheet">
       <div class="sheet-header"><div class="sheet-title" id="pa-modal-title">Player Actions</div><button class="btn-close" onclick="closeModal('modal-player-action')">✕</button></div>
       <div style="display:grid;gap:8px;">
-        <button class="btn-touch goal-us" id="pa-btn-goal">⚽ Scored a Goal</button>
-        <button class="btn-touch sub-btn" id="pa-btn-sub">🔄 Quick Sub Off (Single)</button>
-        <button class="btn-touch card-btn" id="pa-btn-plan">🧪 Open Batch Sub Planner</button>
+        <button class="btn-touch goal-us" id="pa-btn-goal">⚽ Scored a goal</button>
+        <button class="btn-touch sub-btn" id="pa-btn-sub">Sub off now</button>
+        <button class="btn-touch plan-btn" id="pa-btn-plan">Plan several subs</button>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="btn-touch card-btn" id="pa-btn-yc">🟨 Yellow Card</button>
-          <button class="btn-touch goal-them" id="pa-btn-rc">🟥 Red Card</button>
+          <button class="btn-touch card-btn" id="pa-btn-yc">🟨 Yellow card</button>
+          <button class="btn-touch goal-them" id="pa-btn-rc">🟥 Red card</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- EDIT PLAYER -->
+  <div class="modal-backdrop" id="modal-edit-player">
+    <div class="modal-sheet">
+      <div class="sheet-header"><div class="sheet-title" id="edit-player-title">Edit player</div><button class="btn-close" onclick="closeModal('modal-edit-player')">✕</button></div>
+      <div class="form-grid-2" style="grid-template-columns:90px 1fr;">
+        <div class="field-group"><label class="field-label" for="edit-player-num">Shirt</label><input type="number" id="edit-player-num" class="day-input"></div>
+        <div class="field-group"><label class="field-label" for="edit-player-name">First name</label><input type="text" id="edit-player-name" class="day-input"></div>
+      </div>
+      <button class="btn-ctrl-main" style="width:100%;min-height:46px;margin-bottom:10px;" onclick="saveEditPlayer()">Save</button>
+      <button class="btn-outline btn-danger" style="width:100%;" onclick="removeEditingPlayer()">Remove from squad</button>
     </div>
   </div>
 
   <!-- MODAL 4: GOAL -->
   <div class="modal-backdrop" id="modal-goal">
     <div class="modal-sheet">
-      <div class="sheet-header"><div class="sheet-title">⚽ Log Goal (Our Team)</div><button class="btn-close" onclick="closeModal('modal-goal')">✕</button></div>
-      <div class="field-group"><label class="field-label">Goal Scorer</label><select id="goal-scorer-id" class="day-select"></select></div>
-      <div class="field-group"><label class="field-label">Assist Provided By (Optional)</label><select id="goal-assist-id" class="day-select"></select></div>
-      <button class="btn-ctrl-main" style="width:100%;min-height:44px;margin-top:6px;" onclick="confirmOurGoal()">✅ Confirm Goal</button>
+      <div class="sheet-header"><div class="sheet-title">⚽ Goal for us</div><button class="btn-close" onclick="closeModal('modal-goal')">✕</button></div>
+      <input type="hidden" id="goal-scorer-id"><input type="hidden" id="goal-assist-id">
+      <div class="field-label" style="margin-bottom:6px;">Who scored?</div>
+      <div class="pick-grid" id="goal-scorer-grid"></div>
+      <div id="goal-assist-wrap" class="assist-wrap disabled">
+        <div class="field-label" style="margin:12px 0 6px;">Assist? <span style="text-transform:none;font-weight:700;">(tap to save)</span></div>
+        <div class="pick-grid" id="goal-assist-grid"></div>
+      </div>
     </div>
   </div>
 
@@ -1672,6 +1792,7 @@
       persist(); renderTopScoreboard();
     }
     function triggerHalfTime() {
+      if (!confirm("End the first half?")) return;
       pushUndo();
       draftSubMode = false;
       state.match.running = false; state.match.status = "HT"; state.match.elapsedSec = state.setup.halfDuration * 60;
@@ -1693,7 +1814,7 @@
       persist(); renderEverything();
     }
     function triggerFullTime() {
-      if (!confirm("Confirm Full Time? This will commit player minutes and stats to Season Totals and generate your Team Match Report.")) return;
+      if (!confirm("End the match? Minutes and stats will be added to the season totals and your match report created.")) return;
       draftSubMode = false;
       state.match.running = false; state.match.status = "FT"; state.match.subAlarmActive = false;
       const ftMin = Math.ceil(state.match.elapsedSec / 60) || (state.setup.halfDuration * 2);
@@ -1754,10 +1875,10 @@
 
       const btnBox = document.getElementById("clock-buttons-container");
       if (m.status === "PRE") btnBox.innerHTML = `<button class="btn-ctrl-main" onclick="startFirstHalf()">▶ Kickoff (${s.halfDuration}m)</button>`;
-      else if (m.status === "1H") btnBox.innerHTML = `<button class="btn-ctrl-main ${m.running ? 'amber' : ''}" onclick="pauseResumeMatch()">${m.running ? '⏸' : '▶'}</button><button class="btn-ctrl-main navy" onclick="triggerHalfTime()">⏱ HT</button>`;
+      else if (m.status === "1H") btnBox.innerHTML = `<button class="btn-ctrl-main btn-pause ${m.running ? 'amber' : ''}" onclick="pauseResumeMatch()">${m.running ? '❚❚ Pause' : '▶ Resume'}</button><button class="btn-ctrl-main btn-period" onclick="triggerHalfTime()">HT</button>`;
       else if (m.status === "HT") btnBox.innerHTML = `<button class="btn-ctrl-main" onclick="startSecondHalf()">▶ Start 2H</button>`;
-      else if (m.status === "2H") btnBox.innerHTML = `<button class="btn-ctrl-main ${m.running ? 'amber' : ''}" onclick="pauseResumeMatch()">${m.running ? '⏸' : '▶'}</button><button class="btn-ctrl-main red" onclick="triggerFullTime()">🏁 FT</button>`;
-      else btnBox.innerHTML = `<button class="btn-ctrl-main navy" onclick="resetMatchSheet()">🔄 New Match</button>`;
+      else if (m.status === "2H") btnBox.innerHTML = `<button class="btn-ctrl-main btn-pause ${m.running ? 'amber' : ''}" onclick="pauseResumeMatch()">${m.running ? '❚❚ Pause' : '▶ Resume'}</button><button class="btn-ctrl-main btn-period" onclick="triggerFullTime()">FT</button>`;
+      else btnBox.innerHTML = `<button class="btn-ctrl-main navy" onclick="resetMatchSheet()">New match</button>`;
     }
 
     function renderMatchView() {
@@ -1772,7 +1893,6 @@
       const pitchWrap = document.getElementById("match-pitch-wrapper");
       const tickerText = document.getElementById("equal-ticker-text");
       const swapBtn = document.getElementById("equal-swap-btn");
-      const planToggleBtn = document.getElementById("btn-ticker-plan");
       const draftBar = document.getElementById("draft-confirm-bar");
       const liveStrip = document.getElementById("live-touchline-strip");
       const benchTitle = document.getElementById("match-bench-title");
@@ -1782,10 +1902,8 @@
         eqBox.classList.add("draft-active");
         pitchWrap.classList.remove("standalone");
         pitchWrap.classList.add("draft-mode");
-        rightBadge.textContent = "🧪 PLANNING • Tap=Swap • Drag=Move";
+        rightBadge.textContent = "Planning: tap two players to swap"; rightBadge.style.display = "";
         rightBadge.classList.add("draft-badge");
-        planToggleBtn.classList.add("active");
-        planToggleBtn.textContent = "✕ Exit Plan";
         swapBtn.style.display = "none";
         draftBar.classList.add("open");
         liveStrip.style.display = "none";
@@ -1793,45 +1911,44 @@
         const diff = getDraftBatchDiff();
         if (draftSelectedTarget) {
           const selP = state.squad.find(x => x.id === draftSelectedTarget.playerId);
-          tickerText.textContent = `🧪 Selected ${selP ? selP.name : 'Player'} — Now tap who to swap with!`;
+          tickerText.textContent = `${selP ? selP.name : 'Player'} selected: tap who to swap with`;
         } else {
-          tickerText.textContent = `🧪 Planning Mode (Live clock still running • ${remMatchMins}m left)`;
+          tickerText.textContent = `Planning subs · clock still running · ${remMatchMins}' left`;
         }
 
         const summaryEl = document.getElementById("draft-summary-text");
         const commitBtn = document.getElementById("btn-commit-draft");
         if (diff.pairs.length > 0) {
           summaryEl.textContent = `Queued (${diff.pairs.length}): ` + diff.pairs.map(pr => `${pr.pOn ? pr.pOn.name : 'Sub'} ON for ${pr.pOff ? pr.pOff.name : 'Player'}`).join(" • ");
-          commitBtn.textContent = `✅ Confirm Subs (${diff.pairs.length})`;
+          commitBtn.textContent = `Confirm ${diff.pairs.length} sub${diff.pairs.length === 1 ? '' : 's'}`;
         } else if (diff.shapeChanged) {
-          summaryEl.textContent = `Tactical position swap ready (0 bench subs queued)`;
-          commitBtn.textContent = `✅ Save Tactical Shift`;
+          summaryEl.textContent = `Position changes ready (no subs queued)`;
+          commitBtn.textContent = `Save positions`;
         } else {
-          summaryEl.textContent = `Tap a Bench player + Pitch player to queue batch subs, or drag tokens`;
-          commitBtn.textContent = `✅ Confirm Subs (0)`;
+          summaryEl.textContent = `Tap a bench player, then the player coming off`;
+          commitBtn.textContent = `Confirm subs`;
         }
-        benchTitle.textContent = "Draft Bench (Tap Player to Queue Sub)";
+        benchTitle.textContent = "Bench · tap to plan";
       } else {
         eqBox.classList.remove("draft-active");
         pitchWrap.classList.remove("draft-mode");
-        rightBadge.textContent = "🟢50% • 🟠Cap • Tap=Act";
+        rightBadge.innerHTML = s.equalPlay ? `<span class="lg-dot lg-floor"></span>Min ${eq.floorMins}' <span class="lg-dot lg-cap"></span>Full share` : "";
+        rightBadge.style.display = s.equalPlay ? "" : "none";
         rightBadge.classList.remove("draft-badge");
-        planToggleBtn.classList.remove("active");
-        planToggleBtn.textContent = "🧪 Plan Subs";
         draftBar.classList.remove("open");
         liveStrip.style.display = "grid";
-        benchTitle.textContent = "Bench (Tap Player to Sub On)";
+        benchTitle.textContent = "Bench";
 
         if (state.squad.length > 0) {
           eqBox.style.display = "flex";
           pitchWrap.classList.remove("standalone");
           if (s.equalPlay && eq.suggestion) {
             const { subOn, subOff, onMins, offMins } = eq.suggestion;
-            tickerText.innerHTML = `💡 <span style="color:#fef08a;">Sub: ${subOn.name} (${onMins}') → ${subOff.name} (${offMins}/${eq.outfieldTarget}')</span>`;
+            tickerText.innerHTML = `Suggested: <span style="color:#fef08a;">${subOn.name} (${onMins}') on for ${subOff.name} (${offMins}')</span>`;
             swapBtn.style.display = "inline-block";
             swapBtn.onclick = () => executeQuickSuggestedSub(subOff.id, subOn.id);
           } else {
-            tickerText.textContent = `⚖️ Target: ${eq.outfieldTarget}m/player • 50% Floor: ${eq.floorMins}m (${eq.availCount} Avail)`;
+            tickerText.textContent = `Fair share: ${eq.outfieldTarget}' each · ${eq.availCount} players`;
             swapBtn.style.display = "none";
           }
         } else {
@@ -1888,7 +2005,7 @@
         .filter(p => p.available && !activePitchIds.includes(p.id))
         .sort((a, b) => getPlayerMatchMins(a.id) - getPlayerMatchMins(b.id));
 
-      document.getElementById("match-bench-count").textContent = `${benchPlayers.length} Subs`;
+      document.getElementById("match-bench-count").textContent = `${benchPlayers.length} available`;
       const benchGrid = document.getElementById("match-bench-grid");
       benchGrid.innerHTML = "";
       benchPlayers.forEach(p => {
@@ -1909,10 +2026,10 @@
         card.innerHTML = `
           <div class="bench-top-row"><div class="num-circle">${p.num}</div><div class="bench-name">${p.name}</div></div>
           <div class="bench-meta-row">
-            <span>${mins}m</span>
-            <span class="${isSubbingOff ? 'off-pill' : (deficit > 0 && s.equalPlay ? 'need-pill' : '')}">
-              ${isSubbingOff ? 'OFF' : (s.equalPlay ? (deficit > 0 ? `-${deficit}m` : 'Met') : 'SUB')}
-            </span>
+            <span>${mins}'</span>
+            ${isSubbingOff ? `<span class="off-pill">Coming off</span>`
+              : s.equalPlay ? `<span class="need-pill ${deficit <= 0 ? 'need-met' : deficit >= target * 0.5 ? 'need-hi' : deficit >= target * 0.25 ? 'need-mid' : 'need-lo'}">${deficit > 0 ? `Needs ${deficit}'` : 'Full share'}</span>`
+              : ''}
           </div>
           ${s.equalPlay ? `<div class="prog-track"><div class="prog-fill" style="width:${pct}%;"></div></div>` : ''}
         `;
@@ -2071,20 +2188,45 @@
     }
 
     function openGoalModal(preScorerId = null) {
-      const sSel = document.getElementById("goal-scorer-id"), aSel = document.getElementById("goal-assist-id");
-      sSel.innerHTML = ""; aSel.innerHTML = `<option value="">— No Assist / Unassisted —</option>`;
-      state.match.lineupIds.forEach(pid => {
-        const p = state.squad.find(x => x.id === pid);
-        if (p) {
-          sSel.innerHTML += `<option value="${p.id}" ${p.id === preScorerId ? 'selected' : ''}>#${p.num} ${p.name}</option>`;
-          aSel.innerHTML += `<option value="${p.id}">#${p.num} ${p.name}</option>`;
-        }
-      });
+      document.getElementById("goal-scorer-id").value = preScorerId || "";
+      document.getElementById("goal-assist-id").value = "";
+      renderGoalPicker();
       openModal("modal-goal");
     }
 
+    function goalPickPlayers() {
+      return state.match.lineupIds.map(pid => state.squad.find(x => x.id === pid)).filter(Boolean)
+        .sort((a, b) => (parseInt(a.num) || 0) - (parseInt(b.num) || 0));
+    }
+
+    function renderGoalPicker() {
+      const scorerId = document.getElementById("goal-scorer-id").value;
+      const players = goalPickPlayers();
+      const chip = (p, sel, fn) => `<button type="button" class="pick-chip${sel ? ' selected' : ''}" onclick="${fn}('${p.id}')"><span class="pick-num">${p.num}</span><span class="pick-name">${p.name}</span></button>`;
+      document.getElementById("goal-scorer-grid").innerHTML =
+        players.map(p => chip(p, p.id === scorerId, "pickGoalScorer")).join("") +
+        `<button type="button" class="pick-chip ghost${scorerId === "__og" ? ' selected' : ''}" onclick="pickGoalScorer('__og')"><span class="pick-name">Own goal or not sure</span></button>`;
+      const wrap = document.getElementById("goal-assist-wrap");
+      wrap.classList.toggle("disabled", !scorerId);
+      document.getElementById("goal-assist-grid").innerHTML =
+        `<button type="button" class="pick-chip ghost strong" onclick="pickGoalAssist('')"><span class="pick-name">No assist</span></button>` +
+        players.filter(p => p.id !== scorerId).map(p => chip(p, false, "pickGoalAssist")).join("");
+    }
+
+    function pickGoalScorer(pid) {
+      document.getElementById("goal-scorer-id").value = pid;
+      renderGoalPicker();
+    }
+
+    function pickGoalAssist(pid) {
+      if (!document.getElementById("goal-scorer-id").value) return;
+      document.getElementById("goal-assist-id").value = pid;
+      confirmOurGoal();
+    }
+
     function confirmOurGoal() {
-      const scorerId = document.getElementById("goal-scorer-id").value, assistId = document.getElementById("goal-assist-id").value;
+      let scorerId = document.getElementById("goal-scorer-id").value, assistId = document.getElementById("goal-assist-id").value;
+      if (scorerId === "__og") scorerId = "";
       const scorer = state.squad.find(p => p.id === scorerId), assister = assistId ? state.squad.find(p => p.id === assistId) : null;
       pushUndo();
       state.match.scoreUs += 1;
@@ -2438,7 +2580,7 @@
     function renderSquadAndSeason() {
       sanitizeState();
       const availCount = state.squad.filter(p => p.available).length;
-      document.getElementById("squad-count-label").textContent = `${availCount}/${state.squad.length} Available`;
+      document.getElementById("squad-count-label").textContent = `${availCount} of ${state.squad.length} available`;
       const rList = document.getElementById("squad-roster-list");
       rList.innerHTML = "";
       if (!state.squad.length) {
@@ -2447,7 +2589,7 @@
         state.squad.forEach(p => {
           const row = document.createElement("div");
           row.className = "roster-row" + (!p.available ? " unavailable" : "");
-          row.innerHTML = `<div class="bench-top-row"><div class="num-circle">${p.num}</div><div class="bench-name" style="font-size:0.86rem;">${p.name}</div></div><div class="roster-actions"><button class="btn-avail ${p.available ? 'yes' : 'no'}" onclick="toggleAvailability('${p.id}')">${p.available ? '✅ Avail' : '❌ Out'}</button><button class="btn-icon-sq" onclick="editPlayerPrompt('${p.id}')">✏️</button><button class="btn-icon-sq" onclick="removePlayer('${p.id}')">🗑️</button></div>`;
+          row.innerHTML = `<button type="button" class="roster-main" onclick="openEditPlayer('${p.id}')"><div class="num-circle">${p.num}</div><div class="bench-name" style="font-size:0.9rem;">${p.name}</div><span class="roster-edit-hint">Edit</span></button><label class="avail-switch"><input type="checkbox" ${p.available ? 'checked' : ''} onchange="toggleAvailability('${p.id}')"><span class="avail-track"></span><span class="avail-text">${p.available ? 'In' : 'Out'}</span></label><div class="roster-actions" style="display:none"><button class="btn-avail ${p.available ? 'yes' : 'no'}" onclick="toggleAvailability('${p.id}')">${p.available ? '✅ Avail' : '❌ Out'}</button><button class="btn-icon-sq" onclick="editPlayerPrompt('${p.id}')">✏️</button><button class="btn-icon-sq" onclick="removePlayer('${p.id}')">🗑️</button></div>`;
           rList.appendChild(row);
         });
       }
@@ -2493,6 +2635,25 @@
       const newNum = prompt("Edit Squad Number:", p.num); if (newNum === null) return;
       p.name = newName.trim() || p.name; p.num = parseInt(newNum) || p.num;
       persist(); renderEverything();
+    }
+    let editingPlayerId = null;
+    function openEditPlayer(pid) {
+      const p = state.squad.find(x => x.id === pid); if (!p) return;
+      editingPlayerId = pid;
+      document.getElementById("edit-player-title").textContent = `Edit ${p.name}`;
+      document.getElementById("edit-player-num").value = p.num;
+      document.getElementById("edit-player-name").value = p.name;
+      openModal("modal-edit-player");
+    }
+    function saveEditPlayer() {
+      const p = state.squad.find(x => x.id === editingPlayerId); if (!p) return closeModal("modal-edit-player");
+      p.name = document.getElementById("edit-player-name").value.trim() || p.name;
+      p.num = parseInt(document.getElementById("edit-player-num").value) || p.num;
+      closeModal("modal-edit-player"); persist(); renderEverything();
+    }
+    function removeEditingPlayer() {
+      const pid = editingPlayerId; closeModal("modal-edit-player");
+      if (pid) removePlayer(pid);
     }
     function removePlayer(pid) {
       const p = state.squad.find(x => x.id === pid);
