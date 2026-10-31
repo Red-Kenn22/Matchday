@@ -361,7 +361,7 @@
   <header class="top-cockpit">
     <div class="cockpit-inner">
       <div class="app-bar">
-        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6</small></span></div>
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.1</small></span></div>
         <div class="header-pills">
           <button class="icon-pill" onclick="forceCloudPull()" title="Tap to sync now"><span class="dot-indicator active" id="cloud-dot"></span><span class="status-lbl cloud-lbl"></span></button>
           <button class="icon-pill" onclick="toggleWakeLock()" title="Keep screen on"><span class="dot-indicator active" id="wake-dot"></span><span class="status-lbl wake-lbl"></span></button>
@@ -1058,7 +1058,7 @@
     function initWatchMediaSession() {
       if (watchAudioEl) return;
       try {
-        const sampleRate = 8000, numSamples = 8000;
+        const sampleRate = 8000, numSamples = sampleRate * 10; // 10s: Android only shows media controls for media over 5s
         const buffer = new ArrayBuffer(44 + numSamples * 2);
         const view = new DataView(buffer);
         const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
@@ -1082,6 +1082,15 @@
         } catch (e) {}
       }
     }
+
+    // After a page reload mid-match, browsers only allow audio to start from a tap,
+    // so re-arm the watch controls on the first tap anywhere.
+    document.addEventListener("pointerdown", function rearmWatch() {
+      if (state.match && (state.match.status === "1H" || state.match.status === "2H")) {
+        initWatchMediaSession();
+        syncWatchMediaSessionState();
+      }
+    }, { once: true, capture: true });
 
     function syncWatchMediaSessionState() {
       if (!watchAudioEl) return;
