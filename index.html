@@ -361,7 +361,7 @@
   <header class="top-cockpit">
     <div class="cockpit-inner">
       <div class="app-bar">
-        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.2</small></span></div>
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.3</small></span></div>
         <div class="header-pills">
           <button class="icon-pill" onclick="forceCloudPull()" title="Tap to sync now"><span class="dot-indicator active" id="cloud-dot"></span><span class="status-lbl cloud-lbl"></span></button>
           <button class="icon-pill" onclick="toggleWakeLock()" title="Keep screen on"><span class="dot-indicator active" id="wake-dot"></span><span class="status-lbl wake-lbl"></span></button>
@@ -2384,12 +2384,60 @@
       renderTimelineEditorEvents();
     }
 
+    // ---- Timeline ordering: keep events in the right half after a minute is edited ----
+    // The timeline is stored newest-first. Period markers fix the shape of the match.
+    function timelineMarkerKind(ev) {
+      const t = (ev && ev.text) || "";
+      if (/1st Half Started/i.test(t)) return "KO1";
+      if (/Half Time/i.test(t)) return "HT";
+      if (/2nd Half Started/i.test(t)) return "KO2";
+      if (/Full Time/i.test(t)) return "FT";
+      return null;
+    }
+
+    // Which half each event is in, judged by where it sits relative to the markers.
+    function timelineHalvesFromOrder(newestFirst, halfMins) {
+      const chrono = [...newestFirst].reverse();
+      const hasMarkers = chrono.some(ev => timelineMarkerKind(ev) === "HT" || timelineMarkerKind(ev) === "KO2");
+      const halves = new Map();
+      let half = 1;
+      chrono.forEach(ev => {
+        const kind = timelineMarkerKind(ev);
+        if (kind === "KO2") half = 2;
+        if (!hasMarkers && !kind) halves.set(ev, (parseInt(ev.min) || 1) <= halfMins ? 1 : 2);
+        else halves.set(ev, kind === "KO1" || kind === "HT" ? 1 : kind ? 2 : half);
+        if (kind === "HT") half = 2;
+      });
+      return halves;
+    }
+
+    // Re-sort newest-first: by half, then minute; markers open/close their half.
+    function sortTimelineNewestFirst(newestFirst, halves) {
+      const rankInHalf = { KO1: -1, HT: 1, KO2: -1, FT: 1 };
+      const chrono = [...newestFirst].reverse().map((ev, i) => ({ ev, i }));
+      chrono.sort((a, b) => {
+        const ha = halves.get(a.ev) || 1, hb = halves.get(b.ev) || 1;
+        if (ha !== hb) return ha - hb;
+        const ra = rankInHalf[timelineMarkerKind(a.ev)] || 0, rb = rankInHalf[timelineMarkerKind(b.ev)] || 0;
+        if (ra !== rb) return ra - rb;
+        const ma = parseInt(a.ev.min) || 0, mb = parseInt(b.ev.min) || 0;
+        if (ma !== mb) return ma - mb;
+        return a.i - b.i;
+      });
+      return chrono.map(x => x.ev).reverse();
+    }
+
     function saveEditedTimeline() {
       const newFT = Math.max(1, parseInt(document.getElementById("tl-input-ft-mins").value) || tempOriginalFT);
       const ftDelta = newFT - tempOriginalFT;
 
       const playerMinAdjustments = {};
       const addAdj = (pid, d) => { if (pid) playerMinAdjustments[pid] = (playerMinAdjustments[pid] || 0) + d; };
+
+      // Half length: from this match's half-time marker if it has one, else current settings
+      const htEv = tempEditTimeline.find(ev => timelineMarkerKind(ev) === "HT");
+      const halfMins = (htEv && parseInt(htEv.min)) || parseInt(state.setup.halfDuration) || 40;
+      const halves = timelineHalvesFromOrder(tempEditTimeline, halfMins);
 
       if (ftDelta !== 0) {
         tempFinalPitchSet.forEach(pid => addAdj(pid, ftDelta));
@@ -2417,8 +2465,11 @@
           addAdj(offId, subDelta);
           addAdj(onId, -subDelta);
         }
+        // An edited event moves to the half its new minute belongs to
+        if (newMin !== oldMin && !timelineMarkerKind(ev)) halves.set(ev, newMin <= halfMins ? 1 : 2);
         ev.min = `${newMin}'`;
       });
+      tempEditTimeline = sortTimelineNewestFirst(tempEditTimeline, halves);
 
       if (editingTargetMatchId === "LIVE") {
         pushUndo();
