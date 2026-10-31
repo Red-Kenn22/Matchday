@@ -361,7 +361,7 @@
   <header class="top-cockpit">
     <div class="cockpit-inner">
       <div class="app-bar">
-        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.1</small></span></div>
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.2</small></span></div>
         <div class="header-pills">
           <button class="icon-pill" onclick="forceCloudPull()" title="Tap to sync now"><span class="dot-indicator active" id="cloud-dot"></span><span class="status-lbl cloud-lbl"></span></button>
           <button class="icon-pill" onclick="toggleWakeLock()" title="Keep screen on"><span class="dot-indicator active" id="wake-dot"></span><span class="status-lbl wake-lbl"></span></button>
@@ -1075,8 +1075,23 @@
 
       if ("mediaSession" in navigator) {
         try {
-          navigator.mediaSession.setActionHandler("play", () => { if (!state.match.running) pauseResumeMatch(); });
-          navigator.mediaSession.setActionHandler("pause", () => { if (state.match.running) pauseResumeMatch(); });
+          // Play from the watch/phone: always restart the silent track (the browser may have
+          // stopped it), then resume the clock only if a half is in progress and paused.
+          navigator.mediaSession.setActionHandler("play", () => {
+            if (watchAudioEl) watchAudioEl.play().catch(() => {});
+            const live = state.match.status === "1H" || state.match.status === "2H";
+            if (live && !state.match.running) pauseResumeMatch();
+            else syncWatchMediaSessionState();
+          });
+          // Pause: pause the clock but keep the silent track playing, so the controls
+          // stay on the watch and Play can bring the match back.
+          const watchPause = () => {
+            if (state.match.running) pauseResumeMatch();
+            else syncWatchMediaSessionState();
+            if (watchAudioEl && watchAudioEl.paused) watchAudioEl.play().catch(() => {});
+          };
+          navigator.mediaSession.setActionHandler("pause", watchPause);
+          try { navigator.mediaSession.setActionHandler("stop", watchPause); } catch (e) {}
           navigator.mediaSession.setActionHandler("nexttrack", () => { handleSubPillTap(); });
           navigator.mediaSession.setActionHandler("previoustrack", () => { snoozeSubTimer(120); });
         } catch (e) {}
