@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0b192c">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Matchday">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <title>Matchday — Pitchside Coaching App</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6EG2JQGKMS"></script>
   <script>
@@ -353,6 +358,26 @@
     /* Room for full names on the pitch */
     .token-label { max-width: 100px; flex-shrink: 0; }
     @media (min-width: 768px) and (orientation: portrait) { .token-label { max-width: 130px; } }
+
+    /* IMPORT (v7.7) */
+    .imp-row { border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 8px; margin-bottom: 6px; background: #fff; display: grid; gap: 6px; }
+    .imp-row.off { opacity: 0.55; background: #f8fafc; }
+    .imp-row.unsure { border-color: var(--amber-warn); }
+    .imp-top { display: flex; align-items: center; gap: 8px; }
+    .imp-top input[type=checkbox] { width: 20px; height: 20px; flex: none; }
+    .imp-title { font-weight: 900; font-size: 0.84rem; flex: 1; min-width: 0; }
+    .imp-sub { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); }
+    .imp-res { font-size: 0.72rem; font-weight: 900; border-radius: 6px; padding: 2px 7px; color: #fff; flex: none; }
+    .imp-res.W { background: var(--green-bright); } .imp-res.D { background: #64748b; } .imp-res.L { background: var(--red-danger); }
+    .imp-edit { display: grid; grid-template-columns: 1.3fr 0.8fr 1.6fr 44px 44px; gap: 4px; }
+    .imp-edit .day-input, .imp-edit .day-select { min-height: 34px; font-size: 0.76rem; padding: 0 5px; border-width: 1.5px; }
+    .imp-flag { font-size: 0.68rem; font-weight: 800; color: #9a3412; }
+    .imp-status { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin: 8px 0; min-height: 1.2em; }
+    .imp-status.err { color: var(--red-danger); }
+    #squad-paste-text { width: 100%; min-height: 140px; border: 2px solid var(--text-main); border-radius: 9px; padding: 8px; font: inherit; font-size: 0.88rem; font-weight: 700; user-select: text; -webkit-user-select: text; }
+    .season-record { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.78rem; font-weight: 900; margin-bottom: 10px; }
+    .season-record .rec { background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 7px; padding: 3px 8px; }
+    .season-record .note { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); width: 100%; }
   </style>
 </head>
 <body>
@@ -361,7 +386,7 @@
   <header class="top-cockpit">
     <div class="cockpit-inner">
       <div class="app-bar">
-        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.6.3</small></span></div>
+        <div class="brand-logo" onclick="handleSecretAdminTap()"><span class="brand-dot"></span><span>MATCHDAY <small style="font-size:0.62rem;color:#72c2eb;">v7.7</small></span></div>
         <div class="header-pills">
           <button class="icon-pill" onclick="forceCloudPull()" title="Tap to sync now"><span class="dot-indicator active" id="cloud-dot"></span><span class="status-lbl cloud-lbl"></span></button>
           <button class="icon-pill" onclick="toggleWakeLock()" title="Keep screen on"><span class="dot-indicator active" id="wake-dot"></span><span class="status-lbl wake-lbl"></span></button>
@@ -546,6 +571,7 @@
             <input type="text" id="new-player-name" class="day-input" placeholder="First Name">
             <button class="btn-sky" onclick="addNewPlayer()">+ Add</button>
           </div>
+          <button class="btn-avail sky" style="margin-top:8px;width:100%;min-height:38px;" onclick="openSquadPaste()">📋 Paste a list of players</button>
         </div>
         <div class="day-card">
           <div class="day-card-title"><span>Active Squad List</span><span id="squad-count-label" style="font-size:0.75rem;color:var(--text-muted);"></span></div>
@@ -576,8 +602,12 @@
     <div class="day-card">
       <div class="day-card-title">
         <span>Team Match Archive</span>
-        <button class="btn-sky" style="min-height:36px;padding:0 10px;font-size:0.76rem;" onclick="openManualMatchModal()">+ Log Past Match</button>
+        <span style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn-sky" style="min-height:36px;padding:0 10px;font-size:0.76rem;" onclick="openImportResults()">📷 Import results</button>
+          <button class="btn-sky" style="min-height:36px;padding:0 10px;font-size:0.76rem;" onclick="openManualMatchModal()">+ Log Past Match</button>
+        </span>
       </div>
+      <div class="season-record" id="season-record"></div>
       <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1.5px dashed #cbd5e1;">
         <button class="btn-ctrl-main" style="width:100%;font-size:0.82rem;min-height:40px;" onclick="rebuildMatchFromSeasonStats()">
           🔄 Rebuild Match Report from Season Stats
@@ -790,6 +820,57 @@
       <div style="margin:6px 0;font-size:0.74rem;font-weight:900;text-transform:uppercase;">Player Participation (Role | Mins | ⚽G | 🎯A)</div>
       <div id="past-players-container" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
       <button class="btn-ctrl-main" style="width:100%;min-height:44px;" onclick="savePastMatchResult()">💾 Save Result</button>
+    </div>
+  </div>
+
+  <!-- MODAL: IMPORT RESULTS FROM SCREENSHOT -->
+  <div class="modal-backdrop" id="modal-import">
+    <div class="modal-sheet">
+      <div class="sheet-header"><div class="sheet-title">📷 Import results</div><button class="btn-close" onclick="closeModal('modal-import')">✕</button></div>
+      <div id="imp-step-pick">
+        <div style="font-size:0.84rem;font-weight:700;line-height:1.45;margin-bottom:10px;">
+          Take a screenshot of your results page and pick it here. On FA Full-Time: open your team, tap <b>All Results</b>, then screenshot. If the list is long, take several and pick them all.
+        </div>
+        <label class="btn-ctrl-main" style="width:100%;min-height:48px;font-size:0.9rem;cursor:pointer;">
+          📷 Choose screenshots
+          <input type="file" id="imp-files" accept="image/*" multiple style="display:none;" onchange="importScreenshots(this.files)">
+        </label>
+        <div class="imp-status" id="imp-status"></div>
+        <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);">The screenshot is read by AI (Anthropic's Claude) and not stored. Avoid screenshots that show children's full names.</div>
+      </div>
+      <div id="imp-step-review" style="display:none;">
+        <div class="field-group">
+          <label class="field-label">Which team is yours?</label>
+          <select id="imp-our-team" class="day-select" onchange="importPickTeam(this.value)"></select>
+        </div>
+        <div class="field-label" style="margin:8px 0 6px;" id="imp-results-label">Results</div>
+        <div id="imp-results-list"></div>
+        <div id="imp-fixtures-wrap" style="display:none;">
+          <div class="field-label" style="margin:10px 0 6px;">Upcoming fixtures</div>
+          <div id="imp-fixtures-list"></div>
+        </div>
+        <div id="imp-unreadable" class="imp-flag" style="margin:6px 0;"></div>
+        <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);margin:6px 0 10px;">Imported matches count towards your record. Player minutes weren't tracked for them, so season minutes are unchanged.</div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;">
+          <button class="btn-avail" style="min-height:46px;" onclick="importReset()">Start again</button>
+          <button class="btn-ctrl-main" style="min-height:46px;font-size:0.9rem;" id="imp-save-btn" onclick="importSave()">Add results</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PASTE SQUAD LIST -->
+  <div class="modal-backdrop" id="modal-squad-paste">
+    <div class="modal-sheet">
+      <div class="sheet-header"><div class="sheet-title">📋 Paste a list of players</div><button class="btn-close" onclick="closeModal('modal-squad-paste')">✕</button></div>
+      <div style="font-size:0.8rem;font-weight:700;line-height:1.45;margin-bottom:8px;">One player per line. A shirt number before or after the name is picked up, e.g. <b>7 Shaye</b>. You can also copy rows straight from a spreadsheet.</div>
+      <textarea id="squad-paste-text" oninput="renderSquadPastePreview()" placeholder="7 Shaye&#10;11 Kyle&#10;Archie"></textarea>
+      <label style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:0.8rem;margin:8px 0;cursor:pointer;">
+        <input type="checkbox" id="squad-paste-first" checked style="width:18px;height:18px;" onchange="renderSquadPastePreview()">
+        <span>First names only (adds a surname initial if two share a name)</span>
+      </label>
+      <div id="squad-paste-preview" style="max-height:200px;overflow-y:auto;margin-bottom:10px;"></div>
+      <button class="btn-ctrl-main" style="width:100%;min-height:46px;" id="squad-paste-btn" onclick="saveSquadPaste()">Add players</button>
     </div>
   </div>
 
@@ -1493,7 +1574,10 @@
         deltas: it.deltas || null,
         timeline: toArray(it.timeline),
         finalLineupIds: toArray(it.finalLineupIds),
-        totalMins: parseInt(it.totalMins) || 0
+        totalMins: parseInt(it.totalMins) || 0,
+        ...(it.imported ? { imported: true } : {}),
+        ...(it.result && typeof it.result === "object" ? { result: { us: parseInt(it.result.us) || 0, them: parseInt(it.result.them) || 0 } } : {}),
+        ...(it.competition ? { competition: String(it.competition) } : {})
       };
     }
 
@@ -2932,12 +3016,383 @@
       persist(true); renderEverything();
     }
 
+    // ===== IMPORT RESULTS FROM SCREENSHOT (v7.7) =====
+    const READER_URL = "https://matchday-reader.liam030322.workers.dev/";
+    let importState = { matches: [], teams: [], ourTeam: "", rows: [], fixtures: [], unreadable: [], ignored: 0 };
+
+    function escHtml(v) {
+      return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function isoToGb(iso) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+      return m ? `${m[3]}/${m[2]}/${m[1]}` : "";
+    }
+    function gbToTime(gb) {
+      const m = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/.exec(gb || "");
+      if (!m) return NaN;
+      let y = parseInt(m[3]); if (y < 100) y += 2000;
+      return new Date(y, parseInt(m[2]) - 1, parseInt(m[1])).getTime();
+    }
+    function teamKey(n) { return String(n || "").trim().toLowerCase().replace(/\s+/g, " "); }
+
+    function openImportResults() {
+      if (!currentTeamCode) return openModal("modal-welcome");
+      importReset();
+      openModal("modal-import");
+    }
+    function importReset() {
+      importState = { matches: [], teams: [], ourTeam: "", rows: [], fixtures: [], unreadable: [], ignored: 0 };
+      document.getElementById("imp-step-pick").style.display = "";
+      document.getElementById("imp-step-review").style.display = "none";
+      document.getElementById("imp-files").value = "";
+      importSetStatus("");
+    }
+    function importSetStatus(msg, isErr) {
+      const el = document.getElementById("imp-status");
+      el.textContent = msg; el.classList.toggle("err", !!isErr);
+    }
+
+    function importPrepImage(file) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          const max = 2000, scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+          const c = document.createElement("canvas");
+          c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(url);
+          resolve(c.toDataURL("image/jpeg", 0.85).split(",")[1]);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That file couldn't be opened as an image.")); };
+        img.src = url;
+      });
+    }
+
+    async function importReadOne(file) {
+      if (!/^https:\/\//.test(READER_URL)) throw new Error("The screenshot reader isn't set up yet.");
+      const b64 = await importPrepImage(file);
+      let res;
+      try {
+        res = await fetch(READER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain", "X-Team-Code": currentTeamCode, "X-Media-Type": "image/jpeg" },
+          body: b64
+        });
+      } catch (e) { throw new Error("Couldn't reach the reader. Check your signal and try again."); }
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error(data.error || "The reader couldn't read that screenshot.");
+      return data;
+    }
+
+    async function importScreenshots(fileList) {
+      const files = Array.from(fileList || []);
+      if (!files.length) return;
+      if (!navigator.onLine) return importSetStatus("You're offline. Importing needs a signal.", true);
+      const all = [], unreadable = [], errors = [];
+      for (let i = 0; i < files.length; i++) {
+        importSetStatus(files.length > 1 ? `Reading screenshot ${i + 1} of ${files.length}…` : "Reading screenshot…");
+        try {
+          const data = await importReadOne(files[i]);
+          (data.matches || []).forEach(m => all.push(m));
+          (data.unreadable || []).forEach(u => unreadable.push(u));
+        } catch (e) { errors.push(e.message); }
+      }
+      const seen = new Set(), matches = [];
+      all.forEach(m => {
+        if (!m || !m.home || !m.away) return;
+        const k = [m.date, teamKey(m.home), teamKey(m.away)].join("|");
+        if (!seen.has(k)) { seen.add(k); matches.push(m); }
+      });
+      if (!matches.length) {
+        return importSetStatus(errors[0] || "No matches found in that screenshot. Try the All Results page.", true);
+      }
+      importState.matches = matches;
+      importState.unreadable = unreadable.concat(errors);
+      const counts = {};
+      matches.forEach(m => [m.home, m.away].forEach(n => { const k = teamKey(n); counts[k] = counts[k] || { name: n.trim(), n: 0 }; counts[k].n++; }));
+      const myKey = teamKey(state.setup.myTeam);
+      importState.teams = Object.values(counts).sort((a, b) => (b.n - a.n) || ((teamKey(b.name).includes(myKey) ? 1 : 0) - (teamKey(a.name).includes(myKey) ? 1 : 0)));
+      const sel = document.getElementById("imp-our-team");
+      sel.innerHTML = importState.teams.map(t => `<option value="${escHtml(t.name)}">${escHtml(t.name)}</option>`).join("");
+      document.getElementById("imp-step-pick").style.display = "none";
+      document.getElementById("imp-step-review").style.display = "";
+      importPickTeam(importState.teams[0].name);
+    }
+
+    function importIsDuplicate(row) {
+      const gb = isoToGb(row.date);
+      if (!gb) return false;
+      const opp = teamKey(row.opp);
+      return state.history.some(h => {
+        if (h.date !== gb) return false;
+        const head = teamKey(h.header);
+        if (opp && head.includes(opp)) return true;
+        if (h.result) return h.result.us === row.us && h.result.them === row.them;
+        return head.includes(`${row.home ? row.us : row.them} – ${row.home ? row.them : row.us}`);
+      });
+    }
+
+    function importPickTeam(name) {
+      importState.ourTeam = name;
+      document.getElementById("imp-our-team").value = name;
+      const ours = teamKey(name);
+      const rows = [], fixtures = [];
+      let ignored = 0;
+      importState.matches.forEach(m => {
+        const isHome = teamKey(m.home) === ours, isAway = teamKey(m.away) === ours;
+        if (!isHome && !isAway) { ignored++; return; }
+        const opp = (isHome ? m.away : m.home).trim();
+        const unsure = Array.isArray(m.unsure) ? m.unsure : [];
+        if (m.status === "upcoming") {
+          fixtures.push({ date: m.date || "", time: m.time || "", home: isHome, opp, venue: m.venue || "", competition: m.competition || "" });
+          return;
+        }
+        const hasScore = Number.isInteger(m.home_score) && Number.isInteger(m.away_score);
+        if (!hasScore && m.status !== "played" && m.status !== "walkover") { ignored++; return; }
+        const us = isHome ? m.home_score : m.away_score, them = isHome ? m.away_score : m.home_score;
+        const hasHt = Number.isInteger(m.ht_home) && Number.isInteger(m.ht_away);
+        const goalsUs = (m.goals || []).filter(g => g && Number.isInteger(g.minute) && teamKey(g.team) === ours).map(g => g.minute).sort((a, b) => a - b);
+        const row = {
+          date: m.date || "", home: isHome, opp,
+          us: Number.isInteger(us) ? us : null, them: Number.isInteger(them) ? them : null,
+          htUs: hasHt ? (isHome ? m.ht_home : m.ht_away) : null, htThem: hasHt ? (isHome ? m.ht_away : m.ht_home) : null,
+          competition: m.competition || (m.type === "cup" ? "Cup" : m.type === "league" ? "League" : ""),
+          goalsUs, unsure, walkover: m.status === "walkover"
+        };
+        row.dup = importIsDuplicate(row);
+        row.include = !row.dup && row.us !== null && row.them !== null && !!row.date;
+        rows.push(row);
+      });
+      rows.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      fixtures.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+      importState.rows = rows; importState.fixtures = fixtures; importState.ignored = ignored;
+      renderImportReview();
+    }
+
+    function importResultLetter(r) {
+      if (r.us === null || r.them === null) return "";
+      return r.us > r.them ? "W" : r.us < r.them ? "L" : "D";
+    }
+
+    function renderImportReview() {
+      const list = document.getElementById("imp-results-list");
+      const rows = importState.rows;
+      document.getElementById("imp-results-label").textContent = rows.length ? `Results (${rows.length})` : "Results";
+      list.innerHTML = rows.length ? "" : `<div class="imp-sub" style="padding:6px 0;">No results for this team in the screenshot.</div>`;
+      rows.forEach((r, i) => {
+        const res = importResultLetter(r);
+        const flags = [];
+        if (r.dup) flags.push("Already in History");
+        if (r.unsure.length) flags.push("Check: " + r.unsure.join(", ").replace(/_/g, " "));
+        if (r.us === null || r.them === null) flags.push("Score missing");
+        if (!r.date) flags.push("Date missing");
+        if (r.walkover) flags.push("Walkover");
+        const subBits = [isoToGb(r.date) || "No date", r.competition, r.htUs !== null ? `HT ${r.htUs}-${r.htThem}` : ""].filter(Boolean);
+        const showEdit = r.editing || r.unsure.length || r.us === null || r.them === null || !r.date;
+        const el = document.createElement("div");
+        el.className = "imp-row" + (r.include ? "" : " off") + (r.unsure.length ? " unsure" : "");
+        el.innerHTML = `
+          <div class="imp-top">
+            <input type="checkbox" ${r.include ? "checked" : ""} onchange="importEditRow(${i},'include',this.checked)" aria-label="Include this result">
+            <div class="imp-title">${escHtml(r.opp)} <span class="imp-sub">(${r.home ? "H" : "A"})</span><div class="imp-sub">${escHtml(subBits.join(" · "))}</div></div>
+            <div style="font-weight:900;font-size:1rem;flex:none;">${r.us ?? "?"}–${r.them ?? "?"}</div>
+            ${res ? `<span class="imp-res ${res}">${res}</span>` : ""}
+          </div>
+          ${flags.length ? `<div class="imp-flag">${escHtml(flags.join(" · "))}</div>` : ""}
+          ${showEdit ? "" : `<button type="button" class="btn-avail" style="justify-self:start;min-height:30px;" onclick="importEditRow(${i},'editing',true)">✏️ Edit</button>`}
+          <div class="imp-edit" style="${showEdit ? "" : "display:none;"}">
+            <input type="date" class="day-input" value="${escHtml(r.date)}" onchange="importEditRow(${i},'date',this.value)" aria-label="Date">
+            <select class="day-select" onchange="importEditRow(${i},'home',this.value==='H')" aria-label="Home or away"><option value="H" ${r.home ? "selected" : ""}>Home</option><option value="A" ${r.home ? "" : "selected"}>Away</option></select>
+            <input type="text" class="day-input" value="${escHtml(r.opp)}" onchange="importEditRow(${i},'opp',this.value)" aria-label="Opponent">
+            <input type="number" min="0" class="day-input" value="${r.us ?? ""}" onchange="importEditRow(${i},'us',this.value)" aria-label="Our goals">
+            <input type="number" min="0" class="day-input" value="${r.them ?? ""}" onchange="importEditRow(${i},'them',this.value)" aria-label="Their goals">
+          </div>`;
+        list.appendChild(el);
+      });
+
+      const fx = document.getElementById("imp-fixtures-list");
+      document.getElementById("imp-fixtures-wrap").style.display = importState.fixtures.length ? "" : "none";
+      const live = ["1H", "HT", "2H"].includes(state.match.status);
+      fx.innerHTML = importState.fixtures.map((f, i) => `
+        <div class="imp-row">
+          <div class="imp-top">
+            <div class="imp-title">${escHtml(f.opp)} <span class="imp-sub">(${f.home ? "H" : "A"})</span>
+              <div class="imp-sub">${escHtml([isoToGb(f.date), f.time, f.competition, f.venue].filter(Boolean).join(" · "))}</div></div>
+            <button class="btn-avail sky" style="flex:none;" ${live ? "disabled title='A match is in progress'" : ""} onclick="importSetNextMatch(${i}, this)">Set as next match</button>
+          </div>
+        </div>`).join("");
+
+      const notes = [];
+      if (importState.ignored) notes.push(`${importState.ignored} other match${importState.ignored === 1 ? "" : "es"} not involving your team skipped.`);
+      importState.unreadable.forEach(u => notes.push("Couldn't read: " + u));
+      document.getElementById("imp-unreadable").textContent = notes.join(" ");
+      const n = rows.filter(r => r.include).length;
+      const btn = document.getElementById("imp-save-btn");
+      btn.textContent = n ? `Add ${n} result${n === 1 ? "" : "s"}` : "Nothing selected";
+      btn.disabled = !n;
+    }
+
+    function importEditRow(i, field, value) {
+      const r = importState.rows[i]; if (!r) return;
+      if (field === "us" || field === "them") { const v = parseInt(value); r[field] = Number.isInteger(v) && v >= 0 ? v : null; }
+      else if (field === "opp") r.opp = String(value).trim() || r.opp;
+      else r[field] = value;
+      if (field !== "include" && field !== "editing") {
+        r.editing = true; r.unsure = [];
+        r.dup = importIsDuplicate(r);
+        if (r.us === null || r.them === null || !r.date) r.include = false;
+      }
+      if (field === "include" && value && (r.us === null || r.them === null || !r.date)) {
+        r.include = false; alert("Add the date and both scores first.");
+      }
+      renderImportReview();
+    }
+
+    function importSetNextMatch(i, btn) {
+      const f = importState.fixtures[i]; if (!f) return;
+      if (["1H", "HT", "2H"].includes(state.match.status)) return alert("A match is in progress. Finish it first.");
+      state.setup.oppTeam = f.opp;
+      state.setup.venue = f.home ? "home" : "away";
+      persist(true); renderEverything();
+      btn.textContent = "✓ Next match set"; btn.disabled = true;
+    }
+
+    function importSave() {
+      const chosen = importState.rows.filter(r => r.include && r.us !== null && r.them !== null && r.date);
+      if (!chosen.length) return;
+      sanitizeState();
+      const my = state.setup.myTeam;
+      chosen.forEach((r, i) => {
+        const dateGb = isoToGb(r.date);
+        const homeName = r.home ? my : r.opp, awayName = r.home ? r.opp : my;
+        const hs = r.home ? r.us : r.them, as = r.home ? r.them : r.us;
+        const header = `${homeName} ${hs} – ${as} ${awayName}`;
+        let report = `⚽ *${my.toUpperCase()} MATCH REPORT*\n🏟️ *${header}*\n📅 Date: ${dateGb}\n`;
+        if (r.competition) report += `🏆 ${r.competition}\n`;
+        if (r.htUs !== null) report += `⏸️ Half time: ${r.home ? r.htUs : r.htThem} – ${r.home ? r.htThem : r.htUs}\n`;
+        if (r.goalsUs && r.goalsUs.length) report += `\n⚽ Our goals: ${r.goalsUs.map(m => m + "'").join(", ")}\n`;
+        report += `\nℹ️ Imported from a results screenshot. Player minutes weren't tracked for this match.`;
+        const item = normalizeHistoryItem({
+          id: `match_imp_${Date.now()}_${i}`, teamCode: currentTeamCode, date: dateGb, header, report,
+          deltas: null, timeline: [], finalLineupIds: [], totalMins: 0,
+          imported: true, result: { us: r.us, them: r.them }, competition: r.competition || ""
+        }, i);
+        const t = gbToTime(dateGb);
+        let at = state.history.findIndex(h => { const ht = gbToTime(h.date); return !isNaN(ht) && ht < t; });
+        if (at < 0) at = state.history.length;
+        state.history.splice(at, 0, item);
+      });
+      persist(true); renderEverything();
+      closeModal("modal-import");
+      alert(`${chosen.length} result${chosen.length === 1 ? "" : "s"} added to History.`);
+    }
+
+    function historyItemScore(item) {
+      if (item.result) return item.result;
+      const m = /^(.*) (\d+) – (\d+) (.*)$/.exec(item.header || "");
+      if (!m) return null;
+      const my = teamKey(state.setup.myTeam), h = parseInt(m[2]), a = parseInt(m[3]);
+      if (teamKey(m[1]) === my) return { us: h, them: a };
+      if (teamKey(m[4]) === my) return { us: a, them: h };
+      return null;
+    }
+
+    function renderSeasonRecord() {
+      const el = document.getElementById("season-record"); if (!el) return;
+      let p = 0, w = 0, d = 0, l = 0, gf = 0, ga = 0, imp = 0;
+      state.history.forEach(item => {
+        const s = historyItemScore(item); if (!s) return;
+        p++; gf += s.us; ga += s.them;
+        if (s.us > s.them) w++; else if (s.us < s.them) l++; else d++;
+        if (item.imported) imp++;
+      });
+      if (!p) { el.innerHTML = ""; el.style.display = "none"; return; }
+      el.style.display = "";
+      el.innerHTML = `<span class="rec">P ${p}</span><span class="rec">W ${w}</span><span class="rec">D ${d}</span><span class="rec">L ${l}</span><span class="rec">GF ${gf} · GA ${ga}</span>` +
+        (imp ? `<span class="note">${imp} imported match${imp === 1 ? "" : "es"} included (no player minutes).</span>` : "");
+    }
+
+    // ===== PASTE SQUAD LIST (v7.7) =====
+    function openSquadPaste() {
+      if (!currentTeamCode) return openModal("modal-welcome");
+      document.getElementById("squad-paste-text").value = "";
+      renderSquadPastePreview();
+      openModal("modal-squad-paste");
+    }
+
+    function parseSquadPaste(text, firstOnly) {
+      const skip = /^(name|names|player|players|first ?name|surname|last ?name|no\.?|number|shirt|#)$/i;
+      const raw = [];
+      String(text || "").split(/\r?\n/).forEach(line => {
+        let t = line.replace(/^[\s•*•\-–]+/, "").trim();
+        if (!t) return;
+        let num = null, name = "";
+        if (t.includes("\t")) {
+          const cells = t.split("\t").map(c => c.trim()).filter(Boolean);
+          const nc = cells.find(c => /^#?\d{1,3}\.?$/.test(c));
+          if (nc) num = parseInt(nc.replace(/\D/g, ""));
+          const named = cells.filter(c => /[A-Za-z]/.test(c) && !skip.test(c));
+          name = named.slice(0, 2).join(" ");
+        } else {
+          let m;
+          if ((m = /^#?(\d{1,3})[.):\-\s]+(.+)$/.exec(t))) { num = parseInt(m[1]); name = m[2]; }
+          else if ((m = /^(.+?)[\s,\-]+#?(\d{1,3})$/.exec(t))) { name = m[1]; num = parseInt(m[2]); }
+          else name = t;
+        }
+        name = name.replace(/\s+/g, " ").trim();
+        if (!name || skip.test(name) || !/[A-Za-z]/.test(name)) return;
+        raw.push({ num, full: name, first: name.split(" ")[0], last: name.split(" ").slice(1).join(" ") });
+      });
+      const existing = state.squad.map(p => p.name.toLowerCase());
+      const firstCounts = {};
+      raw.forEach(r => { const k = r.first.toLowerCase(); firstCounts[k] = (firstCounts[k] || 0) + 1; });
+      existing.forEach(n => { const k = n.split(" ")[0]; if (firstCounts[k]) firstCounts[k]++; });
+      const usedNums = new Set(state.squad.map(p => parseInt(p.num)));
+      return raw.map(r => {
+        let name = r.full;
+        if (firstOnly) name = (firstCounts[r.first.toLowerCase()] > 1 && r.last) ? `${r.first} ${r.last[0].toUpperCase()}` : r.first;
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        const exists = existing.includes(name.toLowerCase());
+        return { name, num: r.num, exists, numClash: r.num !== null && usedNums.has(r.num) };
+      });
+    }
+
+    function renderSquadPastePreview() {
+      const rows = parseSquadPaste(document.getElementById("squad-paste-text").value, document.getElementById("squad-paste-first").checked);
+      const box = document.getElementById("squad-paste-preview");
+      box.innerHTML = rows.map(r => `<div class="past-player-row" style="${r.exists ? "opacity:0.55;" : ""}"><div style="font-weight:900;font-size:0.84rem;">${r.num !== null ? "#" + r.num + " " : ""}${escHtml(r.name)}</div><div class="imp-sub">${r.exists ? "Already in squad" : r.numClash ? "Number already used" : r.num === null ? "Number will be added" : ""}</div></div>`).join("");
+      const n = rows.filter(r => !r.exists).length;
+      const btn = document.getElementById("squad-paste-btn");
+      btn.textContent = n ? `Add ${n} player${n === 1 ? "" : "s"}` : "Add players";
+      btn.disabled = !n;
+    }
+
+    function saveSquadPaste() {
+      const rows = parseSquadPaste(document.getElementById("squad-paste-text").value, document.getElementById("squad-paste-first").checked).filter(r => !r.exists);
+      if (!rows.length) return;
+      const used = new Set(state.squad.map(p => parseInt(p.num)));
+      let next = 1;
+      const nextFree = () => { while (used.has(next)) next++; used.add(next); return next; };
+      rows.forEach((r, i) => {
+        let num = r.num;
+        if (num === null) num = nextFree(); else used.add(num);
+        state.squad.push({ id: `p_${Date.now()}_${i}`, name: r.name, num, available: true });
+      });
+      persist(); renderEverything();
+      closeModal("modal-squad-paste");
+    }
+
     function renderEverything() {
       try { renderTopScoreboard(); } catch (e) {}
       try { renderMatchView(); } catch (e) {}
       try { renderLineupView(); } catch (e) {}
       try { renderSquadAndSeason(); } catch (e) {}
       try { renderHistoryView(); } catch (e) {}
+      try { renderSeasonRecord(); } catch (e) {}
     }
 
     currentTeamCode = detectInitialTeamCode();
@@ -2947,6 +3402,11 @@
     requestScreenWakeLock();
     renderEverything();
     if (!currentTeamCode) openModal("modal-welcome");
+
+    // Installable app + offline support (v7.7)
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+    }
   </script>
 </body>
 </html>
